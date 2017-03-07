@@ -1,0 +1,23 @@
+# 
+# /etc/fstab: static file system information
+#
+# For diskless, /var/empty must be owned by root
+#
+# <file system>	<dir>	<type>	<options>	<dump>	<pass>
+#/dev/mmcblk0p1  /boot   vfat    defaults        0       0
+
+tmpfs  /var/empty tmpfs   defaults        0 0
+tmpfs  /var/tmp   tmpfs   defaults        0 0
+tmpfs  /var/log   tmpfs   defaults        0 0
+tmpfs  /var/cache tmpfs   defaults        0 0
+tmpfs  /var/lib/systemd tmpfs   defaults        0 0
+tmpfs  /var/lib/machines tmpfs   defaults        0 0
+tmpfs  /home      tmpfs   defaults        0 0
+tmpfs  /mnt       tmpfs   defaults        0 0
+tmpfs  /mnt/boot  tmpfs   defaults        0 0
+tmpfs  /mnt/clas12  tmpfs   defaults        0 0
+tmpfs  /mnt/home  tmpfs   defaults        0 0
+tmpfs  /opt       tmpfs   defaults        0 0
+tmpfs  /root      tmpfs   defaults        0 0
+
+192.168.2.1:/u1/nfsexport/hps /mnt/host nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0
