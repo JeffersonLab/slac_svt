@@ -1,0 +1,36 @@
+%NAME%
+dosfstools
+
+%VERSION%
+3.0.28-1
+
+%DESC%
+DOS filesystem utilities
+
+%URL%
+https://github.com/dosfstools/dosfstools
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1435218349
+
+%INSTALLDATE%
+1438690861
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu3@archlinuxarm.org>
+
+%SIZE%
+265216
+
+%LICENSE%
+GPL2
+
+%VALIDATION%
+none
+
+%DEPENDS%
+glibc
+

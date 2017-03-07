@@ -1,0 +1,33 @@
+%NAME%
+fake-hwclock
+
+%VERSION%
+0.3-1
+
+%DESC%
+Saves time on shutdown and restores it on boot from a file
+
+%URL%
+
+
+%ARCH%
+any
+
+%BUILDDATE%
+1401242587
+
+%INSTALLDATE%
+1438690950
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu0@archlinuxarm.org>
+
+%SIZE%
+26624
+
+%LICENSE%
+GPL
+
+%VALIDATION%
+none
+

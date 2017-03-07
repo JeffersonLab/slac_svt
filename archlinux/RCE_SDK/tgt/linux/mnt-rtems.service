@@ -1,0 +1,10 @@
+
+[Unit]
+Description=SD MMC Mount RTEMS Partition
+
+[Service]
+Type=oneshot
+ExecStart=/bin/mount /dev/mmcblk0p5 /mnt/rtems
+
+[Install]
+WantedBy=multi-user.target

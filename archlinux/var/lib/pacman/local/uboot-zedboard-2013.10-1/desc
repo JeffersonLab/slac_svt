@@ -1,0 +1,33 @@
+%NAME%
+uboot-zedboard
+
+%VERSION%
+2013.10-1
+
+%DESC%
+U-Boot for Zedboard
+
+%URL%
+https://github.com/Xilinx/u-boot-xlnx
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1395275528
+
+%INSTALLDATE%
+1439605054
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu2@archlinuxarm.org>
+
+%SIZE%
+379904
+
+%LICENSE%
+GPL
+
+%VALIDATION%
+sha256
+

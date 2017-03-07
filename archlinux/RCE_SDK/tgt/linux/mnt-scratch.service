@@ -1,0 +1,10 @@
+
+[Unit]
+Description=SD MMC Mount Scratch Partition
+
+[Service]
+Type=oneshot
+ExecStart=/bin/mount /dev/mmcblk0p2 /mnt/scratch
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,39 @@
+%NAME%
+libevent
+
+%VERSION%
+2.0.22-1
+
+%DESC%
+An event notification library
+
+%URL%
+http://www.monkey.org/~provos/libevent/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1421110766
+
+%INSTALLDATE%
+1438690864
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu3@archlinuxarm.org>
+
+%SIZE%
+947200
+
+%LICENSE%
+BSD
+
+%VALIDATION%
+none
+
+%DEPENDS%
+openssl
+
+%OPTDEPENDS%
+python2: to use event_rpcgen.py
+

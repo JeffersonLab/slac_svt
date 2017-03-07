@@ -1,0 +1,36 @@
+%NAME%
+libmpc
+
+%VERSION%
+1.0.3-1
+
+%DESC%
+Library for the arithmetic of complex numbers with arbitrarily high precision
+
+%URL%
+http://www.multiprecision.org/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1425791093
+
+%INSTALLDATE%
+1438690957
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu3@archlinuxarm.org>
+
+%SIZE%
+137216
+
+%LICENSE%
+LGPL
+
+%VALIDATION%
+none
+
+%DEPENDS%
+mpfr
+

@@ -1,0 +1,94 @@
+RCE SDK for ARM Linux
+=================
+
+Copyright (C) 2016  Stanford University
+
+Introduction
+============
+
+The RCE SDK for Linux provides the API, libraries, and tools necessary
+to develop software for the RCE platform.  It contains pre-built
+images, header files, and tools to create custom images.
+
+All included and generated SDK images are targeted for one of the
+following platforms:
+
+1) the RCE hardware executing a supported linux operating system.
+2) x86 hardware executing a supported linux operating system
+
+SDK Concepts
+============
+
+Platform
+---------
+The pairing of specific hardware with an operating system.
+
+host   - x86 based hardware executing a supported linux operating system
+target - ARM Cortex-A9 based RCE harware executing the LINUX operating system
+
+Images
+------
+One of the supported binary image types compiled for execution on a
+target platform.
+
+Tools
+-----
+Scripts and executables intended for use on a host platform.
+
+SDK Installation
+================
+
+Choose SDK installation directory
+---------------------------------
+$ cd <install_dir>
+
+Download and unpack the SDK to your host platform
+----------------------------------------------
+
+The SDK can be copied from:
+/afs/slac/www/projects/CTK/SDK/rce-sdk-latest.tar.gz
+
+or over the web:
+wget http://www.slac.stanford.edu/projects/CTK/SDK/rce-sdk-latest.tar.gz
+
+tar -xzf rce-sdk-latest.tar.gz
+
+Initialize the SDK environment
+------------------------------
+$ source <install_dir>/i86-linux-64/tools/envs-sdk.[c]sh
+
+Sourcing of envs-sdk.[c]sh sets the following required environment variables:
+PATH  = <install_dir>/<platform>/bin:${PATH}
+
+You are now ready to program using the SDK
+
+SDK Contents
+============
+
+bin/
+This directory contains host executables and scripts that must be
+found via your host's PATH environment variable.  Execution of
+<install_dir>/<platform>/tools/envs-sdk.[c]sh will set your host's PATH environment
+variable properly.
+
+include/
+This directory contains target include directories and header files
+that are to be specified at target image compile time using -I.
+
+lib/
+This directory contains pre-built target libraries that can be
+specified at target image link time using -l.
+
+tgt/
+This directory contains pre-built target images that must reside on
+the target filesystem.
+
+tools/
+This directory contains installation/maintenance scripts that can be
+executed on any supported host platform.
+
+SDK Documentation
+=================
+
+https://confluence.slac.stanford.edu/display/RPTUSER/Home
+

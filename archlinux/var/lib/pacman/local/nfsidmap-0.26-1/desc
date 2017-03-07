@@ -1,0 +1,37 @@
+%NAME%
+nfsidmap
+
+%VERSION%
+0.26-1
+
+%DESC%
+Library to help mapping IDs, mainly for NFSv4
+
+%URL%
+http://www.citi.umich.edu/projects/nfsv4/linux/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1411370330
+
+%INSTALLDATE%
+1438690869
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu5@archlinuxarm.org>
+
+%SIZE%
+131072
+
+%LICENSE%
+custom:nfsidmap
+
+%VALIDATION%
+none
+
+%DEPENDS%
+glibc
+libldap>=2.4.18
+

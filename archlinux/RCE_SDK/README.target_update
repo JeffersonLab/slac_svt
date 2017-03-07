@@ -1,0 +1,195 @@
+RCE Cross Platform SDK
+=======================
+
+Copyright (C) 2016  Stanford University
+
+Introduction
+=============
+
+Starting with V0.11.0, all RCE SDKs and corresponding SD images include tools 
+to update the core OS and system files residing on the target filesystem.
+
+The source of all system updates are the files residing in the /tgt directory of
+arm-linux-rceCA9 in the SDK.
+
+Update Methods
+===============
+
+Software and firwmare updates to the RCE target are performed over the network 
+by copying files from a host nfs server to the target SD flash.
+
+For host systems that do not support nfs servers, the RCE DTM can be used as 
+the nfs server.  In this scenario, the updates are first secure copied (scp) 
+from the host to the DTM.  The DTM then serves the updates to any RCE using 
+its internal nfs server.
+
+Only one OS platform may be updated at a time.  The RCE must be booted into the
+appropriate OS prior to initiating the update.
+
+Update Process
+===============
+
+Updating is initiated on the host by running the dsl_update executable.
+The executable issues an update command that instructs RCEs to:
+
+1. mount an nfs directory from the nfs server
+2. execute a shell script from the nfs directory
+
+The update shell script instructs RCEs to:
+
+1. mount appropriate filesystem partitions
+2. pull (copy) files from the nfs directory to its local filesystem
+3. record SDK update version and identifier
+4. reboot the RCE upon completion
+
+Preparing the SDK
+==================
+
+LINUX
+----------------
+The system update will copy __all__ files from the SDK /tgt/boot/dpm directory 
+to the RCE.
+
+If you are using a non-default firmware bitfile, have 2 choices:
+
+1. Remove the default fpga.bit from the SDK /tgt/boot/dpm directory prior to 
+updating.  You are then responsible for updating the bitfile as fpga.bit on the 
+RCE.
+
+2. Place your custom firmware bitfile in the SDK as /tgt/boot/dpm/fpga.bit 
+directory prior to updating.  The system update will copy them to the RCE for 
+you.
+
+Preparing the Host NFS Server
+==============================
+
+For hosts supporting nfs servers, the SDK platform directory must be mounted 
+and prepared for access by RCEs on the network.  
+Note that this requires sudo priveleges.
+
+Create nfs server directory
+----------------------------
+mkdir -p /srv/nfs4/dsl
+chmod -R a+r /srv/nfs4
+
+Add directory to /etc/exports
+------------------------------
+/srv/nfs4 192.168.204.0/24(rw,no_subtree_check,all_squash,anongid=2660,insecure)
+/srv/nfs4/dsl 192.168.204.0/24(rw,no_subtree_check,all_squash,anongid=2660,insecure)
+
+Note: replace 192.168.204 with your subnet
+
+Mount the SDK platform directory
+---------------------------------
+mount --bind <path_to_sdk>/<platform> /srv/nfs4/dsl
+
+i.e. mount --bind /opt/RCE_SDK/V1.0.0/arm-linux-rceCA9 /srv/nfs4/dsl
+
+Refresh nfs server
+-------------------
+/sbin/service nfs restart
+
+Preparing the DTM NFS Server
+=============================
+
+A utility script is provided in the i86-linux-64 directory which uploads the updates and
+prepares the nfs server on the DTM.
+
+i.e. i86-linux-64/tools/uploadSDK /opt/RCE_SDK/V1.0.0/arm-linux-rceCA9 <shelf/slot/bay/rce> [<ifname>]
+
+uploadSDK
+---------
+usage: i86-linux-64/tools/uploadSDK <rce_sdk> <shelf/slot/bay/rce> [<ifname>]
+       Configures the RCE update server with an SDK package
+
+params:  <shelf/slot/bay/rce>  The location of the RCE in ATCA coords
+         <rce_sdk>             The full path of the RCE SDK
+         <ifname>              The first interface to check for the RCE (optional)
+
+Launching the Update
+=====================
+
+Now that the nfs server is configured, the update command can be issued to one or more RCES.
+
+EXTREME WARNING!!!!
+=====================
+DO NOT POWER CYCLE OR REBOOT RCES AFTER LAUNCHING UPDATE!!!!!
+This will cause severe damage to the RCE filesystem and require manually removing the SD card.
+RCEs will reboot once the update has finished.
+
+RCE single update example:
+--------------------------
+dsl_update --ip 192.168.204.1 --src /srv/nfs4/dsl --file tools/update-target.sh
+           --ifname em2 --id 0x12345678 --tmo 8000
+           egbert/1/0/0
+
+RCE DPM update example:
+-----------------------
+dsl_update --ip 192.168.204.1 --src /srv/nfs4/dsl --file tools/update-target.sh
+           --ifname em2 --id 0x12345678 --tmo 8000
+           egbert/1/0
+
+RCE COB update example (excludes DTM):
+--------------------------------------
+dsl_update --ip 192.168.204.1 --src /srv/nfs4/dsl --file tools/update-target.sh
+           --ifname em2 --id 0x12345678 --tmo 8000
+           egbert/1/DPM
+
+dsl_update
+=====================
+usage: dsl_update --ip ip --src src --file file [options] location
+
+          -v         Verbose output:  report things which don't respond.
+          --ip       IP address of update server
+          --sm       Hostname or IP address of shelf manager
+          --src      Path of update source directory on server (max 31 chars)
+          --file     Path of update file relative to source directory (max 31 chars)
+          --ifname   The name of a NIC which can see the shelf.
+          --id       32-bit identifier for update transaction
+          --tmo      Response timeout in milliseconds
+          location   An RCE location.  May be wildcarded
+
+Broadcast 'update yourself' packet to a network.  All running
+   RCEs matching the wildcarded location on that network will
+   update target filesystem by executing ip:src/file.
+
+
+Checking the Update Status
+===========================
+
+The time for an RCE to complete an update can vary depending on the SDK content
+Using the -sm switch, the shelf manager can monitor the progress of the update.
+You can also manually check for completion of the update using dsl_identify.
+The dsl_identify command will query RCEs for their current operating status.
+
+While the update is in progress, a response should be received showing the 
+current version information.
+
+While the RCE is rebooting, no response will be received.
+
+Once the update is complete, the received response will have the updated
+version information.
+
+RCE single status:
+------------------
+dsl_identify egbert/1/0/0 --ifname em2
+
+Slot 1 : Had Responses
+   RCE 0/0 : OS: LINUX  IP: 192.168.204.137  ID: 0x00000000 V1.0.0
+
+RCE COB status: 
+------------------
+This will dump the stats for all RCEs in the COB.
+
+dsl_identify egbert/1 --ifname em2
+
+
+Reboot Commands
+================
+To make your custom bitfile the default at boot, execute the appropriate 
+reboot command with the -b flag set to 1.  All subsequent boots will now 
+load your fpga.bit. 
+
+LINUX: 
+
+reboot_rce -t linux -b 1

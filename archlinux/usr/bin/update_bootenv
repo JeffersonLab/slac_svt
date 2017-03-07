@@ -1,0 +1,62 @@
+#!/bin/bash
+
+declare UPDATE_RDISK='setenv modeboot sdboot_rdisk && echo Copying Linux from SD to RAM... && 
+         mmcinfo && fatload mmc 0:7 0x3000000 ${ramdisk_kernel} && 
+         fatload mmc 0:7 0x2A00000 ${ramdisk_devicetree} && 
+         fatload mmc 0:7 0x2000000 ${ramdisk_image} && bootm 0x3000000 0x2000000 0x2A00000'
+
+usage()
+{
+    cat <<EOF
+        Usage: ${PROGNAME}
+
+        Update RCE U-Boot environment file
+
+EOF
+    cat <<EOF | column -s\& -t
+        Options: &
+        -h|--help & show this output
+EOF
+    exit -1
+}
+
+abort() 
+{
+    echo $*
+    exit -1
+}
+
+setup()
+{
+    # first char + ==> Scanning mode = stop after non-option to avoid
+    # parsing of extra options for compiler as part of this script's 
+    # options
+    SHORTOPTS="+h"
+    LONGOPTS="help"
+    OPTS=$(getopt -s bash --alternative --options $SHORTOPTS \
+         --longoptions $LONGOPTS -- $@ )
+
+    eval set -- ${OPTS}
+
+    while true; do
+        case "$1" in
+            -h|--help)    usage;         shift;;
+            --)                          shift;  break;;
+            *)                           shift;  break;;
+        esac
+    done
+    
+    #delete old ramdisk command        
+    { $(fw_setenv sdboot_ramdisk);}
+    
+    #add new rdisk command
+    { $(fw_setenv sdboot_rdisk $UPDATE_RDISK);}
+    
+    #add new loadbit command
+    { $(fw_setenv loadbit 0);}
+    
+}
+
+setup "$@"
+
+sync;

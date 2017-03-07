@@ -1,0 +1,10 @@
+
+[Unit]
+Description=RCE first boot services
+
+[Service]
+Type=oneshot
+ExecStart=/opt/RCE_SDK/tgt/linux/rce-firstboot.sh 0 0
+
+[Install]
+WantedBy=multi-user.target

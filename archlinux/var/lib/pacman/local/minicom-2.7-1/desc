@@ -1,0 +1,39 @@
+%NAME%
+minicom
+
+%VERSION%
+2.7-1
+
+%DESC%
+A serial communication program
+
+%URL%
+http://alioth.debian.org/projects/minicom/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1389438639
+
+%INSTALLDATE%
+1438690867
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu5@archlinuxarm.org>
+
+%SIZE%
+880640
+
+%LICENSE%
+GPL
+
+%VALIDATION%
+none
+
+%DEPENDS%
+bash
+
+%OPTDEPENDS%
+lrzsz: for xmodem, ymodem and zmodem file transfer protocols
+

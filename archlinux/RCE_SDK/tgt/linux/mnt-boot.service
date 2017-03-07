@@ -1,0 +1,10 @@
+
+[Unit]
+Description=SD MMC Mount Boot Partition
+
+[Service]
+Type=oneshot
+ExecStart=/bin/mount /dev/mmcblk0p1 /mnt/boot
+
+[Install]
+WantedBy=multi-user.target

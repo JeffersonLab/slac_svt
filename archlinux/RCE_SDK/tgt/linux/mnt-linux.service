@@ -1,0 +1,10 @@
+
+[Unit]
+Description=SD MMC Mount Linux Partition
+
+[Service]
+Type=oneshot
+ExecStart=/bin/mount /dev/mmcblk0p7 /mnt/linux
+
+[Install]
+WantedBy=multi-user.target

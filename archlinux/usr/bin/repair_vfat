@@ -1,0 +1,21 @@
+#Unmount each rce partition, execute disk check, then re-mount
+systemctl stop mnt-boot.service
+systemctl stop mnt-scratch.service
+systemctl stop mnt-rtems.service
+systemctl stop mnt-rtemsapp.service
+systemctl stop mnt-linux.service
+umount /dev/mmcblk0p1
+umount /dev/mmcblk0p2
+umount /dev/mmcblk0p5
+umount /dev/mmcblk0p6
+umount /dev/mmcblk0p7
+dosfsck -a /dev/mmcblk0p1
+dosfsck -a /dev/mmcblk0p2
+dosfsck -a /dev/mmcblk0p5
+dosfsck -a /dev/mmcblk0p6
+dosfsck -a /dev/mmcblk0p7
+systemctl start mnt-boot.service
+systemctl start mnt-scratch.service
+systemctl start mnt-rtems.service
+systemctl start mnt-rtemsapp.service
+systemctl start mnt-linux.service

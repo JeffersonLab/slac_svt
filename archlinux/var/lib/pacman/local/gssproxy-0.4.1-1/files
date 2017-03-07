@@ -1,0 +1,36 @@
+%FILES%
+etc/
+etc/gss/
+etc/gss/mech
+etc/gssproxy/
+etc/gssproxy/gssproxy.conf
+usr/
+usr/bin/
+usr/bin/gssproxy
+usr/lib/
+usr/lib/gssproxy/
+usr/lib/gssproxy/proxymech.so
+usr/lib/systemd/
+usr/lib/systemd/system/
+usr/lib/systemd/system/gssproxy.service
+usr/share/
+usr/share/licenses/
+usr/share/licenses/gssproxy/
+usr/share/licenses/gssproxy/COPYING
+usr/share/man/
+usr/share/man/man5/
+usr/share/man/man5/gssproxy.conf.5.gz
+usr/share/man/man8/
+usr/share/man/man8/gssproxy-mech.8.gz
+usr/share/man/man8/gssproxy.8.gz
+var/
+var/lib/
+var/lib/gssproxy/
+var/lib/gssproxy/clients/
+var/log/
+var/log/gssproxy/
+
+%BACKUP%
+etc/gssproxy/gssproxy.conf	aa3b671c451f84d03c2b0d392642826f
+etc/gss/mech	f6e8373745bf5f7229ee878c0bf7d291
+

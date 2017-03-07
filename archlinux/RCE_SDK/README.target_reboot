@@ -1,0 +1,101 @@
+RCE Cross Platform SDK
+=======================
+
+Copyright (C) 2016  Stanford University
+
+Introduction
+=============
+
+Starting with V0.11.0, all RCE SDKs and corresponding SD images include tools 
+to remotely reboot an RCE.
+
+The reboot shell commands residing on the target RCEs have specific parameters
+which control boot behavior.
+
+Host Reboot Command
+====================
+
+The host command for remotely rebooting an RCE resides in the i86-linux-64 SDK 
+directory.  This command can target one or more RCEs at once.
+
+Reboot from RTEMS to Linux example
+-----------------------------------
+dsl_reboot egbert/1/0/0 -t linux -b 0 --ifname em2
+
+Note that in this case, the -b value is set to 0.
+This is because the default Linux configuration does not require the 
+bitfile /mnt/boot/fpga.bit.
+
+Reboot from Linux to RTEMS example
+-----------------------------------
+dsl_reboot egbert/1/0/0 -t rtems -b 1 --ifname em2
+
+Note that in this case, the -b value is set to 1.
+This is because the default RTEMS configuration requires the bitfile 
+/mnt/boot/fpga.bit.
+
+usage: dsl_reboot [options] location
+
+          -i, --ifname   The name of a NIC which can see the shelf.
+          -t, --type     The destination OS type (linux/rtems/rescue/default)  Default is nochange
+          -b, --bitload  The bitfile load directive [0:no_load|1:load]  Default is nochange
+          location   An RCE location.  May be wildcarded
+
+Broadcast 'reboot yourself' packet to a network.  All running
+   RCEs matching the wildcarded location on that network will
+   reboot to the target OS.  Default target OS is 'default',
+   meaning 'reboot to the default OS'.
+
+Target Reboot Commands
+=======================
+
+Under RTEMS, the shell command is named reboot.
+Under ARM Linux, the shell command is named reboot_rce.
+
+RTEMS:
+------
+reboot       - Usage:  reboot [-t <rtems|linux|ramdisk>] [-b <0|1>]
+              Reboot the system
+              Optional arguments:
+              -t <rtems|linux|ramdisk>: Sets the default boot operating system
+              -b <0|1>: Sets the default bitfile load directive
+
+reboot -t rtems -b 1
+
+LINUX: 
+------
+reboot_rce
+        Usage:  [<-t <rtems|linux|ramdisk>] [-b <0|1>]
+
+        Modify bootloader parameters and reboot system
+
+        Options:
+        -h|--help       show this output
+        -t|--target     Set the target operating system
+        -b|--bitload    Set the bitfile load directive
+
+reboot_rce -t linux -b 1
+
+Bitfile Load Directive
+=======================
+
+All reboot commands contain an option (-b) to control loading of the bitfile
+/mnt/boot/fpga.bit at boot.  The bitfile contains the firmware image to be
+applied to the FPGA.
+
+When -b value is 0, no bitfile will be loaded at boot, and the default
+bitstream included in the bootloader will be used.
+All subsequent reboots that do not specify -b will never load a bitfile.
+
+When -b value is 1, the bitfile /mnt/boot/fpga.bit will be loaded by default 
+at boot.  All subsequent reboots that do not specify -b will always load 
+/mnt/boot/fpga.bit.
+
+Custom/Non-Default Bitfiles
+============================
+
+To make your custom bitfile the default at boot, rename the file to fpga.bit 
+and transfer it to /mnt/boot on the RCE filesystem.  This can be done manually, 
+or as part of a system update.  Then execute the appropriate reboot command 
+with the -b flag set to 1.  All subsequent boots will now load your fpga.bit. 
+

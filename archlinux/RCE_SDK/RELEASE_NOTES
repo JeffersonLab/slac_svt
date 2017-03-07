@@ -1,0 +1,251 @@
+Release Notes for arm-linux-rceCA9 SDK
+---------------------------------------------------------------------------------
+linux-V2.0.0                        2016-11-02
+Changes:
+  Add DPM 10GE XAUI kernel driver. (uImage,devicetree.dtb.10GAxi,fpga.bit.10GAxi)
+  Add register dump to Fulcrum manager port interface status. (fmd)
+  Disable duplicate dhcp request in eth0 start.
+
+---------------------------------------------------------------------------------
+linux-V1.10.0                       2016-08-08
+Changes:
+  Add boot status output for DSL reboot/update commands. (libdslutil.so)
+  Use RCE scratch partition for DSL update. (tools/update-target.sh)
+  
+---------------------------------------------------------------------------------
+linux-V1.9.0                        2016-07-19
+Changes:
+  None
+
+---------------------------------------------------------------------------------
+linux-V1.8.0                        2016-06-15
+Changes:
+  SDK images are now compiled with the Vivado hard float toolchain to match the 
+  ABI on Arch Linux images.
+  Bootloader now compiled with Vivado toolchain. (boot.bin)
+  
+---------------------------------------------------------------------------------
+linux-V1.7.0                        2016-05-24
+Changes:
+  Fix minor storage bug in dsl utilities (libdslutil.so)
+  Improve support for fpga bitfile load in bootloader shell. (boot.bin)
+  Add example fstab to support diskless systems. (fstab.diskless)
+  Add example bootp parameters to dhcp server configuration. (dhcpd.dtm.conf)
+    
+---------------------------------------------------------------------------------
+linux-V1.6.0                        2016-05-18
+Changes:  
+  Fix EMIO clock bug in bootloader zynq gem driver. (boot.bin)
+  Add bootloader support for dhcp and nfs. (boot.bin)
+  Add support for zedboard bootloader.
+
+---------------------------------------------------------------------------------
+linux-V1.5.1                        2016-05-11
+Changes:  
+  Improve performance of update tools. (libdslutil.so dsl_update dsl_identify)
+  Updates to README documentation.
+
+---------------------------------------------------------------------------------
+linux-V1.5.0                        2016-04-29
+Changes:  
+  Added nocm environment variable to disable DTM switch initialziation. (boot.bin)
+  Updated rced to wait until ip address assignment before signaling bsi success. 
+
+---------------------------------------------------------------------------------
+linux-V1.4.0                        2016-02-26
+Changes:  
+  Added DTM driver support for new FM4000 series Bali switch.
+
+---------------------------------------------------------------------------------
+linux-V1.3.0                        2016-02-18
+Changes:  
+  None
+
+---------------------------------------------------------------------------------
+linux-V1.2.0                        2016-02-02
+Changes:  
+  None
+
+---------------------------------------------------------------------------------
+linux-V1.1.1                        2016-01-29
+Changes:  
+  None
+  
+---------------------------------------------------------------------------------
+linux-V1.1.0                        2016-01-26
+Changes:  
+  None
+  
+---------------------------------------------------------------------------------
+linux-V1.0.0                        2015-12-01
+Changes:  
+  Remove obsolete tools/install-sdk.sh
+  Remove obsolete bin/linux-* commands.
+  Remove obsolete examples.
+  Remove atca_* source from tools.
+  Add updated u-boot to boot.bin
+  
+---------------------------------------------------------------------------------
+linux-V0.11.1                       2015-10-27
+Changes:  
+  No changes
+
+---------------------------------------------------------------------------------
+linux-V0.11.0                       2015-08-30
+Changes:  
+  Updates to support xilinx linux kernel 4.0.0.
+  Added axi stream dma to device tree.
+  SDK now contains ArchLinuxARM package bundles, kernel, and device tree.
+  Added firsboot services.
+  
+---------------------------------------------------------------------------------
+linux-V0.10.0                       2015-08-14
+Changes:  
+  Added support for new dsl_update utility.
+  Added update id and SDK TAG output to dsl_identify.
+  Updated kernel configuration to support nfsd on DTMs.
+
+---------------------------------------------------------------------------------
+linux-V0.9.2                        2015-07-30
+Changes:
+  Add uboot env utilities.
+  Updates for dsl reboot.
+
+---------------------------------------------------------------------------------
+linux-V0.9.1                        2015-07-29
+Changes:
+  Deprecate git usage in tool scripts.
+
+---------------------------------------------------------------------------------
+linux-V0.9.0                        2015-07-20
+Changes:
+  Add new scripts for rce reboot command.
+
+---------------------------------------------------------------------------------
+linux-V0.8.0                        2015-04-07
+Changes:
+  Update U-Boot to rce.0.5.1 - use BSI eFUSE register to calculate MAC address.
+  Change install-sdk.sh to cover problems with SL6
+  Add identifier and rebooter to rced
+
+---------------------------------------------------------------------------------
+linux-V0.6.1                        2014-10-07
+Changes:
+  CCI-150: Maximize default DHCP lease time in configuration
+
+---------------------------------------------------------------------------------
+linux-V0.6.0                        2014-09-28
+Changes:
+  Add dmabuf module and rename devocm to ocm
+  Add dmabufapi API
+
+---------------------------------------------------------------------------------
+linux-V0.5.2                        2014-09-01
+No changes for Linux
+
+---------------------------------------------------------------------------------
+linux-V0.5.1                        2014-08-29
+No changes for Linux
+
+---------------------------------------------------------------------------------
+linux-V0.5.0                        2014-08-28
+Changes:
+  CCI-128: Remove DPM wait loop from DTM cm_init
+  CCI-120: Fix spurious git warning, update README
+  CCI-114: Make sure that DTM services aren't installed on DPMs
+
+---------------------------------------------------------------------------------
+linux-V0.4.0                        2014-08-14
+Changes:
+  CCI-106:  Remove libumem.so -- internal library only
+  CCI-99:   Added minirc config files to install
+
+---------------------------------------------------------------------------------
+linux-V0.3.0                        2014-08-12
+Changes:
+  CCI-87:  Put in most of the rest of the header files.
+  Fixed default VLAN (not valid) usage.  Add VLAN usage to uboot config. (MW)
+  Updated envs-sdk.csh to fix the issue of a source from a source
+
+---------------------------------------------------------------------------------
+linux-V0.2.4                        2014-07-16
+Changes:
+  install-sdk.sh now takes development arg
+
+---------------------------------------------------------------------------------
+linux-V0.2.3                        2014-07-14
+Changes:
+  Fix gateway in dhcpd.dtm.conf
+
+---------------------------------------------------------------------------------
+linux-V0.2.2                        2014-07-11
+bugfix release fixes dhcp broadcast
+
+---------------------------------------------------------------------------------
+linux-V0.2.0                        2014-07-10
+Changes:
+  1) Add shelf IP block to BSI -- backward compatible
+  2) Add dhcpd service to DTM
+     Addresses are now calculated from BSI and shelf slot
+  3) CCI-90: Static inlines in list/List.h
+  4) Fix executable bits on reboot_*
+  5) add bsi_dump command
+  
+---------------------------------------------------------------------------------
+linux-V0.1.1                        2014-07-07
+Changes:
+  1) CCI-87: source environment in install-sdk
+
+---------------------------------------------------------------------------------
+linux-V0.1.0                        2014-07-03
+Changes:
+  1) new command sysinfo to match the one on RTEMS
+  2) CCI-67: Add BasicMutex (concurrency/BasicMutex.h)
+  3) CCI-66: Remove test code from library
+  4) CCI-69: New Regions to replace AXI0 and AXI1
+  5) CCI-73: Add soname to libraries.  (libfoo.so)
+
+---------------------------------------------------------------------------------
+linux-V0.0.1                        2014-06-06
+Changes:
+  1) CCI-59: added sync to reboot_foo scripts
+  2) Updated archlinux distro to include nfs, git, autofs, gcc, gdb and minicom
+  3) Added CM libraries
+  4) Added scripts and services to SDK
+  5) Added update mechanism via git for rtems and archlinux
+  6) Add exception headers
+
+  CM (DTM) only:
+  1) Hpdated BSI info to V2
+  2) Handle front panel port forwarding 
+
+---------------------------------------------------------------------------------
+linux-V0.0.0 FINAL                  2014-04-30
+
+Changes:
+  No functional differences to RC3
+
+---------------------------------------------------------------------------------
+linux-V0.0.0-RC3                    2014-04-25
+
+Release candidate to be pushed to user space.
+
+Changes:
+  1) Added core/conversion includes back in to compile atca commands in SDK
+  2) SEM made some fixes for the DTM bootloader (does not affect Linux)
+  3) SJT fixed a mem management routine that was allocating from the wrong area
+
+---------------------------------------------------------------------------------
+linux-V0.0.0-RC1                    2014-04-23
+
+First release candidate pushed to user space.
+
+Features:
+  1) Highly pruned include tree -- The core include tree has been 
+     trimmed in order to only export what the DAT group is intending 
+     as an external interface.  
+  2) Build date information removed from libraries -- In order to
+     have libraries build the same each time, all DATE information
+     in the base release was commented out.
+
+---------------------------------------------------------------------------------

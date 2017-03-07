@@ -1,0 +1,12 @@
+[Unit]
+Description=RCE Startup Script
+After=rced
+Requires=rced
+
+[Service]
+Type=forking
+ExecStart=/usr/lib/systemd/scripts/rce_start.sh
+
+[Install]
+WantedBy=multi-user.target
+

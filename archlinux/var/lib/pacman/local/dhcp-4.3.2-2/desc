@@ -1,0 +1,36 @@
+%NAME%
+dhcp
+
+%VERSION%
+4.3.2-2
+
+%DESC%
+A DHCP server, client, and relay agent
+
+%URL%
+https://www.isc.org/software/dhcp
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1436823343
+
+%INSTALLDATE%
+1438690857
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu3@archlinuxarm.org>
+
+%SIZE%
+5109760
+
+%LICENSE%
+custom:isc-dhcp
+
+%VALIDATION%
+none
+
+%DEPENDS%
+glibc
+
