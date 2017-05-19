@@ -12,12 +12,18 @@ tmpfs  /var/log   tmpfs   defaults        0 0
 tmpfs  /var/cache tmpfs   defaults        0 0
 tmpfs  /var/lib/systemd tmpfs   defaults        0 0
 tmpfs  /var/lib/machines tmpfs   defaults        0 0
-tmpfs  /home      tmpfs   defaults        0 0
+#tmpfs  /home      tmpfs   defaults        0 0
 tmpfs  /mnt       tmpfs   defaults        0 0
 tmpfs  /mnt/boot  tmpfs   defaults        0 0
 #tmpfs  /mnt/clas12  tmpfs   defaults        0 0
-tmpfs  /mnt/home  tmpfs   defaults        0 0
+#tmpfs  /mnt/home  tmpfs   defaults        0 0
 tmpfs  /opt       tmpfs   defaults        0 0
 tmpfs  /root      tmpfs   defaults        0 0
 
 #192.168.2.1:/u1/nfsexport/hps /mnt/host nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0
+129.57.167.16:/vol/clas12/release/1.3.0/slac_svt/svtdaq /mnt/host nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0
+129.57.167.16:/vol/home /mnt/home nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0
+129.57.167.16:/vol/clas12 /mnt/clas12 nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0
+#129.57.167.16:/vol/clas12/release/1.3.0/slac_svt/ssh /mnt/ssh nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0
+
+

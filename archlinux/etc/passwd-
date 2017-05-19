@@ -1,4 +1,4 @@
-root:x:0:0:root:/root:/bin/bash
+root:x:0:0:root:/root:/bin/tcsh
 bin:x:1:1:bin:/bin:/usr/bin/nologin
 daemon:x:2:2:daemon:/:/usr/bin/nologin
 mail:x:8:12:mail:/var/spool/mail:/usr/bin/nologin
@@ -14,3 +14,4 @@ systemd-bus-proxy:x:194:194:systemd-bus-proxy:/:/usr/bin/nologin
 systemd-resolve:x:195:195:systemd-resolve:/:/usr/bin/nologin
 systemd-journal-remote:x:998:998:systemd Journal Remote:/:/sbin/nologin
 systemd-journal-upload:x:999:999:systemd Journal Upload:/:/sbin/nologin
+alarm:x:1000:1000::/home/alarm:/bin/bash
