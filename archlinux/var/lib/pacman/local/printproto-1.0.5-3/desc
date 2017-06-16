@@ -1,0 +1,33 @@
+%NAME%
+printproto
+
+%VERSION%
+1.0.5-3
+
+%DESC%
+X11 print extension wire protocol
+
+%URL%
+http://xorg.freedesktop.org/
+
+%ARCH%
+any
+
+%BUILDDATE%
+1404394557
+
+%INSTALLDATE%
+1486827129
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu5@archlinuxarm.org>
+
+%SIZE%
+97280
+
+%LICENSE%
+custom
+
+%VALIDATION%
+none
+

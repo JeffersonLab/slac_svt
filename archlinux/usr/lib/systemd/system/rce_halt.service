@@ -1,0 +1,13 @@
+[Unit]
+Description=RCE Halt Script
+
+[Service]
+Type=oneshot
+ExecStart=/mnt/host/daq/rceData/rce_halt.sh
+RemainAfterExit=yes
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target
+
+

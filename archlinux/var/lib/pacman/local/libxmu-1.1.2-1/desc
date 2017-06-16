@@ -1,0 +1,37 @@
+%NAME%
+libxmu
+
+%VERSION%
+1.1.2-1
+
+%DESC%
+X11 miscellaneous micro-utility library
+
+%URL%
+http://xorg.freedesktop.org/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1379059101
+
+%INSTALLDATE%
+1486827129
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+odroid1@archlinuxarm.org>
+
+%SIZE%
+369664
+
+%LICENSE%
+custom
+
+%VALIDATION%
+none
+
+%DEPENDS%
+libxext
+libxt
+

@@ -1,0 +1,10 @@
+[Unit]
+Description=Run to halt RCEs.
+
+[Timer]
+OnActiveSec=1s
+Unit=rce_halt.service
+
+[Install]
+WantedBy=multi-user.target
+

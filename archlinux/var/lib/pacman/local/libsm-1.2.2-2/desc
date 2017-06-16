@@ -1,0 +1,37 @@
+%NAME%
+libsm
+
+%VERSION%
+1.2.2-2
+
+%DESC%
+X11 Session Management library
+
+%URL%
+http://xorg.freedesktop.org/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1382384194
+
+%INSTALLDATE%
+1486825612
+
+%PACKAGER%
+Kevin Mihelich <kevin@archlinuxarm.org>
+
+%SIZE%
+307200
+
+%LICENSE%
+custom
+
+%VALIDATION%
+none
+
+%DEPENDS%
+libice
+util-linux
+

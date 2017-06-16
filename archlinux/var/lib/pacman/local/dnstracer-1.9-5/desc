@@ -1,0 +1,33 @@
+%NAME%
+dnstracer
+
+%VERSION%
+1.9-5
+
+%DESC%
+Determines where a given DNS server gets its information from, and follows the chain of DNS servers
+
+%URL%
+http://www.mavetju.org/unix/dnstracer.php
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1404200856
+
+%INSTALLDATE%
+1486829031
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu5@archlinuxarm.org>
+
+%SIZE%
+60416
+
+%LICENSE%
+custom:BSD
+
+%VALIDATION%
+none
+

@@ -1,0 +1,37 @@
+%NAME%
+libxpm
+
+%VERSION%
+3.5.12-1
+
+%DESC%
+X11 pixmap library
+
+%URL%
+https://xorg.freedesktop.org/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1481832908
+
+%INSTALLDATE%
+1486825632
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu9@archlinuxarm.org>
+
+%SIZE%
+173056
+
+%LICENSE%
+custom
+
+%VALIDATION%
+none
+
+%DEPENDS%
+libxt
+libxext
+
