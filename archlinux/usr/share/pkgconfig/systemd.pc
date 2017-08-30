@@ -30,5 +30,5 @@ systemgidmax=999
 
 Name: systemd
 Description: systemd System and Service Manager
-URL: http://www.freedesktop.org/wiki/Software/systemd
-Version: 224
+URL: https://www.freedesktop.org/wiki/Software/systemd
+Version: 234

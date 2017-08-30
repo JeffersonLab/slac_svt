@@ -1,0 +1,36 @@
+%NAME%
+mkinitcpio-busybox
+
+%VERSION%
+1.26.1-1
+
+%DESC%
+Base initramfs tools
+
+%URL%
+http://www.busybox.net/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1498680510
+
+%INSTALLDATE%
+1495690744
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu9@archlinuxarm.org>
+
+%SIZE%
+338944
+
+%REASON%
+1
+
+%LICENSE%
+GPL
+
+%VALIDATION%
+sha256
+

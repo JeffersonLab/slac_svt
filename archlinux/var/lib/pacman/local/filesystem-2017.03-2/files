@@ -1,0 +1,122 @@
+%FILES%
+bin
+boot/
+dev/
+etc/
+etc/arch-release
+etc/crypttab
+etc/fstab
+etc/group
+etc/gshadow
+etc/host.conf
+etc/hosts
+etc/issue
+etc/ld.so.conf
+etc/ld.so.conf.d/
+etc/motd
+etc/mtab
+etc/nsswitch.conf
+etc/passwd
+etc/profile
+etc/profile.d/
+etc/profile.d/locale.sh
+etc/resolv.conf
+etc/securetty
+etc/shadow
+etc/shells
+etc/skel/
+home/
+lib
+mnt/
+opt/
+proc/
+root/
+run/
+sbin
+srv/
+srv/ftp/
+srv/http/
+sys/
+tmp/
+usr/
+usr/bin/
+usr/include/
+usr/lib/
+usr/lib/os-release
+usr/local/
+usr/local/bin/
+usr/local/etc/
+usr/local/games/
+usr/local/include/
+usr/local/lib/
+usr/local/man/
+usr/local/sbin/
+usr/local/share/
+usr/local/share/man
+usr/local/src/
+usr/sbin
+usr/share/
+usr/share/factory/
+usr/share/factory/etc/
+usr/share/factory/etc/crypttab
+usr/share/factory/etc/fstab
+usr/share/factory/etc/group
+usr/share/factory/etc/gshadow
+usr/share/factory/etc/host.conf
+usr/share/factory/etc/hosts
+usr/share/factory/etc/issue
+usr/share/factory/etc/ld.so.conf
+usr/share/factory/etc/motd
+usr/share/factory/etc/passwd
+usr/share/factory/etc/profile
+usr/share/factory/etc/resolv.conf
+usr/share/factory/etc/securetty
+usr/share/factory/etc/shadow
+usr/share/factory/etc/shells
+usr/share/man/
+usr/share/man/man1/
+usr/share/man/man2/
+usr/share/man/man3/
+usr/share/man/man4/
+usr/share/man/man5/
+usr/share/man/man6/
+usr/share/man/man7/
+usr/share/man/man7/archlinux.7.gz
+usr/share/man/man8/
+usr/share/misc/
+usr/src/
+var/
+var/cache/
+var/empty/
+var/games/
+var/lib/
+var/lib/misc/
+var/local/
+var/lock
+var/log/
+var/log/old/
+var/mail
+var/opt/
+var/run
+var/spool/
+var/spool/mail/
+var/tmp/
+
+%BACKUP%
+etc/fstab	693c97f2c9a519bb97a17008e92c2b74
+etc/crypttab	f0a5071f50d8864d2810c44e23eb00cc
+etc/group	76c80215d8dd395d3be4b8a711d585b6
+etc/hosts	7bc65f234dfb6abf24e7c3b03e86f4ff
+etc/ld.so.conf	6e488ffecc8ba142c0cf7e2d7aeb832e
+etc/passwd	cb1a751b05541d8eebaace316de0e809
+etc/shadow	c0c27476ee248355bf308c8502a8c860
+etc/gshadow	c08581d4f982be8806d3afa912a65203
+etc/resolv.conf	6f48288b6fcaf0065fcb7b0e525413e0
+etc/motd	d41d8cd98f00b204e9800998ecf8427e
+etc/nsswitch.conf	7b21f0f97f048988908bf93778bba65f
+etc/shells	22518e922891f9359f971f4f5b4e793c
+etc/host.conf	f28150d4c0b22a017be51b9f7f9977ed
+etc/securetty	4c4540eeb748bf1f71d631b8c1dcf0b3
+etc/profile	cfa3345c485c59e681ab39a44dc7ece1
+etc/issue	7813c481156f6b280a3ba91fc6236368
+

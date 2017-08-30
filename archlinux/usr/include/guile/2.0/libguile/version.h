@@ -29,7 +29,7 @@
 
 #define SCM_MAJOR_VERSION 2
 #define SCM_MINOR_VERSION 0
-#define SCM_MICRO_VERSION 11
+#define SCM_MICRO_VERSION 14
 #define SCM_EFFECTIVE_VERSION "2.0"
 
 SCM_API SCM scm_major_version (void);

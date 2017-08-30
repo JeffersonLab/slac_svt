@@ -1,42 +1,406 @@
-Fontconfig Developers Reference, Version 2.12.1
+Fontconfig Developers Reference, Version 2.12.4
 
-   Copyright © 2002 Keith Packard
+Keith Packard
 
-   Permission to use, copy, modify, distribute, and sell this
-   software and its documentation for any purpose is hereby
-   granted without fee, provided that the above copyright notice
-   appear in all copies and that both that copyright notice and
-   this permission notice appear in supporting documentation, and
-   that the name of the author(s) not be used in advertising or
-   publicity pertaining to distribution of the software without
-   specific, written prior permission. The authors make no
-   representations about the suitability of this software for any
-   purpose. It is provided "as is" without express or implied
-   warranty.
-
-   THE AUTHOR(S) DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
-   SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-   AND FITNESS, IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY
-   SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-   WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
-   IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
-   ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-   THIS SOFTWARE.
-           _______________________________________________
+   HP Cambridge Research Lab
+     __________________________________________________________
 
    Table of Contents
-   DESCRIPTION
-   FUNCTIONAL OVERVIEW
-   Datatypes
-   FUNCTIONS
+   1. DESCRIPTION
+   2. FUNCTIONAL OVERVIEW
 
-DESCRIPTION
+        2.1. FONT CONFIGURATION
+        2.2. FONT PROPERTIES
+
+   3. Datatypes
+
+        3.1. FcChar8, FcChar16, FcChar32, FcBool
+        3.2. FcMatrix
+        3.3. FcCharSet
+        3.4. FcLangSet
+        3.5. FcLangResult
+        3.6. FcType
+        3.7. FcValue
+        3.8. FcPattern
+        3.9. FcFontSet
+        3.10. FcStrSet, FcStrList
+        3.11. FcObjectSet
+        3.12. FcObjectType
+        3.13. FcConstant
+        3.14. FcBlanks
+        3.15. FcFileCache
+        3.16. FcConfig
+        3.17. FcSetName
+        3.18. FcResult
+        3.19. FcAtomic
+        3.20. FcCache
+
+   4. FUNCTIONS
+
+        4.1. Initialization
+
+              FcInitLoadConfig -- load configuration
+              FcInitLoadConfigAndFonts -- load configuration and
+                      font data
+
+              FcInit -- initialize fontconfig library
+              FcFini -- finalize fontconfig library
+              FcGetVersion -- library version number
+              FcInitReinitialize -- re-initialize library
+              FcInitBringUptoDate -- reload configuration files if
+                      needed
+
+        4.2. FcPattern
+
+              FcPatternCreate -- Create a pattern
+              FcPatternDuplicate -- Copy a pattern
+              FcPatternReference -- Increment pattern reference
+                      count
+
+              FcPatternDestroy -- Destroy a pattern
+              FcPatternEqual -- Compare patterns
+              FcPatternEqualSubset -- Compare portions of patterns
+              FcPatternFilter -- Filter the objects of pattern
+              FcPatternHash -- Compute a pattern hash value
+              FcPatternAdd -- Add a value to a pattern
+              FcPatternAddWeak -- Add a value to a pattern with
+                      weak binding
+
+              FcPatternAdd-Type -- Add a typed value to a pattern
+              FcPatternGet -- Return a value from a pattern
+              FcPatternGet-Type -- Return a typed value from a
+                      pattern
+
+              FcPatternBuild -- Create patterns from arguments
+              FcPatternDel -- Delete a property from a pattern
+              FcPatternRemove -- Remove one object of the
+                      specified type from the pattern
+
+              FcPatternPrint -- Print a pattern for debugging
+              FcDefaultSubstitute -- Perform default substitutions
+                      in a pattern
+
+              FcNameParse -- Parse a pattern string
+              FcNameUnparse -- Convert a pattern back into a
+                      string that can be parsed
+
+              FcPatternFormat -- Format a pattern into a string
+                      according to a format specifier
+
+        4.3. FcFontSet
+
+              FcFontSetCreate -- Create a font set
+              FcFontSetDestroy -- Destroy a font set
+              FcFontSetAdd -- Add to a font set
+              FcFontSetList -- List fonts from a set of font sets
+              FcFontSetMatch -- Return the best font from a set of
+                      font sets
+
+              FcFontSetPrint -- Print a set of patterns to stdout
+              FcFontSetSort -- Add to a font set
+              FcFontSetSortDestroy -- DEPRECATED destroy a font
+                      set
+
+        4.4. FcObjectSet
+
+              FcObjectSetCreate -- Create an object set
+              FcObjectSetAdd -- Add to an object set
+              FcObjectSetDestroy -- Destroy an object set
+              FcObjectSetBuild -- Build object set from args
+
+        4.5. FreeType specific functions
+
+              FcFreeTypeCharIndex -- map Unicode to glyph id
+              FcFreeTypeCharSet -- compute Unicode coverage
+              FcFreeTypeCharSetAndSpacing -- compute Unicode
+                      coverage and spacing type
+
+              FcFreeTypeQuery -- compute pattern from font file
+                      (and index)
+
+              FcFreeTypeQueryFace -- compute pattern from FT_Face
+
+        4.6. FcValue
+
+              FcValueDestroy -- Free a value
+              FcValueSave -- Copy a value
+              FcValuePrint -- Print a value to stdout
+              FcValueEqual -- Test two values for equality
+
+        4.7. FcCharSet
+
+              FcCharSetCreate -- Create an empty character set
+              FcCharSetDestroy -- Destroy a character set
+              FcCharSetAddChar -- Add a character to a charset
+              FcCharSetDelChar -- Add a character to a charset
+              FcCharSetCopy -- Copy a charset
+              FcCharSetEqual -- Compare two charsets
+              FcCharSetIntersect -- Intersect charsets
+              FcCharSetUnion -- Add charsets
+              FcCharSetSubtract -- Subtract charsets
+              FcCharSetMerge -- Merge charsets
+              FcCharSetHasChar -- Check a charset for a char
+              FcCharSetCount -- Count entries in a charset
+              FcCharSetIntersectCount -- Intersect and count
+                      charsets
+
+              FcCharSetSubtractCount -- Subtract and count
+                      charsets
+
+              FcCharSetIsSubset -- Test for charset inclusion
+              FcCharSetFirstPage -- Start enumerating charset
+                      contents
+
+              FcCharSetNextPage -- Continue enumerating charset
+                      contents
+
+              FcCharSetCoverage -- DEPRECATED return coverage for
+                      a Unicode page
+
+              FcCharSetNew -- DEPRECATED alias for FcCharSetCreate
+
+        4.8. FcLangSet
+
+              FcLangSetCreate -- create a langset object
+              FcLangSetDestroy -- destroy a langset object
+              FcLangSetCopy -- copy a langset object
+              FcLangSetAdd -- add a language to a langset
+              FcLangSetDel -- delete a language from a langset
+              FcLangSetUnion -- Add langsets
+              FcLangSetSubtract -- Subtract langsets
+              FcLangSetCompare -- compare language sets
+              FcLangSetContains -- check langset subset relation
+              FcLangSetEqual -- test for matching langsets
+              FcLangSetHash -- return a hash value for a langset
+              FcLangSetHasLang -- test langset for language
+                      support
+
+              FcGetDefaultLangs -- Get the default languages list
+              FcLangSetGetLangs -- get the list of languages in
+                      the langset
+
+              FcGetLangs -- Get list of languages
+              FcLangNormalize -- Normalize the language string
+              FcLangGetCharSet -- Get character map for a language
+
+        4.9. FcMatrix
+
+              FcMatrixInit -- initialize an FcMatrix structure
+              FcMatrixCopy -- Copy a matrix
+              FcMatrixEqual -- Compare two matrices
+              FcMatrixMultiply -- Multiply matrices
+              FcMatrixRotate -- Rotate a matrix
+              FcMatrixScale -- Scale a matrix
+              FcMatrixShear -- Shear a matrix
+
+        4.10. FcRange
+
+              FcRangeCopy -- Copy a range object
+              FcRangeCreateDouble -- create a range object for
+                      double
+
+              FcRangeCreateInteger -- create a range object for
+                      integer
+
+              FcRangeDestroy -- destroy a range object
+              FcRangeGetDouble -- Get the range in double
+
+        4.11. FcConfig
+
+              FcConfigCreate -- Create a configuration
+              FcConfigReference -- Increment config reference
+                      count
+
+              FcConfigDestroy -- Destroy a configuration
+              FcConfigSetCurrent -- Set configuration as default
+              FcConfigGetCurrent -- Return current configuration
+              FcConfigUptoDate -- Check timestamps on config files
+              FcConfigHome -- return the current home directory.
+              FcConfigEnableHome -- controls use of the home
+                      directory.
+
+              FcConfigBuildFonts -- Build font database
+              FcConfigGetConfigDirs -- Get config directories
+              FcConfigGetFontDirs -- Get font directories
+              FcConfigGetConfigFiles -- Get config files
+              FcConfigGetCache -- DEPRECATED used to return
+                      per-user cache filename
+
+              FcConfigGetCacheDirs -- return the list of
+                      directories searched for cache files
+
+              FcConfigGetFonts -- Get config font set
+              FcConfigGetBlanks -- Get config blanks
+              FcConfigGetRescanInterval -- Get config rescan
+                      interval
+
+              FcConfigSetRescanInterval -- Set config rescan
+                      interval
+
+              FcConfigAppFontAddFile -- Add font file to font
+                      database
+
+              FcConfigAppFontAddDir -- Add fonts from directory to
+                      font database
+
+              FcConfigAppFontClear -- Remove all app fonts from
+                      font database
+
+              FcConfigSubstituteWithPat -- Execute substitutions
+              FcConfigSubstitute -- Execute substitutions
+              FcFontMatch -- Return best font
+              FcFontSort -- Return list of matching fonts
+              FcFontRenderPrepare -- Prepare pattern for loading
+                      font file
+
+              FcFontList -- List fonts
+              FcConfigFilename -- Find a config file
+              FcConfigParseAndLoad -- load a configuration file
+              FcConfigGetSysRoot -- Obtain the system root
+                      directory
+
+              FcConfigSetSysRoot -- Set the system root directory
+
+        4.12. FcObjectType
+
+              FcNameRegisterObjectTypes -- Register object types
+              FcNameUnregisterObjectTypes -- Unregister object
+                      types
+
+              FcNameGetObjectType -- Lookup an object type
+
+        4.13. FcConstant
+
+              FcNameRegisterConstants -- Register symbolic
+                      constants
+
+              FcNameUnregisterConstants -- Unregister symbolic
+                      constants
+
+              FcNameGetConstant -- Lookup symbolic constant
+              FcNameConstant -- Get the value for a symbolic
+                      constant
+
+        4.14. FcWeight
+
+              FcWeightFromOpenType -- Convert from OpenType weight
+                      values to fontconfig ones
+
+              FcWeightToOpenType -- Convert from fontconfig weight
+                      values to OpenType ones
+
+        4.15. FcBlanks
+
+              FcBlanksCreate -- Create an FcBlanks
+              FcBlanksDestroy -- Destroy and FcBlanks
+              FcBlanksAdd -- Add a character to an FcBlanks
+              FcBlanksIsMember -- Query membership in an FcBlanks
+
+        4.16. FcAtomic
+
+              FcAtomicCreate -- create an FcAtomic object
+              FcAtomicLock -- lock a file
+              FcAtomicNewFile -- return new temporary file name
+              FcAtomicOrigFile -- return original file name
+              FcAtomicReplaceOrig -- replace original with new
+              FcAtomicDeleteNew -- delete new file
+              FcAtomicUnlock -- unlock a file
+              FcAtomicDestroy -- destroy an FcAtomic object
+
+        4.17. File and Directory routines
+
+              FcFileScan -- scan a font file
+              FcFileIsDir -- check whether a file is a directory
+              FcDirScan -- scan a font directory without caching
+                      it
+
+              FcDirSave -- DEPRECATED: formerly used to save a
+                      directory cache
+
+              FcDirCacheUnlink -- Remove all caches related to dir
+              FcDirCacheValid -- check directory cache
+              FcDirCacheLoad -- load a directory cache
+              FcDirCacheRescan -- Re-scan a directory cache
+              FcDirCacheRead -- read or construct a directory
+                      cache
+
+              FcDirCacheLoadFile -- load a cache file
+              FcDirCacheUnload -- unload a cache file
+
+        4.18. FcCache routines
+
+              FcCacheDir -- Return directory of cache
+              FcCacheCopySet -- Returns a copy of the fontset from
+                      cache
+
+              FcCacheSubdir -- Return the i'th subdirectory.
+              FcCacheNumSubdir -- Return the number of
+                      subdirectories in cache.
+
+              FcCacheNumFont -- Returns the number of fonts in
+                      cache.
+
+              FcDirCacheClean -- This tries to clean up the cache
+                      directory of cache_dir. This returns FcTrue
+                      if the operation is successfully complete.
+                      otherwise FcFalse.
+
+              FcCacheCreateTagFile -- Create CACHEDIR.TAG at cache
+                      directory.
+
+        4.19. FcStrSet and FcStrList
+
+              FcStrSetCreate -- create a string set
+              FcStrSetMember -- check set for membership
+              FcStrSetEqual -- check sets for equality
+              FcStrSetAdd -- add to a string set
+              FcStrSetAddFilename -- add a filename to a string
+                      set
+
+              FcStrSetDel -- delete from a string set
+              FcStrSetDestroy -- destroy a string set
+              FcStrListCreate -- create a string iterator
+              FcStrListFirst -- get first string in iteration
+              FcStrListNext -- get next string in iteration
+              FcStrListDone -- destroy a string iterator
+
+        4.20. String utilities
+
+              FcUtf8ToUcs4 -- convert UTF-8 to UCS4
+              FcUcs4ToUtf8 -- convert UCS4 to UTF-8
+              FcUtf8Len -- count UTF-8 encoded chars
+              FcUtf16ToUcs4 -- convert UTF-16 to UCS4
+              FcUtf16Len -- count UTF-16 encoded chars
+              FcIsLower -- check for lower case ASCII character
+              FcIsUpper -- check for upper case ASCII character
+              FcToLower -- convert upper case ASCII to lower case
+              FcStrCopy -- duplicate a string
+              FcStrDowncase -- create a lower case translation of
+                      a string
+
+              FcStrCopyFilename -- create a complete path from a
+                      filename
+
+              FcStrCmp -- compare UTF-8 strings
+              FcStrCmpIgnoreCase -- compare UTF-8 strings ignoring
+                      case
+
+              FcStrStr -- locate UTF-8 substring
+              FcStrStrIgnoreCase -- locate UTF-8 substring
+                      ignoring ASCII case
+
+              FcStrPlus -- concatenate two strings
+              FcStrFree -- free a string
+              FcStrDirname -- directory part of filename
+              FcStrBasename -- last component of filename
+
+1. DESCRIPTION
 
    Fontconfig is a library designed to provide system-wide font
    configuration, customization and application access.
      __________________________________________________________
 
-FUNCTIONAL OVERVIEW
+2. FUNCTIONAL OVERVIEW
 
    Fontconfig contains two essential modules, the configuration
    module which builds an internal configuration from XML files
@@ -44,7 +408,7 @@ FUNCTIONAL OVERVIEW
    the nearest matching font.
      __________________________________________________________
 
-FONT CONFIGURATION
+2.1. FONT CONFIGURATION
 
    The configuration module consists of the FcConfig datatype,
    libexpat and FcConfigParse which walks over an XML tree and
@@ -75,7 +439,7 @@ FONT CONFIGURATION
    font installation and customization.
      __________________________________________________________
 
-FONT PROPERTIES
+2.2. FONT PROPERTIES
 
    While font patterns may contain essentially any properties,
    there are some well known properties with associated types.
@@ -205,14 +569,14 @@ he font data
 t
      __________________________________________________________
 
-Datatypes
+3. Datatypes
 
    Fontconfig uses abstract data types to hide internal
    implementation details for most data structures. A few
    structures are exposed where appropriate.
      __________________________________________________________
 
-FcChar8, FcChar16, FcChar32, FcBool
+3.1. FcChar8, FcChar16, FcChar32, FcBool
 
    These are primitive data types; the FcChar* types hold
    precisely the number of bits stated (if supported by the C
@@ -220,7 +584,7 @@ FcChar8, FcChar16, FcChar32, FcBool
    symbols: FcFalse or FcTrue.
      __________________________________________________________
 
-FcMatrix
+3.2. FcMatrix
 
    An FcMatrix holds an affine transformation, usually used to
    reshape glyphs. A small set of matrix operations are provided
@@ -230,14 +594,14 @@ FcMatrix
         } FcMatrix;
      __________________________________________________________
 
-FcCharSet
+3.3. FcCharSet
 
    An FcCharSet is an abstract type that holds the set of encoded
    Unicode chars in a font. Operations to build and compare these
    sets are provided.
      __________________________________________________________
 
-FcLangSet
+3.4. FcLangSet
 
    An FcLangSet is an abstract type that holds the set of
    languages supported by a font. Operations to build and compare
@@ -249,7 +613,7 @@ FcLangSet
    languages, please submit them.
      __________________________________________________________
 
-FcLangResult
+3.5. FcLangResult
 
    An FcLangResult is an enumeration used to return the results of
    comparing two language strings or FcLangSet objects.
@@ -259,12 +623,12 @@ FcLangResult
    differ in language.
      __________________________________________________________
 
-FcType
+3.6. FcType
 
    Tags the kind of data stored in an FcValue.
      __________________________________________________________
 
-FcValue
+3.7. FcValue
 
    An FcValue object holds a single value with one of a number of
    different types. The 'type' tag indicates which member is
@@ -298,7 +662,7 @@ FcValue
         FcTypeLangSet   l               FcLangSet *
      __________________________________________________________
 
-FcPattern
+3.8. FcPattern
 
    holds a set of names with associated value lists; each name
    refers to a property of a font. FcPatterns are used as inputs
@@ -308,7 +672,7 @@ FcPattern
    doesn't demand that.
      __________________________________________________________
 
-FcFontSet
+3.9. FcFontSet
 
         typedef struct _FcFontSet {
                 int nfont;
@@ -324,7 +688,7 @@ FcFontSet
    array.
      __________________________________________________________
 
-FcStrSet, FcStrList
+3.10. FcStrSet, FcStrList
 
    FcStrSet holds a list of strings that can be appended to and
    enumerated. Its unique characteristic is that the enumeration
@@ -334,7 +698,7 @@ FcStrSet, FcStrList
    middle of enumeration.
      __________________________________________________________
 
-FcObjectSet
+3.11. FcObjectSet
 
         typedef struct _FcObjectSet {
                 int nobject;
@@ -347,7 +711,7 @@ FcObjectSet
    listing fonts.
      __________________________________________________________
 
-FcObjectType
+3.12. FcObjectType
 
         typedef struct _FcObjectType {
                 const char *object;
@@ -359,7 +723,7 @@ FcObjectType
    may contain the new elements.
      __________________________________________________________
 
-FcConstant
+3.13. FcConstant
 
         typedef struct _FcConstant {
             const FcChar8 *name;
@@ -372,14 +736,14 @@ FcConstant
    with value 'value'.
      __________________________________________________________
 
-FcBlanks
+3.14. FcBlanks
 
    holds a list of Unicode chars which are expected to be blank;
    unexpectedly blank chars are assumed to be invalid and are
    elided from the charset associated with the font.
      __________________________________________________________
 
-FcFileCache
+3.15. FcFileCache
 
    holds the per-user cache information for use while loading the
    font database. This is built automatically for the current
@@ -387,7 +751,7 @@ FcFileCache
    pass '0' when one is requested.
      __________________________________________________________
 
-FcConfig
+3.16. FcConfig
 
    holds a complete configuration of the library; there is one
    default configuration, other can be constructed from XML data
@@ -400,7 +764,7 @@ FcConfig
    the FcSetName enumerated values.
      __________________________________________________________
 
-FcSetName
+3.17. FcSetName
 
    Specifies one of the two sets of fonts available in a
    configuration; FcSetSystem for those fonts specified in the
@@ -408,7 +772,7 @@ FcSetName
    by the application.
      __________________________________________________________
 
-FcResult
+3.18. FcResult
 
    Used as a return type for functions manipulating FcPattern
    objects.
@@ -424,13 +788,13 @@ h
         FcResultOutOfMemory     malloc failed
      __________________________________________________________
 
-FcAtomic
+3.19. FcAtomic
 
    Used for locking access to configuration files. Provides a safe
    way to update configuration files.
      __________________________________________________________
 
-FcCache
+3.20. FcCache
 
    Holds information about the fonts contained in a single
    directory. Normal applications need not worry about this as
@@ -440,13 +804,13 @@ FcCache
    'fc-cache' program generally suffices for all of that.
      __________________________________________________________
 
-FUNCTIONS
+4. FUNCTIONS
 
    These are grouped by functionality, often using the main data
    type being manipulated.
      __________________________________________________________
 
-Initialization
+4.1. Initialization
 
    Table of Contents
    FcInitLoadConfig -- load configuration
@@ -590,7 +954,7 @@ Description
    FcInitReinitialize). Otherwise returns FcTrue.
      __________________________________________________________
 
-FcPattern
+4.2. FcPattern
 
    Table of Contents
    FcPatternCreate -- Create a pattern
@@ -1307,7 +1671,7 @@ Since
    version 2.9.0
      __________________________________________________________
 
-FcFontSet
+4.3. FcFontSet
 
    Table of Contents
    FcFontSetCreate -- Create a font set
@@ -1489,7 +1853,7 @@ Description
    FcFontSetDestroy directly instead.
      __________________________________________________________
 
-FcObjectSet
+4.4. FcObjectSet
 
    Table of Contents
    FcObjectSetCreate -- Create an object set
@@ -1578,7 +1942,7 @@ Description
    variable directly.
      __________________________________________________________
 
-FreeType specific functions
+4.5. FreeType specific functions
 
    Table of Contents
    FcFreeTypeCharIndex -- map Unicode to glyph id
@@ -1703,7 +2067,7 @@ Description
    sometimes FC_FAMILY).
      __________________________________________________________
 
-FcValue
+4.6. FcValue
 
    Table of Contents
    FcValueDestroy -- Free a value
@@ -1788,7 +2152,7 @@ Description
    be considered equal. Strings are compared ignoring case.
      __________________________________________________________
 
-FcCharSet
+4.7. FcCharSet
 
    Table of Contents
    FcCharSetCreate -- Create an empty character set
@@ -2174,7 +2538,7 @@ Description
    FcCharSetNew is a DEPRECATED alias for FcCharSetCreate.
      __________________________________________________________
 
-FcLangSet
+4.8. FcLangSet
 
    Table of Contents
    FcLangSetCreate -- create a langset object
@@ -2530,7 +2894,7 @@ Description
    Returns the FcCharMap for a language.
      __________________________________________________________
 
-FcMatrix
+4.9. FcMatrix
 
    Table of Contents
    FcMatrixInit -- initialize an FcMatrix structure
@@ -2670,7 +3034,7 @@ Description
   sv  1
      __________________________________________________________
 
-FcRange
+4.10. FcRange
 
    Table of Contents
    FcRangeCopy -- Copy a range object
@@ -2787,7 +3151,7 @@ Since
    version 2.11.91
      __________________________________________________________
 
-FcConfig
+4.11. FcConfig
 
    Table of Contents
    FcConfigCreate -- Create a configuration
@@ -3473,7 +3837,7 @@ Since
    version 2.10.92
      __________________________________________________________
 
-FcObjectType
+4.12. FcObjectType
 
    Table of Contents
    FcNameRegisterObjectTypes -- Register object types
@@ -3534,7 +3898,7 @@ Description
    Return the object type for the pattern element named object.
      __________________________________________________________
 
-FcConstant
+4.13. FcConstant
 
    Table of Contents
    FcNameRegisterConstants -- Register symbolic constants
@@ -3615,7 +3979,7 @@ Description
    present.
      __________________________________________________________
 
-FcWeight
+4.14. FcWeight
 
    Table of Contents
    FcWeightFromOpenType -- Convert from OpenType weight values to
@@ -3679,7 +4043,7 @@ Since
    version 2.11.91
      __________________________________________________________
 
-FcBlanks
+4.15. FcBlanks
 
    Table of Contents
    FcBlanksCreate -- Create an FcBlanks
@@ -3761,7 +4125,7 @@ Description
    indicated Unicode value.
      __________________________________________________________
 
-FcAtomic
+4.16. FcAtomic
 
    Table of Contents
    FcAtomicCreate -- create an FcAtomic object
@@ -3917,7 +4281,7 @@ Description
    Destroys atomic.
      __________________________________________________________
 
-File and Directory routines
+4.17. File and Directory routines
 
    Table of Contents
    FcFileScan -- scan a font file
@@ -4158,7 +4522,7 @@ Description
    it remain, all memory associated with the cache will be freed.
      __________________________________________________________
 
-FcCache routines
+4.18. FcCache routines
 
    Table of Contents
    FcCacheDir -- Return directory of cache
@@ -4308,7 +4672,7 @@ Since
    version 2.9.91
      __________________________________________________________
 
-FcStrSet and FcStrList
+4.19. FcStrSet and FcStrList
 
    Table of Contents
    FcStrSetCreate -- create a string set
@@ -4513,7 +4877,7 @@ Description
    Destroys the enumerator list.
      __________________________________________________________
 
-String utilities
+4.20. String utilities
 
    Table of Contents
    FcUtf8ToUcs4 -- convert UTF-8 to UCS4

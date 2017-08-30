@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="UP"
 TITLE="FcConfig"
 HREF="x102.html#AEN2718"><LINK
@@ -46,7 +46,7 @@ VALIGN="bottom"
 ><A
 HREF="fcfontmatch.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -60,7 +60,7 @@ VALIGN="bottom"
 ><A
 HREF="fcfontrenderprepare.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ></TABLE
@@ -94,53 +94,16 @@ CLASS="FUNCSYNOPSIS"
 ><A
 NAME="AEN3246"
 ></A
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="FUNCSYNOPSISINFO"
->#include &#60;fontconfig/fontconfig.h&#62;
+>#include &lt;fontconfig/fontconfig.h&gt;
 	</PRE
-></TD
-></TR
-></TABLE
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcFontSet * <TT
-CLASS="FUNCTION"
->FcFontSort</TT
-></CODE
->(FcConfig *<TT
-CLASS="PARAMETER"
-><I
->config</I
-></TT
->, FcPattern *<TT
-CLASS="PARAMETER"
-><I
->p</I
-></TT
->, FcBool <TT
-CLASS="PARAMETER"
-><I
->trim</I
-></TT
->, FcCharSet **<TT
-CLASS="PARAMETER"
-><I
->csp</I
-></TT
->, FcResult *<TT
-CLASS="PARAMETER"
-><I
->result</I
-></TT
->);</CODE
+>FcFontSet * FcFontSort</CODE
+>(FcConfig *config, FcPattern *p, FcBool trim, FcCharSet **csp, FcResult *result);</CODE
 ></P
 ><P
 ></P
@@ -154,59 +117,45 @@ NAME="AEN3261"
 ><H2
 >Description</H2
 ><P
->Returns the list of fonts sorted by closeness to <TT
+>Returns the list of fonts sorted by closeness to <CODE
 CLASS="PARAMETER"
-><I
->p</I
-></TT
->.  If <TT
+>p</CODE
+>.  If <CODE
 CLASS="PARAMETER"
-><I
->trim</I
-></TT
+>trim</CODE
 > is FcTrue,
 elements in the list which don't include Unicode coverage not provided by
 earlier elements in the list are elided.  The union of Unicode coverage of
-all of the fonts is returned in <TT
+all of the fonts is returned in <CODE
 CLASS="PARAMETER"
-><I
->csp</I
-></TT
->, if <TT
+>csp</CODE
+>, if <CODE
 CLASS="PARAMETER"
-><I
->csp</I
-></TT
+>csp</CODE
 > is not NULL.  This function
 should be called only after FcConfigSubstitute and FcDefaultSubstitute have
-been called for <TT
+been called for <CODE
 CLASS="PARAMETER"
-><I
->p</I
-></TT
+>p</CODE
 >; otherwise the results will not be correct.
     </P
 ><P
 >The returned FcFontSet references FcPattern structures which may be shared
 by the return value from multiple FcFontSort calls, applications must not
-modify these patterns.  Instead, they should be passed, along with <TT
+modify these patterns.  Instead, they should be passed, along with <CODE
 CLASS="PARAMETER"
-><I
->p</I
-></TT
+>p</CODE
 > to
-<TT
+<CODE
 CLASS="FUNCTION"
->FcFontRenderPrepare</TT
+>FcFontRenderPrepare</CODE
 > which combines them into a complete pattern.
     </P
 ><P
 >The FcFontSet returned by FcFontSort is destroyed by calling FcFontSetDestroy.
-If <TT
+If <CODE
 CLASS="PARAMETER"
-><I
->config</I
-></TT
+>config</CODE
 > is NULL, the current configuration is used.
 	    </P
 ></DIV
@@ -228,14 +177,14 @@ VALIGN="top"
 ><A
 HREF="fcfontmatch.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD
@@ -246,7 +195,7 @@ VALIGN="top"
 ><A
 HREF="fcfontrenderprepare.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ><TR

@@ -1,0 +1,36 @@
+%NAME%
+hwids
+
+%VERSION%
+20170715-1
+
+%DESC%
+hardware identification databases
+
+%URL%
+https://github.com/gentoo/hwids
+
+%ARCH%
+any
+
+%BUILDDATE%
+1502542726
+
+%INSTALLDATE%
+1495690582
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu6@archlinuxarm.org>
+
+%SIZE%
+1677312
+
+%REASON%
+1
+
+%LICENSE%
+GPL2
+
+%VALIDATION%
+sha256
+

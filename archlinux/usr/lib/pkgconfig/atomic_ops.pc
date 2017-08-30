@@ -5,6 +5,6 @@ includedir=${prefix}/include
 
 Name: The atomic_ops library
 Description: Atomic memory update operations portable implementation
-Version: 7.4.2
+Version: 7.4.6
 Libs: -L${libdir} -latomic_ops
 Cflags: -I${includedir}

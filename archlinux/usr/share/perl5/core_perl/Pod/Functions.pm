@@ -8,7 +8,7 @@ Pod::Functions - Group Perl's functions a la perlfunc.pod
 =head1 SYNOPSIS
 
     use Pod::Functions;
-    
+
     my @misc_ops = @{ $Kinds{ 'Misc' } };
     my $misc_dsc = $Type_Description{ 'Misc' };
 
@@ -54,7 +54,7 @@ L<perlfunc/"Perl Functions by Category"> section.
 
 =cut
 
-our $VERSION = '1.09';
+our $VERSION = '1.11';
 
 require Exporter;
 
@@ -207,7 +207,7 @@ glob	File	expand filenames using wildcards
 gmtime	Time	convert UNIX time into record or string using Greenwich time
 goto	Flow	create spaghetti code
 grep	LIST	locate elements in a list test true against a given criterion
-hex	Math	String	convert a string to a hexadecimal number
+hex	Math	String	convert a hexadecimal string to a number
 import	Modules	Namespace	patch a module's namespace into your own
 index	String	find a substring within a string
 int	Math	get the integer portion of a number
@@ -280,7 +280,7 @@ say	I/O	output a list to a filehandle, appending a newline
 scalar	Misc	force a scalar context
 seek	I/O	reposition file pointer for random-access I/O
 seekdir	I/O	reposition directory pointer
-select	I/O	reset default output or do I/O multiplexing
+select	File	I/O	reset default output or do I/O multiplexing
 semctl	SysV	SysV semaphore control operations
 semget	SysV	get set of SysV semaphores
 semop	SysV	SysV semaphore operations
@@ -312,7 +312,7 @@ sqrt	Math	square root function
 srand	Math	seed the random number generator
 stat	File	get a file's status information
 state	Namespace	declare and assign a persistent lexical variable
-study	Regexp	optimize input data for repeated searches
+study	Regexp	no-op, formerly optimized input data for repeated searches
 sub	Flow	declare a subroutine, possibly anonymously
 __SUB__	Flow	the current subroutine, or C<undef> if not in a subroutine
 substr	String	get or alter a portion of a string

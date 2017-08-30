@@ -2,7 +2,7 @@ package Encode::Alias;
 use strict;
 use warnings;
 no warnings 'redefine';
-our $VERSION = do { my @r = ( q$Revision: 2.19 $ =~ /\d+/g ); sprintf "%d." . "%02d" x $#r, @r };
+our $VERSION = do { my @r = ( q$Revision: 2.21 $ =~ /\d+/g ); sprintf "%d." . "%02d" x $#r, @r };
 use constant DEBUG => !!$ENV{PERL_ENCODE_DEBUG};
 
 use Exporter 'import';
@@ -79,8 +79,10 @@ sub find_alias {
 
 sub define_alias {
     while (@_) {
-        my ( $alias, $name ) = splice( @_, 0, 2 );
-        unshift( @Alias, $alias => $name );    # newer one has precedence
+        my $alias = shift;
+        my $name = shift;
+        unshift( @Alias, $alias => $name )    # newer one has precedence
+            if defined $alias;
         if ( ref($alias) ) {
 
             # clear %Alias cache to allow overrides
@@ -96,9 +98,13 @@ sub define_alias {
                 }
             }
         }
-        else {
+        elsif (defined $alias) {
             DEBUG and warn "delete \$Alias\{$alias\}";
             delete $Alias{$alias};
+        }
+        elsif (DEBUG) {
+            require Carp;
+            Carp::croak("undef \$alias");
         }
     }
 }
@@ -139,7 +145,7 @@ sub init_aliases {
     define_alias( qr/^UCS-?2-?LE$/i => '"UCS-2LE"' );
     define_alias(
         qr/^UCS-?2-?(BE)?$/i    => '"UCS-2BE"',
-        qr/^UCS-?4-?(BE|LE)?$/i => 'uc("UTF-32$1")',
+        qr/^UCS-?4-?(BE|LE|)?$/i => 'uc("UTF-32$1")',
         qr/^iso-10646-1$/i      => '"UCS-2BE"'
     );
     define_alias(

@@ -1,0 +1,36 @@
+%NAME%
+ethtool
+
+%VERSION%
+1:4.11-1
+
+%DESC%
+Utility for controlling network drivers and hardware
+
+%URL%
+https://www.kernel.org/pub/software/network/ethtool/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1496891926
+
+%INSTALLDATE%
+1495690618
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu6@archlinuxarm.org>
+
+%SIZE%
+297984
+
+%LICENSE%
+GPL
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+glibc
+

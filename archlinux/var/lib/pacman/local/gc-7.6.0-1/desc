@@ -1,0 +1,37 @@
+%NAME%
+gc
+
+%VERSION%
+7.6.0-1
+
+%DESC%
+A garbage collector for C and C++
+
+%URL%
+http://www.hboehm.info/gc/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1475240164
+
+%INSTALLDATE%
+1495690625
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu4@archlinuxarm.org>
+
+%SIZE%
+753664
+
+%LICENSE%
+GPL
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+gcc-libs
+libatomic_ops
+

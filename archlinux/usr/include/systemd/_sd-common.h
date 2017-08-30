@@ -1,5 +1,3 @@
-/*-*- Mode: C; c-basic-offset: 8; indent-tabs-mode: nil -*-*/
-
 #ifndef foosdcommonhfoo
 #define foosdcommonhfoo
 
@@ -24,8 +22,8 @@
 
 /* This is a private header; never even think of including this directly! */
 
-#if __INCLUDE_LEVEL__ <= 1
-#error "Do not include _sd-common.h directly; it is a private header."
+#if defined(__INCLUDE_LEVEL__) && __INCLUDE_LEVEL__ <= 1
+#  error "Do not include _sd-common.h directly; it is a private header."
 #endif
 
 #ifndef _sd_printf_
@@ -57,10 +55,10 @@
 #  ifdef __cplusplus
 #    define _SD_BEGIN_DECLARATIONS                              \
         extern "C" {                                            \
-        struct __useless_struct_to_allow_trailing_semicolon__
+        struct _sd_useless_struct_to_allow_trailing_semicolon_
 #  else
 #    define _SD_BEGIN_DECLARATIONS                              \
-        struct __useless_struct_to_allow_trailing_semicolon__
+        struct _sd_useless_struct_to_allow_trailing_semicolon_
 #  endif
 #endif
 
@@ -68,11 +66,18 @@
 #  ifdef __cplusplus
 #    define _SD_END_DECLARATIONS                                \
         }                                                       \
-        struct __useless_struct_to_allow_trailing_semicolon__
+        struct _sd_useless_cpp_struct_to_allow_trailing_semicolon_
 #  else
 #    define _SD_END_DECLARATIONS                                \
-        struct __useless_struct_to_allow_trailing_semicolon__
+        struct _sd_useless_struct_to_allow_trailing_semicolon_
 #  endif
 #endif
+
+#define _SD_DEFINE_POINTER_CLEANUP_FUNC(type, func)             \
+        static __inline__ void func##p(type **p) {              \
+                if (*p)                                         \
+                        func(*p);                               \
+        }                                                       \
+        struct _sd_useless_struct_to_allow_trailing_semicolon_
 
 #endif

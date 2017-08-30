@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="UP"
 TITLE="FcConfig"
 HREF="x102.html#AEN2718"><LINK
@@ -46,7 +46,7 @@ VALIGN="bottom"
 ><A
 HREF="fcconfigsetrescaninterval.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -60,7 +60,7 @@ VALIGN="bottom"
 ><A
 HREF="fcconfigappfontadddir.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ></TABLE
@@ -94,38 +94,16 @@ CLASS="FUNCSYNOPSIS"
 ><A
 NAME="AEN3100"
 ></A
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="FUNCSYNOPSISINFO"
->#include &#60;fontconfig/fontconfig.h&#62;
+>#include &lt;fontconfig/fontconfig.h&gt;
 	</PRE
-></TD
-></TR
-></TABLE
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcBool <TT
-CLASS="FUNCTION"
->FcConfigAppFontAddFile</TT
-></CODE
->(FcConfig *<TT
-CLASS="PARAMETER"
-><I
->config</I
-></TT
->, const FcChar8 *<TT
-CLASS="PARAMETER"
-><I
->file</I
-></TT
->);</CODE
+>FcBool FcConfigAppFontAddFile</CODE
+>(FcConfig *config, const FcChar8 *file);</CODE
 ></P
 ><P
 ></P
@@ -141,11 +119,9 @@ NAME="AEN3109"
 ><P
 >Adds an application-specific font to the configuration. Returns FcFalse
 if the fonts cannot be added (due to allocation failure or no fonts found).
-Otherwise returns FcTrue. If <TT
+Otherwise returns FcTrue. If <CODE
 CLASS="PARAMETER"
-><I
->config</I
-></TT
+>config</CODE
 > is NULL,
 the current configuration is used.
 	    </P
@@ -168,14 +144,14 @@ VALIGN="top"
 ><A
 HREF="fcconfigsetrescaninterval.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD
@@ -186,7 +162,7 @@ VALIGN="top"
 ><A
 HREF="fcconfigappfontadddir.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ><TR

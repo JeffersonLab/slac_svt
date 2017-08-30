@@ -1,0 +1,44 @@
+%NAME%
+gd
+
+%VERSION%
+2.2.4-2
+
+%DESC%
+Library for the dynamic creation of images by programmers
+
+%URL%
+http://www.libgd.org/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1493487789
+
+%INSTALLDATE%
+1495690941
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu9@archlinuxarm.org>
+
+%SIZE%
+579584
+
+%REASON%
+1
+
+%LICENSE%
+custom
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+fontconfig
+libxpm
+libwebp
+
+%OPTDEPENDS%
+perl: bdftogd script
+

@@ -85,6 +85,14 @@ struct reg_code_block {
     REGEXP *src_regex;
 };
 
+/* array of reg_code_block's plus header info */
+
+struct reg_code_blocks {
+    int refcnt; /* we may be pointed to from a regex and from the savestack */
+    int  count;    /* how many code blocks */
+    struct reg_code_block *cb; /* array of reg_code_block's */
+};
+
 
 /*
   The regexp/REGEXP struct, see L<perlreapi> for further documentation
@@ -102,6 +110,7 @@ struct reg_code_block {
 	const struct regexp_engine* engine; 				\
 	REGEXP *mother_re; /* what re is this a lightweight copy of? */	\
 	HV *paren_names;   /* Optional hash of paren names */		\
+        /*--------------------------------------------------------*/    \
 	/* Information about the match that the perl core uses to */	\
 	/* manage things */						\
 	U32 extflags;	/* Flags used both externally and internally */	\
@@ -116,12 +125,15 @@ struct reg_code_block {
 	U32 intflags;	/* Engine Specific Internal flags */		\
 	void *pprivate;	/* Data private to the regex engine which */	\
 			/* created this object. */			\
+        /*--------------------------------------------------------*/    \
 	/* Data about the last/current match. These are modified */	\
 	/* during matching */						\
 	U32 lastparen;			/* last open paren matched */	\
 	U32 lastcloseparen;		/* last close paren matched */	\
 	/* Array of offsets for (@-) and (@+) */			\
 	regexp_paren_pair *offs;					\
+        char **recurse_locinput; /* used to detect infinite recursion, XXX: move to internal */ \
+        /*--------------------------------------------------------*/    \
 	/* saved or original string so \digit works forever. */		\
 	char *subbeg;							\
 	SV_SAVED_COPY	/* If non-NULL, SV which is COW from original */\
@@ -130,11 +142,13 @@ struct reg_code_block {
 	SSize_t subcoffset; /* suboffset equiv, but in chars (for @-/@+) */ \
 	/* Information about the match that isn't often used */		\
         SSize_t maxlen;        /* mininum possible number of chars in string to match */\
+        /*--------------------------------------------------------*/    \
 	/* offset from wrapped to the start of precomp */		\
 	PERL_BITFIELD32 pre_prefix:4;					\
         /* original flags used to compile the pattern, may differ */    \
         /* from extflags in various ways */                             \
         PERL_BITFIELD32 compflags:9;                                    \
+        /*--------------------------------------------------------*/    \
 	CV *qr_anoncv	/* the anon sub wrapped round qr/(?{..})/ */
 
 typedef struct regexp {
@@ -168,7 +182,7 @@ typedef struct regexp_engine {
                         const U32 flags,
                        re_scream_pos_data *data);
     SV*     (*checkstr) (pTHX_ REGEXP * const rx);
-    void    (*free) (pTHX_ REGEXP * const rx);
+    void    (*rxfree) (pTHX_ REGEXP * const rx);
     void    (*numbered_buff_FETCH) (pTHX_ REGEXP * const rx, const I32 paren,
                                     SV * const sv);
     void    (*numbered_buff_STORE) (pTHX_ REGEXP * const rx, const I32 paren,
@@ -242,7 +256,7 @@ equivalent to the following snippet:
     if (SvTYPE(sv) == SVt_REGEXP)
         return (REGEXP*) sv;
 
-NULL will be returned if a REGEXP* is not found.
+C<NULL> will be returned if a REGEXP* is not found.
 
 =for apidoc Am|bool|SvRXOK|SV* sv
 
@@ -256,7 +270,7 @@ and check for NULL.
 */
 
 #define SvRX(sv)   (Perl_get_re_arg(aTHX_ sv))
-#define SvRXOK(sv) (Perl_get_re_arg(aTHX_ sv) ? TRUE : FALSE)
+#define SvRXOK(sv) cBOOL(Perl_get_re_arg(aTHX_ sv))
 
 
 /* Flags stored in regexp->extflags
@@ -272,25 +286,26 @@ and check for NULL.
 
 #include "op_reg_common.h"
 
-#define RXf_PMf_STD_PMMOD	(RXf_PMf_MULTILINE|RXf_PMf_SINGLELINE|RXf_PMf_FOLD|RXf_PMf_EXTENDED|RXf_PMf_NOCAPTURE)
+#define RXf_PMf_STD_PMMOD	(RXf_PMf_MULTILINE|RXf_PMf_SINGLELINE|RXf_PMf_FOLD|RXf_PMf_EXTENDED|RXf_PMf_EXTENDED_MORE|RXf_PMf_NOCAPTURE)
 
 #define CASE_STD_PMMOD_FLAGS_PARSE_SET(pmfl, x_count)                       \
     case IGNORE_PAT_MOD:    *(pmfl) |= RXf_PMf_FOLD;       break;           \
     case MULTILINE_PAT_MOD: *(pmfl) |= RXf_PMf_MULTILINE;  break;           \
     case SINGLE_PAT_MOD:    *(pmfl) |= RXf_PMf_SINGLELINE; break;           \
-    case XTENDED_PAT_MOD:   *(pmfl) |= RXf_PMf_EXTENDED; (x_count)++; break;\
+    case XTENDED_PAT_MOD:   if (x_count == 0) {                             \
+                                *(pmfl) |= RXf_PMf_EXTENDED;                \
+                                *(pmfl) &= ~RXf_PMf_EXTENDED_MORE;          \
+                            }                                               \
+                            else {                                          \
+                                *(pmfl) |= RXf_PMf_EXTENDED                 \
+                                          |RXf_PMf_EXTENDED_MORE;           \
+                            }                                               \
+                            (x_count)++; break;                             \
     case NOCAPTURE_PAT_MOD: *(pmfl) |= RXf_PMf_NOCAPTURE; break;
-
-#define STD_PMMOD_FLAGS_PARSE_X_WARN(x_count)                                   \
-    if (UNLIKELY((x_count) > 1)) {                                              \
-        Perl_ck_warner_d(aTHX_ packWARN2(WARN_DEPRECATED, WARN_REGEXP),         \
-                    "Having more than one /%c regexp modifier is deprecated",   \
-                    XTENDED_PAT_MOD);                                           \
-    }
 
 /* Note, includes charset ones, assumes 0 is the default for them */
 #define STD_PMMOD_FLAGS_CLEAR(pmfl)                        \
-    *(pmfl) &= ~(RXf_PMf_FOLD|RXf_PMf_MULTILINE|RXf_PMf_SINGLELINE|RXf_PMf_EXTENDED|RXf_PMf_CHARSET|RXf_PMf_NOCAPTURE)
+    *(pmfl) &= ~(RXf_PMf_FOLD|RXf_PMf_MULTILINE|RXf_PMf_SINGLELINE|RXf_PMf_EXTENDED|RXf_PMf_EXTENDED_MORE|RXf_PMf_CHARSET|RXf_PMf_NOCAPTURE)
 
 /* chars and strings used as regex pattern modifiers
  * Singular is a 'c'har, plural is a "string"
@@ -352,9 +367,8 @@ and check for NULL.
  */
 
 /*
-  Set in Perl_pmruntime if op_flags & OPf_SPECIAL, i.e. split. Will
-  be used by regex engines to check whether they should set
-  RXf_SKIPWHITE
+  Set in Perl_pmruntime for a split. Will be used by regex engines to
+  check whether they should set RXf_SKIPWHITE
 */
 #define RXf_SPLIT   RXf_PMf_SPLIT
 
@@ -657,7 +671,7 @@ typedef struct {
 /* structures for holding and saving the state maintained by regmatch() */
 
 #ifndef MAX_RECURSE_EVAL_NOCHANGE_DEPTH
-#define MAX_RECURSE_EVAL_NOCHANGE_DEPTH 1000
+#define MAX_RECURSE_EVAL_NOCHANGE_DEPTH 10
 #endif
 
 typedef I32 CHECKPOINT;
@@ -742,13 +756,14 @@ typedef struct regmatch_state {
 	struct {
 	    /* this first element must match u.yes */
 	    struct regmatch_state *prev_yes_state;
-	    struct regmatch_state *prev_eval;
 	    struct regmatch_state *prev_curlyx;
+            struct regmatch_state *prev_eval;
 	    REGEXP	*prev_rex;
 	    CHECKPOINT	cp;	/* remember current savestack indexes */
 	    CHECKPOINT	lastcp;
-	    U32        close_paren; /* which close bracket is our end */
+            U32         close_paren; /* which close bracket is our end (+1) */
 	    regnode	*B;	/* the node following us  */
+            char        *prev_recurse_locinput;
 	} eval;
 
 	struct {
@@ -832,6 +847,8 @@ typedef struct regmatch_state {
 
     } u;
 } regmatch_state;
+
+
 
 /* how many regmatch_state structs to allocate as a single slab.
  * We do it in 4K blocks for efficiency. The "3" is 2 for the next/prev

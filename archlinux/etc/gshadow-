@@ -8,7 +8,7 @@ disk:::root
 lp:::daemon
 mem:::
 kmem:::
-wheel:::root,alarm
+wheel:::root,alarm,hpsrun
 ftp:::
 mail:::
 uucp:::
@@ -43,3 +43,6 @@ systemd-resolve:::
 systemd-journal-remote:!!::
 systemd-journal-upload:!!::
 alarm:!::
+hpsrun:!::
+rpc:!::
+polkitd:!::

@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="UP"
 TITLE="FcPattern"
 HREF="x102.html#AEN241"><LINK
@@ -46,7 +46,7 @@ VALIGN="bottom"
 ><A
 HREF="fcpatternget-type.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -60,7 +60,7 @@ VALIGN="bottom"
 ><A
 HREF="fcpatterndel.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ></TABLE
@@ -94,83 +94,30 @@ CLASS="FUNCSYNOPSIS"
 ><A
 NAME="AEN733"
 ></A
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="FUNCSYNOPSISINFO"
->#include &#60;fontconfig/fontconfig.h&#62;
+>#include &lt;fontconfig/fontconfig.h&gt;
 	</PRE
-></TD
-></TR
-></TABLE
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcPattern * <TT
-CLASS="FUNCTION"
->FcPatternBuild</TT
-></CODE
->(FcPattern *<TT
-CLASS="PARAMETER"
-><I
->pattern</I
-></TT
->, ...<TT
-CLASS="PARAMETER"
-><I
-></I
-></TT
->);</CODE
+>FcPattern * FcPatternBuild</CODE
+>(FcPattern *pattern, ...);</CODE
 ></P
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcPattern * <TT
-CLASS="FUNCTION"
->FcPatternVaBuild</TT
-></CODE
->(FcPattern *<TT
-CLASS="PARAMETER"
-><I
->pattern</I
-></TT
->, va_list <TT
-CLASS="PARAMETER"
-><I
->va</I
-></TT
->);</CODE
+>FcPattern * FcPatternVaBuild</CODE
+>(FcPattern *pattern, va_list va);</CODE
 ></P
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->void <TT
-CLASS="FUNCTION"
->FcPatternVapBuild</TT
-></CODE
->(FcPattern *<TT
-CLASS="PARAMETER"
-><I
->result</I
-></TT
->, FcPattern *<TT
-CLASS="PARAMETER"
-><I
->pattern</I
-></TT
->, va_list <TT
-CLASS="PARAMETER"
-><I
->va</I
-></TT
->);</CODE
+>void FcPatternVapBuild</CODE
+>(FcPattern *result, FcPattern *pattern, va_list va);</CODE
 ></P
 ><P
 ></P
@@ -201,7 +148,7 @@ TYPE="1"
 ><LI
 ><P
 >Value, not an FcValue, but the raw type as passed to any of the
-FcPatternAdd&#60;type&#62; functions.  Must match the type of the second
+FcPatternAdd&lt;type&gt; functions.  Must match the type of the second
 argument.</P
 ></LI
 ></OL
@@ -210,26 +157,15 @@ argument.</P
 value need be passed for this.  The values are added to `pattern', if
 `pattern' is null, a new pattern is created.  In either case, the pattern is
 returned. Example</P
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="PROGRAMLISTING"
 >pattern = FcPatternBuild (0, FC_FAMILY, FcTypeString, "Times", (char *) 0);</PRE
-></TD
-></TR
-></TABLE
 ><P
 >FcPatternVaBuild is used when the arguments are already in the form of a
 varargs value. FcPatternVapBuild is a macro version of FcPatternVaBuild
-which returns its result directly in the <TT
+which returns its result directly in the <CODE
 CLASS="PARAMETER"
-><I
->result</I
-></TT
+>result</CODE
 >
 variable.
 	    </P
@@ -252,14 +188,14 @@ VALIGN="top"
 ><A
 HREF="fcpatternget-type.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD
@@ -270,7 +206,7 @@ VALIGN="top"
 ><A
 HREF="fcpatterndel.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ><TR

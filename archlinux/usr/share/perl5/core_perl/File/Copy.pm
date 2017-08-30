@@ -22,7 +22,7 @@ sub syscopy;
 sub cp;
 sub mv;
 
-$VERSION = '2.30';
+$VERSION = '2.32';
 
 require Exporter;
 @ISA = qw(Exporter);
@@ -479,6 +479,11 @@ from the input filespec, then all timestamps other than the
 revision date are propagated.  If this parameter is not supplied,
 it defaults to 0.
 
+C<rmscopy> is VMS specific and cannot be exported; it must be
+referenced by its full name, e.g.:
+
+  File::Copy::rmscopy($from, $to) or die $!;
+
 Like C<copy>, C<rmscopy> returns 1 on success.  If an error occurs,
 it sets C<$!>, deletes the output file, and returns 0.
 
@@ -488,6 +493,14 @@ it sets C<$!>, deletes the output file, and returns 0.
 
 All functions return 1 on success, 0 on failure.
 $! will be set if an error was encountered.
+
+=head1 NOTES
+
+Before calling copy() or move() on a filehandle, the caller should
+close or flush() the file to avoid writes being lost. Note that this
+is the case even for move(), because it may actually copy the file,
+depending on the OS-specific inplementation, and the underlying
+filesystem(s).
 
 =head1 AUTHOR
 

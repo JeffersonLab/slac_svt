@@ -1,0 +1,2 @@
+libdconfsettings.so: gsettings-backend
+libgsettingsgconfbackend.so: gsettings-backend

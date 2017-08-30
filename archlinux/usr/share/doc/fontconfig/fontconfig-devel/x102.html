@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="PREVIOUS"
 TITLE="Datatypes"
 HREF="x31.html"></HEAD
@@ -40,7 +40,7 @@ VALIGN="bottom"
 ><A
 HREF="x31.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -63,7 +63,7 @@ CLASS="SECT1"
 CLASS="SECT1"
 ><A
 NAME="AEN102"
->FUNCTIONS</A
+>4. FUNCTIONS</A
 ></H1
 ><P
 >These are grouped by functionality, often using the main data type being
@@ -75,7 +75,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN105"
->Initialization</A
+>4.1. Initialization</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -131,7 +131,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN241"
->FcPattern</A
+>4.2. FcPattern</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -258,7 +258,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN1031"
->FcFontSet</A
+>4.3. FcFontSet</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -320,7 +320,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN1242"
->FcObjectSet</A
+>4.4. FcObjectSet</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -363,7 +363,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN1344"
->FreeType specific functions</A
+>4.5. FreeType specific functions</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -411,7 +411,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN1463"
->FcValue</A
+>4.6. FcValue</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -445,9 +445,12 @@ HREF="fcvalueequal.html"
 ><P
 >FcValue is a structure containing a type tag and a union of all possible
 datatypes.  The tag is an enum of type 
-<I
+<SPAN
+CLASS="emphasis"
+><I
 CLASS="EMPHASIS"
 >FcType</I
+></SPAN
 >
 and is intended to provide a measure of run-time
 typechecking, although that depends on careful programming.
@@ -459,7 +462,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN1549"
->FcCharSet</A
+>4.7. FcCharSet</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -579,7 +582,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN2016"
->FcLangSet</A
+>4.8. FcLangSet</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -689,7 +692,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN2410"
->FcMatrix</A
+>4.9. FcMatrix</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -745,7 +748,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN2590"
->FcRange</A
+>4.10. FcRange</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -791,7 +794,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN2718"
->FcConfig</A
+>4.11. FcConfig</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -969,7 +972,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN3420"
->FcObjectType</A
+>4.12. FcObjectType</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -1006,7 +1009,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN3485"
->FcConstant</A
+>4.13. FcConstant</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -1047,7 +1050,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN3573"
->FcWeight</A
+>4.14. FcWeight</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -1078,7 +1081,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN3623"
->FcBlanks</A
+>4.15. FcBlanks</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -1123,7 +1126,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN3706"
->FcAtomic</A
+>4.16. FcAtomic</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -1186,7 +1189,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN3867"
->File and Directory routines</A
+>4.17. File and Directory routines</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -1219,11 +1222,9 @@ HREF="fcdirsave.html"
 ><A
 HREF="fcdircacheunlink.html"
 >FcDirCacheUnlink</A
->&nbsp;--&nbsp;Remove all caches related to <TT
+>&nbsp;--&nbsp;Remove all caches related to <CODE
 CLASS="PARAMETER"
-><I
->dir</I
-></TT
+>dir</CODE
 ></DT
 ><DT
 ><A
@@ -1268,7 +1269,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN4145"
->FcCache routines</A
+>4.18. FcCache routines</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -1281,61 +1282,49 @@ CLASS="TOC"
 ><A
 HREF="fccachedir.html"
 >FcCacheDir</A
->&nbsp;--&nbsp;Return directory of <TT
+>&nbsp;--&nbsp;Return directory of <CODE
 CLASS="PARAMETER"
-><I
->cache</I
-></TT
+>cache</CODE
 ></DT
 ><DT
 ><A
 HREF="fccachecopyset.html"
 >FcCacheCopySet</A
->&nbsp;--&nbsp;Returns a copy of the fontset from <TT
+>&nbsp;--&nbsp;Returns a copy of the fontset from <CODE
 CLASS="PARAMETER"
-><I
->cache</I
-></TT
+>cache</CODE
 ></DT
 ><DT
 ><A
 HREF="fccachesubdir.html"
 >FcCacheSubdir</A
->&nbsp;--&nbsp;Return the <TT
+>&nbsp;--&nbsp;Return the <CODE
 CLASS="PARAMETER"
-><I
->i</I
-></TT
+>i</CODE
 >'th subdirectory.</DT
 ><DT
 ><A
 HREF="fccachenumsubdir.html"
 >FcCacheNumSubdir</A
->&nbsp;--&nbsp;Return the number of subdirectories in <TT
+>&nbsp;--&nbsp;Return the number of subdirectories in <CODE
 CLASS="PARAMETER"
-><I
->cache</I
-></TT
+>cache</CODE
 >.</DT
 ><DT
 ><A
 HREF="fccachenumfont.html"
 >FcCacheNumFont</A
->&nbsp;--&nbsp;Returns the number of fonts in <TT
+>&nbsp;--&nbsp;Returns the number of fonts in <CODE
 CLASS="PARAMETER"
-><I
->cache</I
-></TT
+>cache</CODE
 >.</DT
 ><DT
 ><A
 HREF="fcdircacheclean.html"
 >FcDirCacheClean</A
->&nbsp;--&nbsp;This tries to clean up the cache directory of <TT
+>&nbsp;--&nbsp;This tries to clean up the cache directory of <CODE
 CLASS="PARAMETER"
-><I
->cache_dir</I
-></TT
+>cache_dir</CODE
 >.
 This returns FcTrue if the operation is successfully complete. otherwise FcFalse.</DT
 ><DT
@@ -1357,7 +1346,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN4302"
->FcStrSet and FcStrList</A
+>4.19. FcStrSet and FcStrList</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -1434,7 +1423,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN4543"
->String utilities</A
+>4.20. String utilities</A
 ></H2
 ><DIV
 CLASS="TOC"
@@ -1565,14 +1554,14 @@ VALIGN="top"
 ><A
 HREF="x31.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD

@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="PREVIOUS"
 TITLE="FUNCTIONAL OVERVIEW"
 HREF="x19.html"><LINK
@@ -43,7 +43,7 @@ VALIGN="bottom"
 ><A
 HREF="x19.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -57,7 +57,7 @@ VALIGN="bottom"
 ><A
 HREF="x102.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ></TABLE
@@ -70,7 +70,7 @@ CLASS="SECT1"
 CLASS="SECT1"
 ><A
 NAME="AEN31"
->Datatypes</A
+>3. Datatypes</A
 ></H1
 ><P
 >Fontconfig uses abstract data types to hide internal implementation details
@@ -82,7 +82,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN34"
->FcChar8, FcChar16, FcChar32, FcBool</A
+>3.1. FcChar8, FcChar16, FcChar32, FcBool</A
 ></H2
 ><P
 >These are primitive data types; the FcChar* types hold precisely the number
@@ -96,26 +96,17 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN37"
->FcMatrix</A
+>3.2. FcMatrix</A
 ></H2
 ><P
 >An FcMatrix holds an affine transformation, usually used to reshape glyphs.
 A small set of matrix operations are provided to manipulate these.
-    <TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
-><PRE
+    <PRE
 CLASS="PROGRAMLISTING"
 >        typedef struct _FcMatrix {
                 double xx, xy, yx, yy;
         } FcMatrix;
     </PRE
-></TD
-></TR
-></TABLE
 >
     </P
 ></DIV
@@ -125,7 +116,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN41"
->FcCharSet</A
+>3.3. FcCharSet</A
 ></H2
 ><P
 >An FcCharSet is an abstract type that holds the set of encoded Unicode chars
@@ -138,7 +129,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN44"
->FcLangSet</A
+>3.4. FcLangSet</A
 ></H2
 ><P
 >An FcLangSet is an abstract type that holds the set of languages supported
@@ -156,7 +147,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN47"
->FcLangResult</A
+>3.5. FcLangResult</A
 ></H2
 ><P
 >An FcLangResult is an enumeration used to return the results of comparing
@@ -172,7 +163,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN50"
->FcType</A
+>3.6. FcType</A
 ></H2
 ><P
 >Tags the kind of data stored in an FcValue.
@@ -184,18 +175,12 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN53"
->FcValue</A
+>3.7. FcValue</A
 ></H2
 ><P
 >An FcValue object holds a single value with one of a number of different
 types.  The 'type' tag indicates which member is valid.
-    <TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
-><PRE
+    <PRE
 CLASS="PROGRAMLISTING"
 >        typedef struct _FcValue {
                 FcType type;
@@ -211,17 +196,8 @@ CLASS="PROGRAMLISTING"
                 } u;
         } FcValue;
     </PRE
-></TD
-></TR
-></TABLE
 >
-    <TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
-><PRE
+    <PRE
 CLASS="PROGRAMLISTING"
 >                  FcValue Members
 
@@ -237,9 +213,6 @@ CLASS="PROGRAMLISTING"
 	FcTypeFTFace	f		void * (FT_Face)
 	FcTypeLangSet	l		FcLangSet *
     </PRE
-></TD
-></TR
-></TABLE
 >
     </P
 ></DIV
@@ -249,7 +222,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN58"
->FcPattern</A
+>3.8. FcPattern</A
 ></H2
 ><P
 >holds a set of names with associated value lists; each name refers to a
@@ -265,16 +238,10 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN61"
->FcFontSet</A
+>3.9. FcFontSet</A
 ></H2
 ><P
->    <TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
-><PRE
+>    <PRE
 CLASS="PROGRAMLISTING"
 >        typedef struct _FcFontSet {
                 int nfont;
@@ -282,9 +249,6 @@ CLASS="PROGRAMLISTING"
                 FcPattern **fonts;
         } FcFontSet;
     </PRE
-></TD
-></TR
-></TABLE
 >
 An FcFontSet contains a list of FcPatterns.  Internally fontconfig uses this
 data structure to hold sets of fonts.  Externally, fontconfig returns the
@@ -299,7 +263,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN65"
->FcStrSet, FcStrList</A
+>3.10. FcStrSet, FcStrList</A
 ></H2
 ><P
 >FcStrSet holds a list of strings that can be appended to and enumerated.
@@ -315,16 +279,10 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN68"
->FcObjectSet</A
+>3.11. FcObjectSet</A
 ></H2
 ><P
->      <TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
-><PRE
+>      <PRE
 CLASS="PROGRAMLISTING"
 >        typedef struct _FcObjectSet {
                 int nobject;
@@ -332,9 +290,6 @@ CLASS="PROGRAMLISTING"
                 const char **objects;
         } FcObjectSet;
       </PRE
-></TD
-></TR
-></TABLE
 >
 holds a set of names and is used to specify which fields from fonts are
 placed in the the list of returned patterns when listing fonts.
@@ -346,25 +301,16 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN72"
->FcObjectType</A
+>3.12. FcObjectType</A
 ></H2
 ><P
->      <TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
-><PRE
+>      <PRE
 CLASS="PROGRAMLISTING"
 >        typedef struct _FcObjectType {
                 const char *object;
                 FcType type;
         } FcObjectType;
       </PRE
-></TD
-></TR
-></TABLE
 >
 marks the type of a pattern element generated when parsing font names.
 Applications can add new object types so that font names may contain the new
@@ -377,16 +323,10 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN76"
->FcConstant</A
+>3.13. FcConstant</A
 ></H2
 ><P
->      <TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
-><PRE
+>      <PRE
 CLASS="PROGRAMLISTING"
 >        typedef struct _FcConstant {
             const FcChar8 *name;
@@ -394,9 +334,6 @@ CLASS="PROGRAMLISTING"
             int value;
         } FcConstant;
       </PRE
-></TD
-></TR
-></TABLE
 >
 Provides for symbolic constants for new pattern elements.  When 'name' is
 seen in a font name, an 'object' element is created with value 'value'.
@@ -408,7 +345,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN80"
->FcBlanks</A
+>3.14. FcBlanks</A
 ></H2
 ><P
 >holds a list of Unicode chars which are expected to be blank; unexpectedly
@@ -422,7 +359,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN83"
->FcFileCache</A
+>3.15. FcFileCache</A
 ></H2
 ><P
 >holds the per-user cache information for use while loading the font
@@ -436,7 +373,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN86"
->FcConfig</A
+>3.16. FcConfig</A
 ></H2
 ><P
 >holds a complete configuration of the library; there is one default
@@ -455,7 +392,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN89"
->FcSetName</A
+>3.17. FcSetName</A
 ></H2
 ><P
 >Specifies one of the two sets of fonts available in a configuration;
@@ -469,17 +406,11 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN92"
->FcResult</A
+>3.18. FcResult</A
 ></H2
 ><P
 >Used as a return type for functions manipulating FcPattern objects.
-    <TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
-><PRE
+    <PRE
 CLASS="PROGRAMLISTING"
 >      FcResult Values
         Result Code             Meaning
@@ -491,9 +422,6 @@ CLASS="PROGRAMLISTING"
                                 than specified
         FcResultOutOfMemory     malloc failed
     </PRE
-></TD
-></TR
-></TABLE
 >
     </P
 ></DIV
@@ -503,7 +431,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN96"
->FcAtomic</A
+>3.19. FcAtomic</A
 ></H2
 ><P
 >Used for locking access to configuration files.  Provides a safe way to update
@@ -516,7 +444,7 @@ CLASS="SECT2"
 CLASS="SECT2"
 ><A
 NAME="AEN99"
->FcCache</A
+>3.20. FcCache</A
 ></H2
 ><P
 >Holds information about the fonts contained in a single directory. Normal
@@ -545,14 +473,14 @@ VALIGN="top"
 ><A
 HREF="x19.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD
@@ -563,7 +491,7 @@ VALIGN="top"
 ><A
 HREF="x102.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ><TR

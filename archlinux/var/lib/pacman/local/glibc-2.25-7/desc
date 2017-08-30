@@ -1,0 +1,45 @@
+%NAME%
+glibc
+
+%VERSION%
+2.25-7
+
+%DESC%
+GNU C Library
+
+%URL%
+http://www.gnu.org/software/libc
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1500040217
+
+%INSTALLDATE%
+1495690465
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu0@archlinuxarm.org>
+
+%SIZE%
+32970752
+
+%GROUPS%
+base
+
+%LICENSE%
+GPL
+LGPL
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+linux-api-headers>=4.10
+tzdata
+filesystem
+
+%OPTDEPENDS%
+gd: for memusagestat
+

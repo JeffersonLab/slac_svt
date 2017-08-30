@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>p11-kit: PIN Callbacks</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<title>PIN Callbacks: p11-kit</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="p11-kit">
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="p11-kit-URIs.html" title="URIs">
 <link rel="next" href="p11-kit-Utilities.html" title="Utilities">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -33,7 +33,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="p11-kit-PIN-Callbacks.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -147,7 +147,7 @@
 </div>
 <div class="refsect1">
 <a name="p11-kit-PIN-Callbacks.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -185,7 +185,7 @@ value to <a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-register-c
 called for every 'pin-source' attribute request for which no callback has been
 directly registered.</p>
 <p>To request a PIN for a given 'pin-source' attribute, use the
-<a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-request" title="p11_kit_pin_request ()"><code class="function">p11_kit_pin_request()</code></a> function. If this function returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> then either
+<a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-request" title="p11_kit_pin_request ()"><code class="function">p11_kit_pin_request()</code></a> function. If this function returns <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> then either
 no callbacks were registered or none of them could handle the request.</p>
 <p>If multiple callbacks are registered for the same PIN source, then they are
 called in last-registered-first-called order. They are called in turn until
@@ -223,7 +223,7 @@ attribute</p>
 <span class="cbracket">}</span>
 
 <span class="function"><a href="p11-kit-PIN-Callbacks.html#p11-kit-pin-register-callback">p11_kit_pin_register_callback</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"my-application"</span><span class="symbol">,</span><span class="normal"> my_application_pin_callback</span><span class="symbol">,</span>
-<span class="normal">                               <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span></pre></td>
+<span class="normal">                               <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -245,8 +245,8 @@ usually used from within registered PIN callbacks.</p>
 or encodings are not considered. A copy of the <em class="parameter"><code>value</code></em>
  will be made.</p>
 <div class="refsect3">
-<a name="id-1.7.4.6.2.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-new.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -268,10 +268,9 @@ or encodings are not considered. A copy of the <em class="parameter"><code>value
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.4.6.2.7"></a><h4>Returns</h4>
+<a name="p11-kit-pin-new.returns"></a><h4>Returns</h4>
 <p> The newly allocated P11KitPin, which should be freed with
 <a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-unref" title="p11_kit_pin_unref ()"><code class="function">p11_kit_pin_unref()</code></a> when no longer needed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -309,8 +308,8 @@ caller to use a buffer as a PIN without copying it.</p>
 </div>
 
 <div class="refsect3">
-<a name="id-1.7.4.6.3.8"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-new-for-buffer.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -330,17 +329,16 @@ caller to use a buffer as a PIN without copying it.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>destroy</p></td>
-<td class="parameter_description"><p>if not <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then called when PIN is destroyed.</p></td>
+<td class="parameter_description"><p>if not <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then called when PIN is destroyed.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.4.6.3.9"></a><h4>Returns</h4>
+<a name="p11-kit-pin-new-for-buffer.returns"></a><h4>Returns</h4>
 <p> The newly allocated P11KitPin, which should be freed with
 <a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-unref" title="p11_kit_pin_unref ()"><code class="function">p11_kit_pin_unref()</code></a> when no longer needed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -355,8 +353,8 @@ PIN callbacks.</p>
 String encoding is not considered. A copy of the <em class="parameter"><code>value</code></em>
  will be made.</p>
 <div class="refsect3">
-<a name="id-1.7.4.6.4.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-new-for-string.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -370,10 +368,9 @@ String encoding is not considered. A copy of the <em class="parameter"><code>val
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.4.6.4.7"></a><h4>Returns</h4>
+<a name="p11-kit-pin-new-for-string.returns"></a><h4>Returns</h4>
 <p> The newly allocated P11KitPin, which should be freed with
 <a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-unref" title="p11_kit_pin_unref ()"><code class="function">p11_kit_pin_unref()</code></a> when no longer needed.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -389,8 +386,8 @@ length of the value.</p>
 It remains valid as long as a reference to the PIN is held. The PIN value
 will not contain an extra null-terminator character.</p>
 <div class="refsect3">
-<a name="id-1.7.4.6.5.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-get-value.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -411,9 +408,8 @@ will not contain an extra null-terminator character.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.4.6.5.7"></a><h4>Returns</h4>
+<a name="p11-kit-pin-get-value.returns"></a><h4>Returns</h4>
 <p> the value for the PIN.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -423,8 +419,8 @@ will not contain an extra null-terminator character.</p>
 p11_kit_pin_get_length (<em class="parameter"><code><a class="link" href="p11-kit-PIN-Callbacks.html#P11KitPin" title="P11KitPin"><span class="type">P11KitPin</span></a> *pin</code></em>);</pre>
 <p>Get the length of the PIN value from a P11KitPin.</p>
 <div class="refsect3">
-<a name="id-1.7.4.6.6.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-get-length.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -438,9 +434,8 @@ p11_kit_pin_get_length (<em class="parameter"><code><a class="link" href="p11-ki
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.4.6.6.6"></a><h4>Returns</h4>
+<a name="p11-kit-pin-get-length.returns"></a><h4>Returns</h4>
 <p> the length of the PIN value.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -452,8 +447,8 @@ p11_kit_pin_ref (<em class="parameter"><code><a class="link" href="p11-kit-PIN-C
 to <a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-unref" title="p11_kit_pin_unref ()"><code class="function">p11_kit_pin_unref()</code></a>. As long as at least one reference is held, the PIN
 will remain valid and in memory.</p>
 <div class="refsect3">
-<a name="id-1.7.4.6.7.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-ref.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -467,10 +462,9 @@ will remain valid and in memory.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.4.6.7.6"></a><h4>Returns</h4>
+<a name="p11-kit-pin-ref.returns"></a><h4>Returns</h4>
 <p> the <em class="parameter"><code>pin</code></em>
 pointer, for convenience sake.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -481,8 +475,8 @@ p11_kit_pin_unref (<em class="parameter"><code><a class="link" href="p11-kit-PIN
 <p>Remove a reference from a P11KitPin. When all references have been removed
 then the PIN will be freed and will no longer be in memory.</p>
 <div class="refsect3">
-<a name="id-1.7.4.6.8.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-unref.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -513,8 +507,8 @@ been specifically registered.</p>
  value, then
 the last registered callback will be the first to be called.</p>
 <div class="refsect3">
-<a name="id-1.7.4.6.9.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-register-callback.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -547,9 +541,8 @@ the callback is unregistered.</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.4.6.9.7"></a><h4>Returns</h4>
+<a name="p11-kit-pin-register-callback.returns"></a><h4>Returns</h4>
 <p> Returns negative if registering fails.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -564,8 +557,8 @@ p11_kit_pin_unregister_callback (<em class="parameter"><code>const <span class="
 callback matches the given arguments, then only one of those will be
 removed.</p>
 <div class="refsect3">
-<a name="id-1.7.4.6.10.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-unregister-callback.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -605,13 +598,13 @@ removed.</p>
 <a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-request" title="p11_kit_pin_request ()"><code class="function">p11_kit_pin_request()</code></a>. The <em class="parameter"><code>callback_data</code></em>
  argument was the one passed to
 <a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-register-callback" title="p11_kit_pin_register_callback ()"><code class="function">p11_kit_pin_register_callback()</code></a> when registering this callback.</p>
-<p>The function should return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if it could not provide a PIN, either
+<p>The function should return <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if it could not provide a PIN, either
 because of an error or a user cancellation.</p>
 <p>If a PIN is returned, it will be unreferenced by the caller. So it should be
 either newly allocated, or referenced before returning.</p>
 <div class="refsect3">
-<a name="id-1.7.4.6.11.8"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-callback.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -625,7 +618,7 @@ either newly allocated, or referenced before returning.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>pin_uri</p></td>
-<td class="parameter_description"><p>a PKCS#11 URI that the PIN is for, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
+<td class="parameter_description"><p>a PKCS#11 URI that the PIN is for, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -647,9 +640,8 @@ either newly allocated, or referenced before returning.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.4.6.11.9"></a><h4>Returns</h4>
-<p> A PIN or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p>
-<p></p>
+<a name="p11-kit-pin-callback.returns"></a><h4>Returns</h4>
+<p> A PIN or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p>
 </div>
 </div>
 <hr>
@@ -662,7 +654,7 @@ p11_kit_pin_request (<em class="parameter"><code>const <span class="type">char</
                      <em class="parameter"><code><a class="link" href="p11-kit-PIN-Callbacks.html#P11KitPinFlags" title="enum P11KitPinFlags"><span class="type">P11KitPinFlags</span></a> pin_flags</code></em>);</pre>
 <p>Request a PIN for a given 'pin-source' attribute. The result depends on the
 registered callbacks.</p>
-<p>If not <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then the <em class="parameter"><code>pin_uri</code></em>
+<p>If not <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then the <em class="parameter"><code>pin_uri</code></em>
  attribute should point to the thing that the
 PIN is being requested for. In most use cases this should be a PKCS#11 URI
 pointing to a token.</p>
@@ -681,8 +673,8 @@ callback has been registered specifically for <em class="parameter"><code>pin_so
 .</p>
 <p>The PIN returned should be released with <a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-unref" title="p11_kit_pin_unref ()"><code class="function">p11_kit_pin_unref()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.7.4.6.12.10"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-request.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -696,12 +688,12 @@ callback has been registered specifically for <em class="parameter"><code>pin_so
 </tr>
 <tr>
 <td class="parameter_name"><p>pin_uri</p></td>
-<td class="parameter_description"><p>a PKCS#11 URI that the PIN is being requested for, optionally <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
+<td class="parameter_description"><p>a PKCS#11 URI that the PIN is being requested for, optionally <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>pin_description</p></td>
-<td class="parameter_description"><p>a description of what the PIN is for, must not be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
+<td class="parameter_description"><p>a description of what the PIN is for, must not be <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -713,10 +705,9 @@ callback has been registered specifically for <em class="parameter"><code>pin_so
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.4.6.12.11"></a><h4>Returns</h4>
-<p> the PIN which should be released with <a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-unref" title="p11_kit_pin_unref ()"><code class="function">p11_kit_pin_unref()</code></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<a name="p11-kit-pin-request.returns"></a><h4>Returns</h4>
+<p> the PIN which should be released with <a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-unref" title="p11_kit_pin_unref ()"><code class="function">p11_kit_pin_unref()</code></a>, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 if no callback was registered or could proivde a PIN</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -727,8 +718,8 @@ if no callback was registered or could proivde a PIN</p>
 <p>A function called to free or cleanup <em class="parameter"><code>data</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.7.4.6.13.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-destroy-func.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -756,7 +747,7 @@ a file with that name. This can be used to enable the normal PKCS#11 URI
 behavior described in the RFC.</p>
 <p>If <em class="parameter"><code>pin_flags</code></em>
  contains the <a class="link" href="p11-kit-PIN-Callbacks.html#P11-KIT-PIN-FLAGS-RETRY:CAPS"><code class="literal">P11_KIT_PIN_FLAGS_RETRY</code></a> flag, then this
-callback will always return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. This is to prevent endless loops
+callback will always return <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. This is to prevent endless loops
 where an application is expecting to interact with a prompter, but
 instead is interacting with this callback reading a file over and over.</p>
 <p>This callback fails on files larger than 4 Kilobytes.</p>
@@ -770,15 +761,15 @@ in use. To register it, use code like the following:</p>
         <td class="listing_lines" align="right"><pre>1
 2</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="function"><a href="p11-kit-PIN-Callbacks.html#p11-kit-pin-register-callback">p11_kit_pin_register_callback</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="p11-kit-PIN-Callbacks.html#P11-KIT-PIN-FALLBACK:CAPS">P11_KIT_PIN_FALLBACK</a></span><span class="symbol">,</span><span class="normal"> <a href="p11-kit-PIN-Callbacks.html#p11-kit-pin-file-callback">p11_kit_pin_file_callback</a></span><span class="symbol">,</span>
-<span class="normal">                               <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span></pre></td>
+<span class="normal">                               <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
 <div class="refsect3">
-<a name="id-1.7.4.6.14.9"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-pin-file-callback.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -792,7 +783,7 @@ in use. To register it, use code like the following:</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>pin_uri</p></td>
-<td class="parameter_description"><p>a PKCS#11 URI that the PIN is for, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
+<td class="parameter_description"><p>a PKCS#11 URI that the PIN is for, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -807,17 +798,16 @@ in use. To register it, use code like the following:</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>callback_data</p></td>
-<td class="parameter_description"><p>unused, should be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
+<td class="parameter_description"><p>unused, should be <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.4.6.14.10"></a><h4>Returns</h4>
-<p> a referenced PIN with the file contents, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the file
+<a name="p11-kit-pin-file-callback.returns"></a><h4>Returns</h4>
+<p> a referenced PIN with the file contents, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the file
 could not be read</p>
-<p></p>
 </div>
 </div>
 </div>
@@ -835,8 +825,8 @@ visible in this structure. Use the various accessor functions.</p>
 <a name="P11KitPinFlags"></a><h3>enum P11KitPinFlags</h3>
 <p>Flags that are passed to <a class="link" href="p11-kit-PIN-Callbacks.html#p11-kit-pin-request" title="p11_kit_pin_request ()"><code class="function">p11_kit_pin_request()</code></a> and registered callbacks.</p>
 <div class="refsect3">
-<a name="id-1.7.4.7.3.4"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="P11KitPinFlags.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
 <col class="enum_members_description">
@@ -900,7 +890,6 @@ This callback will be called if no other callback is registered for a 'pin-sourc
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.25.1</div>
 </body>
 </html>

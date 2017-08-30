@@ -60,7 +60,7 @@ with two additions:
 'e' may be specified multiple times. 'replacement' is interpreted
 as a double quoted string unless a single-quote (C<'>) is the delimiter.
 
-C<?pattern?> is like C<m/pattern/> but matches only once. No alternate
+C<m?pattern?> is like C<m/pattern/> but matches only once. No alternate
 delimiters can be used.  Must be reset with reset().
 
 =head2 SYNTAX
@@ -144,8 +144,6 @@ and L<perlunicode> for details.
    \V      A non vertical whitespace
    \R      A generic newline           (?>\v|\x0D\x0A)
 
-   \C      Match a byte (with Unicode, '.' matches a character)
-           (Deprecated.)
    \pP     Match P-named (Unicode) property
    \p{...} Match Unicode property with name longer than 1 character
    \PP     Match non-P
@@ -159,7 +157,7 @@ POSIX character classes and their Unicode and Perl equivalents:
  [[:...:]]  \p{...}        \p{...}   sequence    Description
 
  -----------------------------------------------------------------------
- alnum   PosixAlnum       XPosixAlnum            Alpha plus Digit
+ alnum   PosixAlnum       XPosixAlnum            'alpha' plus 'digit'
  alpha   PosixAlpha       XPosixAlpha            Alphabetic characters
  ascii   ASCII                                   Any ASCII character
  blank   PosixBlank       XPosixBlank   \h       Horizontal whitespace;
@@ -169,19 +167,18 @@ POSIX character classes and their Unicode and Perl equivalents:
                                                    extension)
  cntrl   PosixCntrl       XPosixCntrl            Control characters
  digit   PosixDigit       XPosixDigit   \d       Decimal digits
- graph   PosixGraph       XPosixGraph            Alnum plus Punct
+ graph   PosixGraph       XPosixGraph            'alnum' plus 'punct'
  lower   PosixLower       XPosixLower            Lowercase characters
- print   PosixPrint       XPosixPrint            Graph plus Print, but
-                                                   not any Cntrls
+ print   PosixPrint       XPosixPrint            'graph' plus 'space',
+                                                   but not any Controls
  punct   PosixPunct       XPosixPunct            Punctuation and Symbols
                                                    in ASCII-range; just
                                                    punct outside it
- space   PosixSpace       XPosixSpace            [\s\cK]
-         PerlSpace        XPerlSpace    \s       Perl's whitespace def'n
+ space   PosixSpace       XPosixSpace   \s       Whitespace
  upper   PosixUpper       XPosixUpper            Uppercase characters
- word    PosixWord        XPosixWord    \w       Alnum + Unicode marks +
-                                                   connectors, like '_'
-                                                   (Perl extension)
+ word    PosixWord        XPosixWord    \w       'alnum' + Unicode marks
+                                                    + connectors, like
+                                                    '_' (Perl extension)
  xdigit  ASCII_Hex_Digit  XPosixDigit            Hexadecimal digit,
                                                     ASCII-range is
                                                     [0-9A-Fa-f]
@@ -255,10 +252,10 @@ There is no quantifier C<{,n}>. That's interpreted as a literal string.
    (?P>name)         Recurse into a named subpattern (python syntax)
    (?(cond)yes|no)
    (?(cond)yes)      Conditional expression, where "cond" can be:
-                     (?=pat)   look-ahead
-                     (?!pat)   negative look-ahead
-                     (?<=pat)  look-behind
-                     (?<!pat)  negative look-behind
+                     (?=pat)   lookahead
+                     (?!pat)   negative lookahead
+                     (?<=pat)  lookbehind
+                     (?<!pat)  negative lookbehind
                      (N)       subpattern N has matched something
                      (<name>)  named subpattern has matched something
                      ('name')  named subpattern has matched something
@@ -311,7 +308,7 @@ Captured groups are numbered according to their I<opening> paren.
 
    pos         Return or set current match position
    quotemeta   Quote metacharacters
-   reset       Reset ?pattern? status
+   reset       Reset m?pattern? status
    study       Analyze string for optimizing matching
 
    split       Use a regex to split a string into parts
@@ -396,7 +393,7 @@ for details on regexes and internationalisation.
 =item *
 
 I<Mastering Regular Expressions> by Jeffrey Friedl
-(F<http://oreilly.com/catalog/9780596528126/>) for a thorough grounding and
+(L<http://oreilly.com/catalog/9780596528126/>) for a thorough grounding and
 reference on the topic.
 
 =back

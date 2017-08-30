@@ -173,6 +173,33 @@ typedef long		__s64;
 
 #endif /* _*_TYPES_H */
 
+#include <stdint.h>
+
+/* endian checking stuff */
+#ifndef EXT2_ENDIAN_H_
+#define EXT2_ENDIAN_H_
+
+#ifdef __CHECKER__
+# ifndef __bitwise
+#  define __bitwise		__attribute__((bitwise))
+# endif
+#define __force			__attribute__((force))
+#else
+# ifndef __bitwise
+#  define __bitwise
+# endif
+#define __force
+#endif
+
+typedef __u16	__bitwise	__le16;
+typedef __u32	__bitwise	__le32;
+typedef __u64	__bitwise	__le64;
+typedef __u16	__bitwise	__be16;
+typedef __u32	__bitwise	__be32;
+typedef __u64	__bitwise	__be64;
+
+#endif /* EXT2_ENDIAN_H_ */
+
 /* These defines are needed for the public ext2fs.h header file */
 #define HAVE_SYS_TYPES_H 1
 #undef WORDS_BIGENDIAN

@@ -3,7 +3,7 @@ use strict;
 use warnings;
 package CPAN::Meta::Prereqs;
 
-our $VERSION = '2.150001';
+our $VERSION = '2.150010';
 
 #pod =head1 DESCRIPTION
 #pod
@@ -45,6 +45,7 @@ use CPAN::Meta::Requirements 2.121;
 #pod
 #pod =cut
 
+# note we also accept anything matching /\Ax_/i
 sub __legal_phases { qw(configure build test runtime develop)   }
 sub __legal_types  { qw(requires recommends suggests conflicts) }
 
@@ -114,6 +115,40 @@ sub requirements_for {
   return $req;
 }
 
+#pod =method phases
+#pod
+#pod   my @phases = $prereqs->phases;
+#pod
+#pod This method returns the list of all phases currently populated in the prereqs
+#pod object, suitable for iterating.
+#pod
+#pod =cut
+
+sub phases {
+  my ($self) = @_;
+
+  my %is_legal_phase = map {; $_ => 1 } $self->__legal_phases;
+  grep { /\Ax_/i or $is_legal_phase{$_} } keys %{ $self->{prereqs} };
+}
+
+#pod =method types_in
+#pod
+#pod   my @runtime_types = $prereqs->types_in('runtime');
+#pod
+#pod This method returns the list of all types currently populated in the prereqs
+#pod object for the provided phase, suitable for iterating.
+#pod
+#pod =cut
+
+sub types_in {
+  my ($self, $phase) = @_;
+
+  return unless $phase =~ /\Ax_/i or grep { $phase eq $_ } $self->__legal_phases;
+
+  my %is_legal_type  = map {; $_ => 1 } $self->__legal_types;
+  grep { /\Ax_/i or $is_legal_type{$_} } keys %{ $self->{prereqs}{$phase} };
+}
+
 #pod =method with_merged_prereqs
 #pod
 #pod   my $new_prereqs = $prereqs->with_merged_prereqs( $other_prereqs );
@@ -139,8 +174,9 @@ sub with_merged_prereqs {
 
   my %new_arg;
 
-  for my $phase ($self->__legal_phases) {
-    for my $type ($self->__legal_types) {
+  for my $phase (__uniq(map { $_->phases } @prereq_objs)) {
+    for my $type (__uniq(map { $_->types_in($phase) } @prereq_objs)) {
+
       my $req = CPAN::Meta::Requirements->new;
 
       for my $prereq (@prereq_objs) {
@@ -163,7 +199,7 @@ sub with_merged_prereqs {
 #pod
 #pod     my $new_reqs = $prereqs->merged_requirements( \@phases, \@types );
 #pod     my $new_reqs = $prereqs->merged_requirements( \@phases );
-#pod     my $new_reqs = $preerqs->merged_requirements();
+#pod     my $new_reqs = $prereqs->merged_requirements();
 #pod
 #pod This method joins together all requirements across a number of phases
 #pod and types into a new L<CPAN::Meta::Requirements> object.  If arguments
@@ -215,8 +251,8 @@ sub as_string_hash {
 
   my %hash;
 
-  for my $phase ($self->__legal_phases) {
-    for my $type ($self->__legal_types) {
+  for my $phase ($self->phases) {
+    for my $type ($self->types_in($phase)) {
       my $req = $self->requirements_for($phase, $type);
       next unless $req->required_modules;
 
@@ -271,11 +307,14 @@ sub clone {
   my $clone = (ref $self)->new( $self->as_string_hash );
 }
 
+sub __uniq {
+  my (%s, $u);
+  grep { defined($_) ? !$s{$_}++ : !$u++ } @_;
+}
+
 1;
 
 # ABSTRACT: a set of distribution prerequisites by phase and type
-
-__END__
 
 =pod
 
@@ -287,7 +326,7 @@ CPAN::Meta::Prereqs - a set of distribution prerequisites by phase and type
 
 =head1 VERSION
 
-version 2.150001
+version 2.150010
 
 =head1 DESCRIPTION
 
@@ -335,6 +374,20 @@ be added to as needed.
 If C<$phase> or C<$type> are undefined or otherwise invalid, an exception will
 be raised.
 
+=head2 phases
+
+  my @phases = $prereqs->phases;
+
+This method returns the list of all phases currently populated in the prereqs
+object, suitable for iterating.
+
+=head2 types_in
+
+  my @runtime_types = $prereqs->types_in('runtime');
+
+This method returns the list of all types currently populated in the prereqs
+object for the provided phase, suitable for iterating.
+
 =head2 with_merged_prereqs
 
   my $new_prereqs = $prereqs->with_merged_prereqs( $other_prereqs );
@@ -353,7 +406,7 @@ will not alter them.
 
     my $new_reqs = $prereqs->merged_requirements( \@phases, \@types );
     my $new_reqs = $prereqs->merged_requirements( \@phases );
-    my $new_reqs = $preerqs->merged_requirements();
+    my $new_reqs = $prereqs->merged_requirements();
 
 This method joins together all requirements across a number of phases
 and types into a new L<CPAN::Meta::Requirements> object.  If arguments
@@ -407,13 +460,22 @@ David Golden <dagolden@cpan.org>
 
 Ricardo Signes <rjbs@cpan.org>
 
+=item *
+
+Adam Kennedy <adamk@cpan.org>
+
 =back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by David Golden and Ricardo Signes.
+This software is copyright (c) 2010 by David Golden, Ricardo Signes, Adam Kennedy and Contributors.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+
+__END__
+
+
+# vim: ts=2 sts=2 sw=2 et :

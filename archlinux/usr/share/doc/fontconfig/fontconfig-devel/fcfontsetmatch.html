@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="UP"
 TITLE="FcFontSet"
 HREF="x102.html#AEN1031"><LINK
@@ -46,7 +46,7 @@ VALIGN="bottom"
 ><A
 HREF="fcfontsetlist.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -60,7 +60,7 @@ VALIGN="bottom"
 ><A
 HREF="fcfontsetprint.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ></TABLE
@@ -94,53 +94,16 @@ CLASS="FUNCSYNOPSIS"
 ><A
 NAME="AEN1133"
 ></A
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="FUNCSYNOPSISINFO"
->#include &#60;fontconfig/fontconfig.h&#62;
+>#include &lt;fontconfig/fontconfig.h&gt;
 	</PRE
-></TD
-></TR
-></TABLE
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcPattern * <TT
-CLASS="FUNCTION"
->FcFontSetMatch</TT
-></CODE
->(FcConfig *<TT
-CLASS="PARAMETER"
-><I
->config</I
-></TT
->, FcFontSet **<TT
-CLASS="PARAMETER"
-><I
->sets</I
-></TT
->, int<TT
-CLASS="PARAMETER"
-><I
->nsets</I
-></TT
->, FcPattern *<TT
-CLASS="PARAMETER"
-><I
->pattern</I
-></TT
->, FcResult *<TT
-CLASS="PARAMETER"
-><I
->result</I
-></TT
->);</CODE
+>FcPattern * FcFontSetMatch</CODE
+>(FcConfig *config, FcFontSet **sets, intnsets, FcPattern *pattern, FcResult *result);</CODE
 ></P
 ><P
 ></P
@@ -154,42 +117,34 @@ NAME="AEN1148"
 ><H2
 >Description</H2
 ><P
->Finds the font in <TT
+>Finds the font in <CODE
 CLASS="PARAMETER"
-><I
->sets</I
-></TT
+>sets</CODE
 > most closely matching
-<TT
+<CODE
 CLASS="PARAMETER"
-><I
->pattern</I
-></TT
+>pattern</CODE
 > and returns the result of
-<TT
+<CODE
 CLASS="FUNCTION"
->FcFontRenderPrepare</TT
+>FcFontRenderPrepare</CODE
 > for that font and the provided
 pattern. This function should be called only after
-<TT
+<CODE
 CLASS="FUNCTION"
->FcConfigSubstitute</TT
+>FcConfigSubstitute</CODE
 > and
-<TT
+<CODE
 CLASS="FUNCTION"
->FcDefaultSubstitute</TT
+>FcDefaultSubstitute</CODE
 > have been called for
-<TT
+<CODE
 CLASS="PARAMETER"
-><I
->pattern</I
-></TT
+>pattern</CODE
 >; otherwise the results will not be correct.
-If <TT
+If <CODE
 CLASS="PARAMETER"
-><I
->config</I
-></TT
+>config</CODE
 > is NULL, the current configuration is used.
 Returns NULL if an error occurs during this process.
 	    </P
@@ -212,14 +167,14 @@ VALIGN="top"
 ><A
 HREF="fcfontsetlist.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD
@@ -230,7 +185,7 @@ VALIGN="top"
 ><A
 HREF="fcfontsetprint.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ><TR

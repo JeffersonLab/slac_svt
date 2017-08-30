@@ -1,0 +1,39 @@
+%NAME%
+libevent
+
+%VERSION%
+2.1.8-1
+
+%DESC%
+An event notification library
+
+%URL%
+http://libevent.org/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1498680549
+
+%INSTALLDATE%
+1495690701
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu8@archlinuxarm.org>
+
+%SIZE%
+1117184
+
+%LICENSE%
+BSD
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+openssl
+
+%OPTDEPENDS%
+python2: to use event_rpcgen.py
+

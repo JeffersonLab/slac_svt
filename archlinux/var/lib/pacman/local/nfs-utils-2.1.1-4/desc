@@ -1,0 +1,44 @@
+%NAME%
+nfs-utils
+
+%VERSION%
+2.1.1-4
+
+%DESC%
+Support programs for Network File Systems
+
+%URL%
+http://nfs.sourceforge.net
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1498682021
+
+%INSTALLDATE%
+1495690791
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu5@archlinuxarm.org>
+
+%SIZE%
+859136
+
+%LICENSE%
+GPL2
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+rpcbind
+nfsidmap
+gssproxy
+libevent
+device-mapper
+
+%OPTDEPENDS%
+sqlite: for nfsdcltrack usage
+python: for nfsiostat and mountstats usage
+

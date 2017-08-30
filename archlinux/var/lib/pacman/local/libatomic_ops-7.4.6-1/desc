@@ -1,0 +1,37 @@
+%NAME%
+libatomic_ops
+
+%VERSION%
+7.4.6-1
+
+%DESC%
+Provides semi-portable access to hardware provided atomic memory operations
+
+%URL%
+https://github.com/ivmai/libatomic_ops
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1495630166
+
+%INSTALLDATE%
+1495690625
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu7@archlinuxarm.org>
+
+%SIZE%
+654336
+
+%LICENSE%
+GPL2
+MIT
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+glibc
+

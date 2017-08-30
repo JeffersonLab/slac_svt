@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="UP"
 TITLE="String utilities"
 HREF="x102.html#AEN4543"><LINK
@@ -46,7 +46,7 @@ VALIGN="bottom"
 ><A
 HREF="fcucs4toutf8.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -60,7 +60,7 @@ VALIGN="bottom"
 ><A
 HREF="fcutf16toucs4.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ></TABLE
@@ -94,48 +94,16 @@ CLASS="FUNCSYNOPSIS"
 ><A
 NAME="AEN4605"
 ></A
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="FUNCSYNOPSISINFO"
->#include &#60;fontconfig/fontconfig.h&#62;
+>#include &lt;fontconfig/fontconfig.h&gt;
 	</PRE
-></TD
-></TR
-></TABLE
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcBool <TT
-CLASS="FUNCTION"
->FcUtf8Len</TT
-></CODE
->(FcChar8 *<TT
-CLASS="PARAMETER"
-><I
->src</I
-></TT
->, int <TT
-CLASS="PARAMETER"
-><I
->len</I
-></TT
->, int *<TT
-CLASS="PARAMETER"
-><I
->nchar</I
-></TT
->, int *<TT
-CLASS="PARAMETER"
-><I
->wchar</I
-></TT
->);</CODE
+>FcBool FcUtf8Len</CODE
+>(FcChar8 *src, int len, int *nchar, int *wchar);</CODE
 ></P
 ><P
 ></P
@@ -149,35 +117,25 @@ NAME="AEN4618"
 ><H2
 >Description</H2
 ><P
->Counts the number of Unicode chars in <TT
+>Counts the number of Unicode chars in <CODE
 CLASS="PARAMETER"
-><I
->len</I
-></TT
+>len</CODE
 > bytes of
-<TT
+<CODE
 CLASS="PARAMETER"
-><I
->src</I
-></TT
+>src</CODE
 >.  Places that count in
-<TT
+<CODE
 CLASS="PARAMETER"
-><I
->nchar</I
-></TT
->.  <TT
+>nchar</CODE
+>.  <CODE
 CLASS="PARAMETER"
-><I
->wchar</I
-></TT
+>wchar</CODE
 > contains 1, 2 or
 4 depending on the number of bytes needed to hold the largest Unicode char
-counted.  The return value indicates whether <TT
+counted.  The return value indicates whether <CODE
 CLASS="PARAMETER"
-><I
->src</I
-></TT
+>src</CODE
 > is a
 well-formed UTF8 string.
 	    </P
@@ -200,14 +158,14 @@ VALIGN="top"
 ><A
 HREF="fcucs4toutf8.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD
@@ -218,7 +176,7 @@ VALIGN="top"
 ><A
 HREF="fcutf16toucs4.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ><TR

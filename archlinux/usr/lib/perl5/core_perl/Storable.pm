@@ -22,10 +22,16 @@ package Storable; @ISA = qw(Exporter);
 
 use vars qw($canonical $forgive_me $VERSION);
 
-$VERSION = '2.53';
+$VERSION = '2.62';
 
 BEGIN {
-    if (eval { local $SIG{__DIE__}; require Log::Agent; 1 }) {
+    if (eval {
+        local $SIG{__DIE__};
+        local @INC = @INC;
+        pop @INC if $INC[-1] eq '.';
+        require Log::Agent;
+        1;
+    }) {
         Log::Agent->import;
     }
     #
@@ -113,7 +119,7 @@ sub file_magic {
 
     my $file = shift;
     my $fh = IO::File->new;
-    open($fh, "<". $file) || die "Can't open '$file': $!";
+    open($fh, "<", $file) || die "Can't open '$file': $!";
     binmode($fh);
     defined(sysread($fh, my $buf, 32)) || die "Can't read from '$file': $!";
     close($fh);
@@ -239,7 +245,7 @@ sub _store {
 	logcroak "wrong argument number" unless @_ == 2;	# No @foo in arglist
 	local *FILE;
 	if ($use_locking) {
-		open(FILE, ">>$file") || logcroak "can't write into $file: $!";
+		open(FILE, '>>', $file) || logcroak "can't write into $file: $!";
 		unless (&CAN_FLOCK) {
 			logcarp
 				"Storable::lock_store: fcntl/flock emulation broken on $^O";
@@ -250,7 +256,7 @@ sub _store {
 		truncate FILE, 0;
 		# Unlocking will happen when FILE is closed
 	} else {
-		open(FILE, ">$file") || logcroak "can't create $file: $!";
+		open(FILE, '>', $file) || logcroak "can't create $file: $!";
 	}
 	binmode FILE;				# Archaic systems...
 	my $da = $@;				# Don't mess if called from exception handler
@@ -367,7 +373,7 @@ sub lock_retrieve {
 sub _retrieve {
 	my ($file, $use_locking) = @_;
 	local *FILE;
-	open(FILE, $file) || logcroak "can't open $file: $!";
+	open(FILE, '<', $file) || logcroak "can't open $file: $!";
 	binmode FILE;							# Archaic systems...
 	my $self;
 	my $da = $@;							# Could be from exception handler
@@ -979,43 +985,43 @@ such.
 
 Here are some code samples showing a possible usage of Storable:
 
-	use Storable qw(store retrieve freeze thaw dclone);
+ use Storable qw(store retrieve freeze thaw dclone);
 
-	%color = ('Blue' => 0.1, 'Red' => 0.8, 'Black' => 0, 'White' => 1);
+ %color = ('Blue' => 0.1, 'Red' => 0.8, 'Black' => 0, 'White' => 1);
 
-	store(\%color, 'mycolors') or die "Can't store %a in mycolors!\n";
+ store(\%color, 'mycolors') or die "Can't store %a in mycolors!\n";
 
-	$colref = retrieve('mycolors');
-	die "Unable to retrieve from mycolors!\n" unless defined $colref;
-	printf "Blue is still %lf\n", $colref->{'Blue'};
+ $colref = retrieve('mycolors');
+ die "Unable to retrieve from mycolors!\n" unless defined $colref;
+ printf "Blue is still %lf\n", $colref->{'Blue'};
 
-	$colref2 = dclone(\%color);
+ $colref2 = dclone(\%color);
 
-	$str = freeze(\%color);
-	printf "Serialization of %%color is %d bytes long.\n", length($str);
-	$colref3 = thaw($str);
+ $str = freeze(\%color);
+ printf "Serialization of %%color is %d bytes long.\n", length($str);
+ $colref3 = thaw($str);
 
 which prints (on my machine):
 
-	Blue is still 0.100000
-	Serialization of %color is 102 bytes long.
+ Blue is still 0.100000
+ Serialization of %color is 102 bytes long.
 
 Serialization of CODE references and deserialization in a safe
 compartment:
 
 =for example begin
 
-	use Storable qw(freeze thaw);
-	use Safe;
-	use strict;
-	my $safe = new Safe;
+ use Storable qw(freeze thaw);
+ use Safe;
+ use strict;
+ my $safe = new Safe;
         # because of opcodes used in "use strict":
-	$safe->permit(qw(:default require));
-	local $Storable::Deparse = 1;
-	local $Storable::Eval = sub { $safe->reval($_[0]) };
-	my $serialized = freeze(sub { 42 });
-	my $code = thaw($serialized);
-	$code->() == 42;
+ $safe->permit(qw(:default require));
+ local $Storable::Deparse = 1;
+ local $Storable::Eval = sub { $safe->reval($_[0]) };
+ my $serialized = freeze(sub { 42 });
+ my $code = thaw($serialized);
+ $code->() == 42;
 
 =for example end
 

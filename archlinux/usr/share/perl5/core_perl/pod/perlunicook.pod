@@ -26,7 +26,7 @@ to work correctly, with the C<#!> adjusted to work on your system:
  use strict;    # quote strings, declare variables
  use warnings;  # on by default
  use warnings  qw(FATAL utf8);    # fatalize encoding glitches
- use open      qw(:std :utf8);    # undeclared streams in UTF-8
+ use open      qw(:std :encoding(UTF-8)); # undeclared streams in UTF-8
  use charnames qw(:full :short);  # unneeded in v5.16
 
 This I<does> make even Unix programmers C<binmode> your binary streams,
@@ -186,7 +186,7 @@ know how to understand its output.
  # cpan -i Unicode::Unihan
  use Unicode::Unihan;
  my $str = "東京";
- my $unhan = new Unicode::Unihan;
+ my $unhan = Unicode::Unihan->new;
  for my $lang (qw(Mandarin Cantonese Korean JapaneseOn JapaneseKun)) {
      printf "CJK $str in %-12s is ", $lang;
      say $unhan->$lang($str);
@@ -205,7 +205,7 @@ use the specific module:
 
  # cpan -i Lingua::JA::Romanize::Japanese
  use Lingua::JA::Romanize::Japanese;
- my $k2r = new Lingua::JA::Romanize::Japanese;
+ my $k2r = Lingua::JA::Romanize::Japanese->new;
  my $str = "東京";
  say "Japanese for $str is ", $k2r->chars($str);
 
@@ -234,8 +234,8 @@ C<binmode> as described later below.
  or
      $ export PERL_UNICODE=A
  or
-    use Encode qw(decode_utf8);
-    @ARGV = map { decode_utf8($_, 1) } @ARGV;
+    use Encode qw(decode);
+    @ARGV = map { decode('UTF-8', $_, 1) } @ARGV;
 
 =head2 ℞ 14: Decode program arguments as locale encoding
 
@@ -255,9 +255,9 @@ call C<binmode> explicitly:
  or
      $ export PERL_UNICODE=S
  or
-     use open qw(:std :utf8);
+     use open qw(:std :encoding(UTF-8));
  or
-     binmode(STDIN,  ":utf8");
+     binmode(STDIN,  ":encoding(UTF-8)");
      binmode(STDOUT, ":utf8");
      binmode(STDERR, ":utf8");
 
@@ -280,7 +280,7 @@ Files opened without an encoding argument will be in UTF-8:
  or
      $ export PERL_UNICODE=D
  or
-     use open qw(:utf8);
+     use open qw(:encoding(UTF-8));
 
 =head2 ℞ 18: Make all I/O and args default to utf8
 
@@ -288,9 +288,9 @@ Files opened without an encoding argument will be in UTF-8:
  or
      $ export PERL_UNICODE=SDA
  or
-     use open qw(:std :utf8);
-     use Encode qw(decode_utf8);
-     @ARGV = map { decode_utf8($_, 1) } @ARGV;
+     use open qw(:std :encoding(UTF-8));
+     use Encode qw(decode);
+     @ARGV = map { decode('UTF-8', $_, 1) } @ARGV;
 
 =head2 ℞ 19: Open file with specific encoding
 
@@ -391,7 +391,7 @@ one codepoint lacking that property.
  \p{Sk}, \p{Ps}, \p{Lt}
  \p{alpha}, \p{upper}, \p{lower}
  \p{Latin}, \p{Greek}
- \p{script=Latin}, \p{script=Greek}
+ \p{script_extensions=Latin}, \p{scx=Greek}
  \p{East_Asian_Width=Wide}, \p{EA=W}
  \p{Line_Break=Hyphen}, \p{LB=HY}
  \p{Numeric_Value=4}, \p{NV=4}
@@ -613,7 +613,7 @@ Break up text into lines according to Unicode rules.
  use charnames qw(:full);
 
  my $para = "This is a super\N{HYPHEN}long string. " x 20;
- my $fmt = new Unicode::LineBreak;
+ my $fmt = Unicode::LineBreak->new;
  print $fmt->break($para), "\n";
 
 =head2 ℞ 42: Unicode text in DBM hashes, the tedious way
@@ -701,7 +701,7 @@ Here's that program; tested on v5.14.
  use strict;
  use warnings;
  use warnings  qw(FATAL utf8);    # fatalize encoding faults
- use open      qw(:std :utf8);    # undeclared streams in UTF-8
+ use open      qw(:std :encoding(UTF-8)); # undeclared streams in UTF-8
  use charnames qw(:full :short);  # unneeded in v5.16
 
  # std modules
@@ -745,7 +745,7 @@ Here's that program; tested on v5.14.
  # So the Asian stuff comes out in an order that someone
  # who reads those scripts won't freak out over; the
  # CJK stuff will be in JIS X 0208 order that way.
- my $coll  = new Unicode::Collate::Locale locale => "ja";
+ my $coll  = Unicode::Collate::Locale->new(locale => "ja");
 
  for my $item ($coll->sort(keys %price)) {
      print pad(entitle($item), $width, ".");
@@ -855,4 +855,3 @@ Acknowledgement via code comment is polite but not required.
 =head1 REVISION HISTORY
 
 v1.0.0 – first public release, 2012-02-27
-

@@ -1,0 +1,37 @@
+%NAME%
+libpng
+
+%VERSION%
+1.6.31-1
+
+%DESC%
+A collection of routines used to create PNG format graphics files
+
+%URL%
+http://www.libpng.org/pub/png/libpng.html
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1501595419
+
+%INSTALLDATE%
+1495690619
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu9@archlinuxarm.org>
+
+%SIZE%
+570368
+
+%LICENSE%
+custom
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+zlib
+sh
+

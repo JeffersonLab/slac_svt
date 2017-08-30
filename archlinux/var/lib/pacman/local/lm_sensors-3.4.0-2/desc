@@ -1,0 +1,44 @@
+%NAME%
+lm_sensors
+
+%VERSION%
+3.4.0-2
+
+%DESC%
+Collection of user space tools for general SMBus access and hardware monitoring
+
+%URL%
+http://www.lm-sensors.org/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1478206750
+
+%INSTALLDATE%
+1495690928
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu4@archlinuxarm.org>
+
+%SIZE%
+474112
+
+%REASON%
+1
+
+%LICENSE%
+GPL
+LGPL
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+perl
+sysfsutils
+
+%OPTDEPENDS%
+rrdtool: for logging with sensord
+

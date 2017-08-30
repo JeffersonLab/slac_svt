@@ -101,6 +101,7 @@ void gnutls_pkcs11_obj_set_pin_function(gnutls_pkcs11_obj_t obj,
  * @GNUTLS_PKCS11_OBJ_FLAG_RETRIEVE_ANY: When retrieving an object, do not set any requirements (store).
  * @GNUTLS_PKCS11_OBJ_FLAG_RETRIEVE_TRUSTED: When retrieving an object, only retrieve the marked as trusted (alias to %GNUTLS_PKCS11_OBJ_FLAG_MARK_TRUSTED).
  *   In gnutls_pkcs11_crt_is_known() it implies %GNUTLS_PKCS11_OBJ_FLAG_RETRIEVE_COMPARE if %GNUTLS_PKCS11_OBJ_FLAG_COMPARE_KEY is not given.
+ * @GNUTLS_PKCS11_OBJ_FLAG_MARK_DISTRUSTED: When writing an object, mark it as distrusted (store).
  * @GNUTLS_PKCS11_OBJ_FLAG_RETRIEVE_DISTRUSTED: When retrieving an object, only retrieve the marked as distrusted (seek).
  * @GNUTLS_PKCS11_OBJ_FLAG_COMPARE: When checking an object's presence, fully compare it before returning any result (seek).
  * @GNUTLS_PKCS11_OBJ_FLAG_COMPARE_KEY: When checking an object's presence, compare the key before returning any result (seek).
@@ -114,7 +115,7 @@ void gnutls_pkcs11_obj_set_pin_function(gnutls_pkcs11_obj_t obj,
  * @GNUTLS_PKCS11_OBJ_FLAG_CRT: When searching, restrict to certificates only (seek).
  * @GNUTLS_PKCS11_OBJ_FLAG_PUBKEY: When searching, restrict to public key objects only (seek).
  * @GNUTLS_PKCS11_OBJ_FLAG_PRIVKEY: When searching, restrict to private key objects only (seek).
- * @GNUTLS_PKCS11_OBJ_FLAG_WITH_PRIVKEY: When searching, restrict to objects which have a corresponding private key (seek).
+ * @GNUTLS_PKCS11_OBJ_FLAG_NO_STORE_PUBKEY: When generating a keypair don't store the public key (store).
  *
  * Enumeration of different PKCS #11 object flags. Some flags are used
  * to mark objects when storing, while others are also used while seeking
@@ -129,7 +130,8 @@ typedef enum gnutls_pkcs11_obj_flags {
 	GNUTLS_PKCS11_OBJ_FLAG_MARK_NOT_PRIVATE = (1<<5),
 	GNUTLS_PKCS11_OBJ_FLAG_RETRIEVE_ANY = (1<<6),
 	GNUTLS_PKCS11_OBJ_FLAG_RETRIEVE_TRUSTED = GNUTLS_PKCS11_OBJ_FLAG_MARK_TRUSTED,
-	GNUTLS_PKCS11_OBJ_FLAG_RETRIEVE_DISTRUSTED = (1<<8),
+	GNUTLS_PKCS11_OBJ_FLAG_MARK_DISTRUSTED = (1<<8),
+	GNUTLS_PKCS11_OBJ_FLAG_RETRIEVE_DISTRUSTED = GNUTLS_PKCS11_OBJ_FLAG_MARK_DISTRUSTED,
 	GNUTLS_PKCS11_OBJ_FLAG_COMPARE = (1<<9),
 	GNUTLS_PKCS11_OBJ_FLAG_PRESENT_IN_TRUSTED_MODULE = (1<<10),
 	GNUTLS_PKCS11_OBJ_FLAG_MARK_CA = (1<<11),
@@ -142,6 +144,7 @@ typedef enum gnutls_pkcs11_obj_flags {
 	GNUTLS_PKCS11_OBJ_FLAG_CRT = (1<<18),
 	GNUTLS_PKCS11_OBJ_FLAG_WITH_PRIVKEY = (1<<19),
 	GNUTLS_PKCS11_OBJ_FLAG_PUBKEY = (1<<20),
+	GNUTLS_PKCS11_OBJ_FLAG_NO_STORE_PUBKEY = GNUTLS_PKCS11_OBJ_FLAG_PUBKEY,
 	GNUTLS_PKCS11_OBJ_FLAG_PRIVKEY = (1<<21),
 	/* flags 1<<29 and later are reserved - see pkcs11_int.h */
 } gnutls_pkcs11_obj_flags;
@@ -195,7 +198,7 @@ int gnutls_pkcs11_get_raw_issuer_by_subject_key_id (const char *url,
 					gnutls_x509_crt_fmt_t fmt,
 					unsigned int flags);
 
-int gnutls_pkcs11_crt_is_known(const char *url, gnutls_x509_crt_t cert,
+unsigned gnutls_pkcs11_crt_is_known(const char *url, gnutls_x509_crt_t cert,
 			     unsigned int flags);
 
 #if 0
@@ -221,6 +224,12 @@ gnutls_pkcs11_privkey_generate(const char *url, gnutls_pk_algorithm_t pk,
 			       unsigned int bits, const char *label,
 			       unsigned int flags);
 #endif
+
+int
+gnutls_pkcs11_copy_pubkey(const char *token_url,
+			  gnutls_pubkey_t crt, const char *label,
+			  const gnutls_datum_t *cid,
+			  unsigned int key_usage, unsigned int flags);
 
 #define gnutls_pkcs11_copy_x509_crt(url, crt, label, flags) \
 	gnutls_pkcs11_copy_x509_crt2(url, crt, label, NULL, flags)
@@ -425,7 +434,7 @@ int gnutls_pkcs11_privkey_import_url(gnutls_pkcs11_privkey_t pkey,
 int gnutls_pkcs11_privkey_export_url(gnutls_pkcs11_privkey_t key,
 				     gnutls_pkcs11_url_type_t
 				     detailed, char **url);
-int gnutls_pkcs11_privkey_status(gnutls_pkcs11_privkey_t key);
+unsigned gnutls_pkcs11_privkey_status(gnutls_pkcs11_privkey_t key);
 
 #define gnutls_pkcs11_privkey_generate(url, pk, bits, label, flags) \
 	gnutls_pkcs11_privkey_generate3(url, pk, bits, label, NULL, 0, NULL, 0, flags)

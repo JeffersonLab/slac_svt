@@ -4,7 +4,7 @@ DETAILS:
         http://0pointer.de/blog/projects/systemd.html
 
 WEB SITE:
-        http://www.freedesktop.org/wiki/Software/systemd
+        https://www.freedesktop.org/wiki/Software/systemd
 
 GIT:
         git@github.com:systemd/systemd.git
@@ -14,8 +14,7 @@ GITWEB:
         https://github.com/systemd/systemd
 
 MAILING LIST:
-        http://lists.freedesktop.org/mailman/listinfo/systemd-devel
-        http://lists.freedesktop.org/mailman/listinfo/systemd-commits
+        https://lists.freedesktop.org/mailman/listinfo/systemd-devel
 
 IRC:
         #systemd on irc.freenode.org
@@ -36,8 +35,8 @@ LICENSE:
         - except src/udev/* which is (currently still) GPLv2, GPLv2+
 
 REQUIREMENTS:
-        Linux kernel >= 3.7
-        Linux kernel >= 3.8 for Smack support
+        Linux kernel >= 3.13
+        Linux kernel >= 4.2 for unified cgroup hierarchy support
 
         Kernel Config Options:
           CONFIG_DEVTMPFS
@@ -50,6 +49,11 @@ REQUIREMENTS:
           CONFIG_SYSFS
           CONFIG_PROC_FS
           CONFIG_FHANDLE (libudev, mount and bind mount handling)
+
+        Kernel crypto/hash API
+          CONFIG_CRYPTO_USER_API_HASH
+          CONFIG_CRYPTO_HMAC
+          CONFIG_CRYPTO_SHA256
 
         udev will fail to work with the legacy sysfs layout:
           CONFIG_SYSFS_DEPRECATED=n
@@ -68,11 +72,14 @@ REQUIREMENTS:
         create additional symlinks in /dev/disk/ and /dev/tape:
           CONFIG_BLK_DEV_BSG
 
-        Required for PrivateNetwork and PrivateDevices in service units:
+        Required for PrivateNetwork= and PrivateDevices= in service units:
           CONFIG_NET_NS
           CONFIG_DEVPTS_MULTIPLE_INSTANCES
         Note that systemd-localed.service and other systemd units use
         PrivateNetwork and PrivateDevices so this is effectively required.
+
+        Required for PrivateUsers= in service units:
+          CONFIG_USER_NS
 
         Optional but strongly recommended:
           CONFIG_IPV6
@@ -80,6 +87,7 @@ REQUIREMENTS:
           CONFIG_TMPFS_XATTR
           CONFIG_{TMPFS,EXT4,XFS,BTRFS_FS,...}_POSIX_ACL
           CONFIG_SECCOMP
+          CONFIG_SECCOMP_FILTER (required for seccomp support)
           CONFIG_CHECKPOINT_RESTORE (for the kcmp() syscall)
 
         Required for CPUShares= in resource control unit settings
@@ -88,10 +96,6 @@ REQUIREMENTS:
 
         Required for CPUQuota= in resource control unit settings
           CONFIG_CFS_BANDWIDTH
-
-        For systemd-bootchart, several proc debug interfaces are required:
-          CONFIG_SCHEDSTATS
-          CONFIG_SCHED_DEBUG
 
         For UEFI systems:
           CONFIG_EFIVAR_FS
@@ -122,8 +126,10 @@ REQUIREMENTS:
 
         glibc >= 2.16
         libcap
-        libmount >= 2.20 (from util-linux)
-        libseccomp >= 1.0.0 (optional)
+        libmount >= 2.27.1 (from util-linux)
+                (util-linux < 2.29 *must* be built with --enable-libmount-force-mountinfo,
+                 and later versions without --enable-libmount-support-mtab.)
+        libseccomp >= 2.3.1 (optional)
         libblkid >= 2.24 (from util-linux) (optional)
         libkmod >= 15 (optional)
         PAM >= 1.1.2 (optional)
@@ -137,34 +143,61 @@ REQUIREMENTS:
         libqrencode (optional)
         libmicrohttpd (optional)
         libpython (optional)
-        libidn (optional)
+        libidn2 or libidn (optional)
         elfutils >= 158 (optional)
         make, gcc, and similar tools
 
         During runtime, you need the following additional
         dependencies:
 
-        util-linux >= v2.26 required
+        util-linux >= v2.27.1 required
         dbus >= 1.4.0 (strictly speaking optional, but recommended)
+                NOTE: If using dbus < 1.9.18, you should override the default
+                policy directory (--with-dbuspolicydir=/etc/dbus-1/system.d).
         dracut (optional)
         PolicyKit (optional)
 
-        When building from git, the following tools are needed:
+        Two build systems are supported: meson + ninja-build and autools + make.
+
+        The following tools are needed with both systems:
 
         pkg-config
-        docbook-xsl
-        xsltproc
+        gperf >= 3.1
+        docbook-xsl (optional, required for documentation)
+        xsltproc    (optional, required for documentation)
+        python-lxml (optional, required to build the indices)
+
+        When building with meson, python and ninja-build are required.
+
+        To build in directory build/:
+          meson build/ && ninja -C build
+
+        Any configuration options can be specfied as -Darg=value... arguments
+        to meson. After the build directory is initially configured, meson will
+        refuse to run again, and options must be changed with:
+          mesonconf -Darg=value...
+        mesonconf without any arguments will print out available options and
+        their current values.
+
+        Useful commands:
+          ninja -v some/target
+          ninja test
+          sudo ninja install
+          DESTDIR=... ninja install
+
+        When building with autotools, the following tools are needed:
+
         automake
         autoconf
         libtool
         intltool
-        gperf
         python (optional)
-        python-lxml (optional, but required to build the indices)
-        sphinx (optional)
 
-        The build system is initialized with ./autogen.sh. A tar ball
-        can be created with:
+        The build system is initialized with ./autogen.sh and the usual
+          ./configure && make
+        should be used.
+
+        A tar ball can be created with:
           git archive --format=tar --prefix=systemd-222/ v222 | xz > systemd-222.tar.xz
 
         When systemd-hostnamed is used, it is strongly recommended to
@@ -173,11 +206,13 @@ REQUIREMENTS:
         under all circumstances. In fact, systemd-hostnamed will warn
         if nss-myhostname is not installed.
 
-        To build HTML documentation for python-systemd using sphinx,
-        please first install systemd (using 'make install'), and then
-        invoke sphinx-build with 'make sphinx-<target>', with <target>
-        being 'html' or 'latexpdf'. If using DESTDIR for installation,
-        pass the same DESTDIR to 'make sphinx-html' invocation.
+        Additional packages are necessary to run some tests:
+        - busybox            (used by test/TEST-13-NSPAWN-SMOKE)
+        - nc                 (used by test/TEST-12-ISSUE-3171)
+        - python3-pyparsing
+        - python3-evdev      (used by hwdb parsing tests)
+        - strace             (used by test/test-functions)
+        - capsh              (optional, used by test-execute)
 
 USERS AND GROUPS:
         Default udev rules use the following standard system group
@@ -208,11 +243,11 @@ USERS AND GROUPS:
         Similarly, the name resolution daemon requires the
         "systemd-resolve" system user and group to exist.
 
-        Similarly, the kdbus dbus1 proxy daemon requires the
-        "systemd-bus-proxy" system user and group to exist.
+        Similarly, the coredump support requires the
+        "systemd-coredump" system user and group to exist.
 
 NSS:
-        systemd ships with three NSS modules:
+        systemd ships with four glibc NSS modules:
 
         nss-myhostname resolves the local hostname to locally
         configured IP addresses, as well as "localhost" to
@@ -221,15 +256,22 @@ NSS:
         nss-resolve enables DNS resolution via the systemd-resolved
         DNS/LLMNR caching stub resolver "systemd-resolved".
 
-        nss-mymachines enables resolution of all local containers
-        registered with machined to their respective IP addresses.
+        nss-mymachines enables resolution of all local containers registered
+        with machined to their respective IP addresses. It also maps UID/GIDs
+        ranges used by containers to useful names.
 
-        To make use of these NSS modules, please add them to the
-        "hosts: " line in /etc/nsswitch.conf. The "resolve" module
-        should replace the glibc "dns" module in this file.
+        nss-systemd enables resolution of all dynamically allocated service
+        users. (See the DynamicUser= setting in unit files.)
 
-        The three modules should be used in the following order:
+        To make use of these NSS modules, please add them to the "hosts:",
+        "passwd:" and "group:" lines in /etc/nsswitch.conf. The "resolve"
+        module should replace the glibc "dns" module in this file (and don't
+        worry, it chain-loads the "dns" module if it can't talk to resolved).
 
+        The four modules should be used in the following order:
+
+                passwd: compat mymachines systemd
+                group: compat mymachines systemd
                 hosts: files mymachines resolve myhostname
 
 SYSV INIT.D SCRIPTS:
@@ -244,10 +286,6 @@ SYSV INIT.D SCRIPTS:
         needs to look like, and provide an implementation at the marked places.
 
 WARNINGS:
-        systemd will warn you during boot if /etc/mtab is not a
-        symlink to /proc/mounts. Please ensure that /etc/mtab is a
-        proper symlink.
-
         systemd will warn you during boot if /usr is on a different
         file system than /. While in systemd itself very little will
         break if /usr is on a separate partition, many of its
@@ -263,19 +301,14 @@ WARNINGS:
         requires that /var/run is a symlink to /run.
 
         For more information on this issue consult
-        http://freedesktop.org/wiki/Software/systemd/separate-usr-is-broken
+        https://www.freedesktop.org/wiki/Software/systemd/separate-usr-is-broken
 
         To run systemd under valgrind, compile with VALGRIND defined
         (e.g. ./configure CPPFLAGS='... -DVALGRIND=1'). Otherwise,
         false positives will be triggered by code which violates
         some rules but is actually safe.
 
-        Currently, systemd-timesyncd defaults to use the Google NTP
-        servers if not specified otherwise at configure time. You
-        really should not ship an OS or device with this default
-        setting. See DISTRO_PORTING for details.
-
 ENGINEERING AND CONSULTING SERVICES:
-        ENDOCODE <https://endocode.com/> offers professional
-        engineering and consulting services for systemd. Please
-        contact Chris Kühl <chris@endocode.com> for more information.
+        Kinvolk (https://kinvolk.io) offers professional engineering
+        and consulting services for systemd. Please contact Chris Kühl
+        <chris@kinvolk.io> for more information.

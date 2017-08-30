@@ -1,0 +1,36 @@
+%NAME%
+cantarell-fonts
+
+%VERSION%
+1:0.0.25-3
+
+%DESC%
+Cantarell font family
+
+%URL%
+https://git.gnome.org/browse/cantarell-fonts
+
+%ARCH%
+any
+
+%BUILDDATE%
+1484247420
+
+%INSTALLDATE%
+1495690977
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu3@archlinuxarm.org>
+
+%SIZE%
+338944
+
+%REASON%
+1
+
+%LICENSE%
+custom:SIL
+
+%VALIDATION%
+sha256
+

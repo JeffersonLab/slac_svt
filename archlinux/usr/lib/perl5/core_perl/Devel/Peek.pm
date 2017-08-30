@@ -3,7 +3,7 @@
 
 package Devel::Peek;
 
-$VERSION = '1.22';
+$VERSION = '1.26';
 $XS_VERSION = $VERSION;
 $VERSION = eval $VERSION;
 
@@ -115,6 +115,8 @@ counts on SVs.  This document will take a passive, and safe, approach
 to data debugging and for that it will describe only the C<Dump()>
 function.
 
+All output is to STDERR.
+
 The C<Dump()> function takes one or two arguments: something to dump, and
 an optional limit for recursion and array elements (default is 4).  The
 first argument is evaluted in rvalue scalar context, with exceptions for
@@ -131,7 +133,9 @@ means no limit.
 
 If C<use Devel::Peek> directive has a C<:opd=FLAGS> argument,
 this switches on debugging of opcode dispatch.  C<FLAGS> should be a
-combination of C<s>, C<t>, and C<P> (see B<-D> flags in L<perlrun>).
+combination of C<s>, C<t>, and C<P> (see
+L<< B<-D> flags in perlrun|perlrun/B<-D>I<letters> >>).
+
 C<:opd> is a shortcut for C<:opd=st>.
 
 =head2 Runtime debugging
@@ -350,7 +354,6 @@ The output:
             ARRAY = 0xc7e820
             FILL = 0
             MAX = 0
-            ARYLEN = 0x0
             FLAGS = (REAL)
             Elt No. 0
             SV = IV(0xc70f88) at 0xc70f98
@@ -382,7 +385,6 @@ The output:
             ARRAY = 0x1585820
             FILL = 1
             MAX = 1
-            ARYLEN = 0x0
             FLAGS = (REAL)
             Elt No. 0
             SV = IV(0x1577f88) at 0x1577f98
@@ -546,7 +548,7 @@ inside a 5th eval in the program;
 
 =item *
 
-it is not currently executed (see C<DEPTH>);
+it is not currently executed (because C<DEPTH> is 0);
 
 =item *
 

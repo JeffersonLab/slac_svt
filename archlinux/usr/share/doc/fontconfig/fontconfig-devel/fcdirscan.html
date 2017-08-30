@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="UP"
 TITLE="File and Directory routines"
 HREF="x102.html#AEN3867"><LINK
@@ -46,7 +46,7 @@ VALIGN="bottom"
 ><A
 HREF="fcfileisdir.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -60,7 +60,7 @@ VALIGN="bottom"
 ><A
 HREF="fcdirsave.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ></TABLE
@@ -94,58 +94,16 @@ CLASS="FUNCSYNOPSIS"
 ><A
 NAME="AEN3933"
 ></A
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="FUNCSYNOPSISINFO"
->#include &#60;fontconfig/fontconfig.h&#62;
+>#include &lt;fontconfig/fontconfig.h&gt;
 	</PRE
-></TD
-></TR
-></TABLE
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcBool <TT
-CLASS="FUNCTION"
->FcDirScan</TT
-></CODE
->(FcFontSet *<TT
-CLASS="PARAMETER"
-><I
->set</I
-></TT
->, FcStrSet *<TT
-CLASS="PARAMETER"
-><I
->dirs</I
-></TT
->, FcFileCache *<TT
-CLASS="PARAMETER"
-><I
->cache</I
-></TT
->, FcBlanks *<TT
-CLASS="PARAMETER"
-><I
->blanks</I
-></TT
->, const FcChar8 *<TT
-CLASS="PARAMETER"
-><I
->dir</I
-></TT
->, FcBool <TT
-CLASS="PARAMETER"
-><I
->force</I
-></TT
->);</CODE
+>FcBool FcDirScan</CODE
+>(FcFontSet *set, FcStrSet *dirs, FcFileCache *cache, FcBlanks *blanks, const FcChar8 *dir, FcBool force);</CODE
 ></P
 ><P
 ></P
@@ -159,29 +117,21 @@ NAME="AEN3950"
 ><H2
 >Description</H2
 ><P
->If <TT
+>If <CODE
 CLASS="PARAMETER"
-><I
->cache</I
-></TT
-> is not zero or if <TT
+>cache</CODE
+> is not zero or if <CODE
 CLASS="PARAMETER"
-><I
->force</I
-></TT
+>force</CODE
 >
 is FcFalse, this function currently returns FcFalse.  Otherwise, it scans an
-entire directory and adds all fonts found to <TT
+entire directory and adds all fonts found to <CODE
 CLASS="PARAMETER"
-><I
->set</I
-></TT
+>set</CODE
 >.
-Any subdirectories found are added to <TT
+Any subdirectories found are added to <CODE
 CLASS="PARAMETER"
-><I
->dirs</I
-></TT
+>dirs</CODE
 >.  Calling
 this function does not create any cache files.  Use FcDirCacheRead() if
 caching is desired.
@@ -205,14 +155,14 @@ VALIGN="top"
 ><A
 HREF="fcfileisdir.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD
@@ -223,7 +173,7 @@ VALIGN="top"
 ><A
 HREF="fcdirsave.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ><TR

@@ -7,10 +7,11 @@ Before=network.target
 Wants=network.target
 
 [Service]
+Type=forking
+RemainAfterExit=yes
 ExecStart=/usr/bin/netctl-auto start %I
 ExecStop=/usr/bin/netctl-auto stop %I
-RemainAfterExit=yes
-Type=forking
+ExecStopPost=/usr/bin/netctl-auto clean %I
 
 [Install]
 WantedBy=multi-user.target

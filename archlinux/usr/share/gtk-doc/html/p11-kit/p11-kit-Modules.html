@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>p11-kit: Modules</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<title>Modules: p11-kit</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="p11-kit">
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="reference.html" title="API Reference">
 <link rel="next" href="p11-kit-URIs.html" title="URIs">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -33,7 +33,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="p11-kit-Modules.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -65,7 +65,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://developer.gnome.org/gck/stable/pkcs11-links.html#CK-RV:CAPS"><span class="returnvalue">CK_RV</span></a>
+<span class="returnvalue">CK_RV</span>
 </td>
 <td class="function_name">
 <a class="link" href="p11-kit-Modules.html#p11-kit-modules-initialize" title="p11_kit_modules_initialize ()">p11_kit_modules_initialize</a> <span class="c_punctuation">()</span>
@@ -73,7 +73,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://developer.gnome.org/gck/stable/pkcs11-links.html#CK-RV:CAPS"><span class="returnvalue">CK_RV</span></a>
+<span class="returnvalue">CK_RV</span>
 </td>
 <td class="function_name">
 <a class="link" href="p11-kit-Modules.html#p11-kit-modules-finalize" title="p11_kit_modules_finalize ()">p11_kit_modules_finalize</a> <span class="c_punctuation">()</span>
@@ -97,7 +97,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://developer.gnome.org/gck/stable/pkcs11-links.html#CK-RV:CAPS"><span class="returnvalue">CK_RV</span></a>
+<span class="returnvalue">CK_RV</span>
 </td>
 <td class="function_name">
 <a class="link" href="p11-kit-Modules.html#p11-kit-module-initialize" title="p11_kit_module_initialize ()">p11_kit_module_initialize</a> <span class="c_punctuation">()</span>
@@ -105,7 +105,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://developer.gnome.org/gck/stable/pkcs11-links.html#CK-RV:CAPS"><span class="returnvalue">CK_RV</span></a>
+<span class="returnvalue">CK_RV</span>
 </td>
 <td class="function_name">
 <a class="link" href="p11-kit-Modules.html#p11-kit-module-finalize" title="p11_kit_module_finalize ()">p11_kit_module_finalize</a> <span class="c_punctuation">()</span>
@@ -148,6 +148,14 @@
 <span class="returnvalue">char</span> *
 </td>
 <td class="function_name">
+<a class="link" href="p11-kit-Modules.html#p11-kit-module-get-filename" title="p11_kit_module_get_filename ()">p11_kit_module_get_filename</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">char</span> *
+</td>
+<td class="function_name">
 <a class="link" href="p11-kit-Modules.html#p11-kit-config-option" title="p11_kit_config_option ()">p11_kit_config_option</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
@@ -156,7 +164,7 @@
 </div>
 <div class="refsect1">
 <a name="p11-kit-Modules.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -211,8 +219,8 @@ and not included in the returned module list.</p>
 <p>Use <a class="link" href="p11-kit-Modules.html#p11-kit-modules-finalize-and-release" title="p11_kit_modules_finalize_and_release ()"><code class="function">p11_kit_modules_finalize_and_release()</code></a> when you're done with the
 modules returned by this function.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.2.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-modules-load-and-initialize.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -226,10 +234,9 @@ modules returned by this function.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.2.6.2.8"></a><h4>Returns</h4>
+<a name="p11-kit-modules-load-and-initialize.returns"></a><h4>Returns</h4>
 <p> a <code class="literal">NULL</code> terminated list of modules, or
 <code class="literal">NULL</code> on failure</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -255,8 +262,8 @@ PKCS#11 specification. In addition there are no guarantees that
 thread-safe behavior will occur if multiple callers initialize from
 different threads.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.3.9"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-modules-finalize-and-release.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -285,7 +292,7 @@ configuration. This is not recommended for general usage.</p>
  contains the <a class="link" href="p11-kit-Modules.html#P11-KIT-MODULE-CRITICAL:CAPS" title="P11_KIT_MODULE_CRITICAL"><code class="literal">P11_KIT_MODULE_CRITICAL</code></a> flag then the
 modules will all be treated as 'critical', regardless of the module
 configuration. This means that a failure to load any module will
-cause this funtion to fail.</p>
+cause this function to fail.</p>
 <p>For unmanaged modules there is no guarantee to the state of the
 modules. Other callers may be using the modules. Using unmanaged
 modules haphazardly is not recommended for this reason. Some
@@ -296,8 +303,8 @@ this function.</p>
 <p>If this function fails, then an error message will be available via the
 <a class="link" href="p11-kit-Utilities.html#p11-kit-message" title="p11_kit_message ()"><code class="function">p11_kit_message()</code></a> function.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.4.10"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-modules-load.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -306,7 +313,7 @@ this function.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>reserved</p></td>
-<td class="parameter_description"><p>set to <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
+<td class="parameter_description"><p>set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -318,16 +325,15 @@ this function.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.2.6.4.11"></a><h4>Returns</h4>
+<a name="p11-kit-modules-load.returns"></a><h4>Returns</h4>
 <p> a null terminated list of modules represented as PKCS#11
-function lists, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on failure</p>
-<p></p>
+function lists, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on failure</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="p11-kit-modules-initialize"></a><h3>p11_kit_modules_initialize ()</h3>
-<pre class="programlisting"><a href="http://developer.gnome.org/gck/stable/pkcs11-links.html#CK-RV:CAPS"><span class="returnvalue">CK_RV</span></a>
+<pre class="programlisting"><span class="returnvalue">CK_RV</span>
 p11_kit_modules_initialize (<em class="parameter"><code><span class="type">CK_FUNCTION_LIST</span> **modules</code></em>,
                             <em class="parameter"><code><a class="link" href="p11-kit-Future.html#p11-kit-destroyer" title="p11_kit_destroyer ()"><span class="type">p11_kit_destroyer</span></a> failure_callback</code></em>);</pre>
 <p>Initialize all the modules in the <em class="parameter"><code>modules</code></em>
@@ -347,7 +353,7 @@ different threads.</p>
 <p>When a module fails to initialize it is removed from the <em class="parameter"><code>modules</code></em>
  list.
 If the <em class="parameter"><code>failure_callback</code></em>
- is not <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> then it is called with the modules that
+ is not <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> then it is called with the modules that
 fail to initialize. For example, you may pass <a class="link" href="p11-kit-Modules.html#p11-kit-module-release" title="p11_kit_module_release ()"><code class="function">p11_kit_module_release()</code></a>
 as a <em class="parameter"><code>failure_callback</code></em>
  if the <em class="parameter"><code>modules</code></em>
@@ -356,14 +362,14 @@ as a <em class="parameter"><code>failure_callback</code></em>
 module that failed to initialize. Non-critical module failures do not affect
 the return value. If no critical modules failed to initialize then the
 return value will be <code class="literal">CKR_OK</code>.</p>
-<p>When modules are removed, the list will be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> terminated at the
+<p>When modules are removed, the list will be <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> terminated at the
 appropriate place so it can continue to be used as a modules list.</p>
 <p>This function does not accept a <code class="code">CK_C_INITIALIZE_ARGS</code> argument.
 Custom initialization arguments cannot be supported when multiple consumers
 load the same module.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.5.11"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-modules-initialize.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -372,7 +378,7 @@ load the same module.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>modules</p></td>
-<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> terminated list of modules</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> terminated list of modules</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -384,16 +390,15 @@ load the same module.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.2.6.5.12"></a><h4>Returns</h4>
+<a name="p11-kit-modules-initialize.returns"></a><h4>Returns</h4>
 <p> <code class="literal">CKR_OK</code> or the failure code of the last critical
 module that failed to initialize.</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="p11-kit-modules-finalize"></a><h3>p11_kit_modules_finalize ()</h3>
-<pre class="programlisting"><a href="http://developer.gnome.org/gck/stable/pkcs11-links.html#CK-RV:CAPS"><span class="returnvalue">CK_RV</span></a>
+<pre class="programlisting"><span class="returnvalue">CK_RV</span>
 p11_kit_modules_finalize (<em class="parameter"><code><span class="type">CK_FUNCTION_LIST</span> **modules</code></em>);</pre>
 <p>Finalize each module in the <em class="parameter"><code>modules</code></em>
  list by calling its
@@ -415,8 +420,8 @@ PKCS#11 specification. In addition there are no guarantees that
 thread-safe behavior will occur if multiple callers finalize from
 different threads.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.6.8"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-modules-finalize.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -430,10 +435,9 @@ different threads.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.2.6.6.9"></a><h4>Returns</h4>
+<a name="p11-kit-modules-finalize.returns"></a><h4>Returns</h4>
 <p> <code class="literal">CKR_OK</code> or the failure code of the last
 module that failed to finalize</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -448,8 +452,8 @@ the module pointers is also freed by this function.</p>
 callers using them have done so. If the modules were initialized, they
 should have been finalized first.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.7.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-modules-release.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -472,6 +476,8 @@ p11_kit_module_load (<em class="parameter"><code>const <span class="type">char</
 <p>Load an arbitrary PKCS#11 module from a dynamic library file, and
 initialize it. Normally using the <a class="link" href="p11-kit-Modules.html#p11-kit-modules-load" title="p11_kit_modules_load ()"><code class="function">p11_kit_modules_load()</code></a> function
 is preferred.</p>
+<p>A full file path or just (path/)filename relative to
+P11_MODULE_PATH are accepted.</p>
 <p>Using this function to load modules allows coordination between multiple
 callers of the same module in a single process. If <em class="parameter"><code>flags</code></em>
  contains the
@@ -485,8 +491,8 @@ usually unnecessary) to use this function on registered modules.</p>
 <p>If this function fails, then an error message will be available via the
 <a class="link" href="p11-kit-Utilities.html#p11-kit-message" title="p11_kit_message ()"><code class="function">p11_kit_message()</code></a> function.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.8.9"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-module-load.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -495,7 +501,7 @@ usually unnecessary) to use this function on registered modules.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>module_path</p></td>
-<td class="parameter_description"><p>full file path of module library</p></td>
+<td class="parameter_description"><p>relative or full file path of module library</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -507,15 +513,14 @@ usually unnecessary) to use this function on registered modules.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.2.6.8.10"></a><h4>Returns</h4>
-<p> the loaded module PKCS#11 functions or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on failure</p>
-<p></p>
+<a name="p11-kit-module-load.returns"></a><h4>Returns</h4>
+<p> the loaded module PKCS#11 functions or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on failure</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="p11-kit-module-initialize"></a><h3>p11_kit_module_initialize ()</h3>
-<pre class="programlisting"><a href="http://developer.gnome.org/gck/stable/pkcs11-links.html#CK-RV:CAPS"><span class="returnvalue">CK_RV</span></a>
+<pre class="programlisting"><span class="returnvalue">CK_RV</span>
 p11_kit_module_initialize (<em class="parameter"><code><span class="type">CK_FUNCTION_LIST</span> *module</code></em>);</pre>
 <p>Initialize a PKCS#11 module by calling its <code class="literal">C_Initialize</code>
 function.</p>
@@ -534,8 +539,8 @@ different threads.</p>
 Custom initialization arguments cannot be supported when multiple consumers
 load the same module.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.9.8"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-module-initialize.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -549,15 +554,14 @@ load the same module.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.2.6.9.9"></a><h4>Returns</h4>
+<a name="p11-kit-module-initialize.returns"></a><h4>Returns</h4>
 <p> <code class="literal">CKR_OK</code> or a failure code</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="p11-kit-module-finalize"></a><h3>p11_kit_module_finalize ()</h3>
-<pre class="programlisting"><a href="http://developer.gnome.org/gck/stable/pkcs11-links.html#CK-RV:CAPS"><span class="returnvalue">CK_RV</span></a>
+<pre class="programlisting"><span class="returnvalue">CK_RV</span>
 p11_kit_module_finalize (<em class="parameter"><code><span class="type">CK_FUNCTION_LIST</span> *module</code></em>);</pre>
 <p>Finalize a PKCS#11 module by calling its <code class="literal">C_Finalize</code>
 function.</p>
@@ -573,8 +577,8 @@ PKCS#11 specification. In addition there are no guarantees that
 thread-safe behavior will occur if multiple callers finalize from
 different threads.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.10.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-module-finalize.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -588,9 +592,8 @@ different threads.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.2.6.10.8"></a><h4>Returns</h4>
+<a name="p11-kit-module-finalize.returns"></a><h4>Returns</h4>
 <p> <code class="literal">CKR_OK</code> or a failure code</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -602,8 +605,8 @@ p11_kit_module_release (<em class="parameter"><code><span class="type">CK_FUNCTI
 <p>The module may be either managed or unmanaged. The <code class="literal">C_Finalize</code>
 function will be called if no other callers are using this module.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.11.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-module-release.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -634,8 +637,8 @@ managed or unmanaged.</p>
 'owned' by the <em class="parameter"><code>modules</code></em>
  list.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.12.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-module-for-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -656,9 +659,8 @@ managed or unmanaged.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.2.6.12.8"></a><h4>Returns</h4>
-<p> the module which matches the name, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no match.</p>
-<p></p>
+<a name="p11-kit-module-for-name.returns"></a><h4>Returns</h4>
+<p> the module which matches the name, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no match.</p>
 </div>
 </div>
 <hr>
@@ -669,11 +671,11 @@ p11_kit_module_get_name (<em class="parameter"><code><span class="type">CK_FUNCT
 <p>Get the configured name of the PKCS#11 module.</p>
 <p>Configured modules are loaded by <a class="link" href="p11-kit-Modules.html#p11-kit-modules-load" title="p11_kit_modules_load ()"><code class="function">p11_kit_modules_load()</code></a>. The module
 passed to this function can be either managed or unmanaged. Non
-configured modules will return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+configured modules will return <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <p>Use <code class="function">free()</code> to release the return value when you're done with it.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.13.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-module-get-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -687,10 +689,9 @@ configured modules will return <a href="https://developer.gnome.org/glib/unstabl
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.2.6.13.8"></a><h4>Returns</h4>
+<a name="p11-kit-module-get-name.returns"></a><h4>Returns</h4>
 <p> a newly allocated string containing the module name, or</p>
 <code class="code">NULL</code> if the module is not a configured module
-<p></p>
 </div>
 </div>
 <hr>
@@ -706,8 +707,8 @@ to be critical, and not be skipped over if it fails to initialize or
 load. This flag is also set for modules that are not configured, but have
 been loaded in another fashion.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.14.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-module-get-flags.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -721,9 +722,39 @@ been loaded in another fashion.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.2.6.14.8"></a><h4>Returns</h4>
+<a name="p11-kit-module-get-flags.returns"></a><h4>Returns</h4>
 <p> the flags for the module</p>
-<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="p11-kit-module-get-filename"></a><h3>p11_kit_module_get_filename ()</h3>
+<pre class="programlisting"><span class="returnvalue">char</span> *
+p11_kit_module_get_filename (<em class="parameter"><code><span class="type">CK_FUNCTION_LIST</span> *module</code></em>);</pre>
+<p>Get the configured name of the PKCS#11 module.</p>
+<p>Configured modules are loaded by <a class="link" href="p11-kit-Modules.html#p11-kit-modules-load" title="p11_kit_modules_load ()"><code class="function">p11_kit_modules_load()</code></a>. The module
+passed to this function can be either managed or unmanaged. Non
+configured modules will return <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+<p>Use <code class="function">free()</code> to release the return value when you're done with it.</p>
+<div class="refsect3">
+<a name="p11-kit-module-get-filename.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>module</p></td>
+<td class="parameter_description"><p>pointer to a loaded module</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="p11-kit-module-get-filename.returns"></a><h4>Returns</h4>
+<p> a newly allocated string containing the module name, or</p>
+<code class="code">NULL</code> if the module is not a configured module
 </div>
 </div>
 <hr>
@@ -734,16 +765,16 @@ p11_kit_config_option (<em class="parameter"><code><span class="type">CK_FUNCTIO
                        <em class="parameter"><code>const <span class="type">char</span> *option</code></em>);</pre>
 <p>Retrieve the value for a configured option.</p>
 <p>If <em class="parameter"><code>module</code></em>
- is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then the global option with the given name will
+ is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then the global option with the given name will
 be retrieved. Otherwise <em class="parameter"><code>module</code></em>
  should point to a configured loaded module.
 If no such <em class="parameter"><code>option</code></em>
  or configured <em class="parameter"><code>module</code></em>
- exists, then <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> will be returned.</p>
+ exists, then <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> will be returned.</p>
 <p>Use <code class="function">free()</code> to release the returned value.</p>
 <div class="refsect3">
-<a name="id-1.7.2.6.15.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="p11-kit-config-option.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -752,7 +783,7 @@ If no such <em class="parameter"><code>option</code></em>
 <tbody>
 <tr>
 <td class="parameter_name"><p>module</p></td>
-<td class="parameter_description"><p>the module to retrieve the option for, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for global options</p></td>
+<td class="parameter_description"><p>the module to retrieve the option for, or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for global options</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -764,9 +795,8 @@ If no such <em class="parameter"><code>option</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.7.2.6.15.8"></a><h4>Returns</h4>
-<p> the option value or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p>
-<p></p>
+<a name="p11-kit-config-option.returns"></a><h4>Returns</h4>
+<p> the option value or <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p>
 </div>
 </div>
 </div>
@@ -792,7 +822,6 @@ callers of the same module.</p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.25.1</div>
 </body>
 </html>

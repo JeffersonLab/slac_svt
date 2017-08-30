@@ -7,14 +7,15 @@
 package List::Util;
 
 use strict;
+use warnings;
 require Exporter;
 
 our @ISA        = qw(Exporter);
 our @EXPORT_OK  = qw(
-  all any first min max minstr maxstr none notall product reduce sum sum0 shuffle
-  pairmap pairgrep pairfirst pairs pairkeys pairvalues
+  all any first min max minstr maxstr none notall product reduce sum sum0 shuffle uniq uniqnum uniqstr
+  pairs unpairs pairkeys pairvalues pairmap pairgrep pairfirst
 );
-our $VERSION    = "1.41";
+our $VERSION    = "1.46_02";
 our $XS_VERSION = $VERSION;
 $VERSION    = eval $VERSION;
 
@@ -38,17 +39,21 @@ sub import
 sub List::Util::_Pair::key   { shift->[0] }
 sub List::Util::_Pair::value { shift->[1] }
 
-1;
-
-__END__
-
 =head1 NAME
 
 List::Util - A selection of general-utility list subroutines
 
 =head1 SYNOPSIS
 
-    use List::Util qw(first max maxstr min minstr reduce shuffle sum);
+    use List::Util qw(
+      reduce any all none notall first
+
+      max maxstr min minstr product sum sum0
+
+      pairs unpairs pairkeys pairvalues pairfirst pairgrep pairmap
+
+      shuffle uniq uniqnum uniqstr
+    );
 
 =head1 DESCRIPTION
 
@@ -67,7 +72,9 @@ The following set of functions all reduce a list down to a single value.
 
 =cut
 
-=head2 $result = reduce { BLOCK } @list
+=head2 reduce
+
+    $result = reduce { BLOCK } @list
 
 Reduces C<@list> by calling C<BLOCK> in a scalar context multiple times,
 setting C<$a> and C<$b> each time. The first call will be with C<$a> and C<$b>
@@ -106,6 +113,20 @@ sure that you always pass that identity value as the first argument to prevent
 C<undef> being returned
 
   $foo = reduce { $a + $b } 0, @values;             # sum with 0 identity value
+
+The above example code blocks also suggest how to use C<reduce> to build a
+more efficient combined version of one of these basic functions and a C<map>
+block. For example, to find the total length of the all the strings in a list,
+we could use
+
+    $total = sum map { length } @strings;
+
+However, this produces a list of temporary integer values as long as the
+original list of strings, only to reduce it down to a single value again. We
+can compute the same result more efficiently by using C<reduce> with a code
+block that accumulates lengths by writing this instead as:
+
+    $total = reduce { $a + length $b } 0, @strings
 
 The remaining list-reduction functions are all specialisations of this generic
 idea.
@@ -254,7 +275,119 @@ or just a list of values. The functions will all preserve the original ordering
 of the pairs, and will not be confused by multiple pairs having the same "key"
 value - nor even do they require that the first of each pair be a plain string.
 
+B<NOTE>: At the time of writing, the following C<pair*> functions that take a
+block do not modify the value of C<$_> within the block, and instead operate
+using the C<$a> and C<$b> globals instead. This has turned out to be a poor
+design, as it precludes the ability to provide a C<pairsort> function. Better
+would be to pass pair-like objects as 2-element array references in C<$_>, in
+a style similar to the return value of the C<pairs> function. At some future
+version this behaviour may be added.
+
+Until then, users are alerted B<NOT> to rely on the value of C<$_> remaining
+unmodified between the outside and the inside of the control block. In
+particular, the following example is B<UNSAFE>:
+
+ my @kvlist = ...
+
+ foreach (qw( some keys here )) {
+    my @items = pairgrep { $a eq $_ } @kvlist;
+    ...
+ }
+
+Instead, write this using a lexical variable:
+
+ foreach my $key (qw( some keys here )) {
+    my @items = pairgrep { $a eq $key } @kvlist;
+    ...
+ }
+
 =cut
+
+=head2 pairs
+
+    my @pairs = pairs @kvlist;
+
+I<Since version 1.29.>
+
+A convenient shortcut to operating on even-sized lists of pairs, this function
+returns a list of C<ARRAY> references, each containing two items from the
+given list. It is a more efficient version of
+
+    @pairs = pairmap { [ $a, $b ] } @kvlist
+
+It is most convenient to use in a C<foreach> loop, for example:
+
+    foreach my $pair ( pairs @kvlist ) {
+       my ( $key, $value ) = @$pair;
+       ...
+    }
+
+Since version C<1.39> these C<ARRAY> references are blessed objects,
+recognising the two methods C<key> and C<value>. The following code is
+equivalent:
+
+    foreach my $pair ( pairs @kvlist ) {
+       my $key   = $pair->key;
+       my $value = $pair->value;
+       ...
+    }
+
+=head2 unpairs
+
+    my @kvlist = unpairs @pairs
+
+I<Since version 1.42.>
+
+The inverse function to C<pairs>; this function takes a list of C<ARRAY>
+references containing two elements each, and returns a flattened list of the
+two values from each of the pairs, in order. This is notionally equivalent to
+
+    my @kvlist = map { @{$_}[0,1] } @pairs
+
+except that it is implemented more efficiently internally. Specifically, for
+any input item it will extract exactly two values for the output list; using
+C<undef> if the input array references are short.
+
+Between C<pairs> and C<unpairs>, a higher-order list function can be used to
+operate on the pairs as single scalars; such as the following near-equivalents
+of the other C<pair*> higher-order functions:
+
+    @kvlist = unpairs grep { FUNC } pairs @kvlist
+    # Like pairgrep, but takes $_ instead of $a and $b
+
+    @kvlist = unpairs map { FUNC } pairs @kvlist
+    # Like pairmap, but takes $_ instead of $a and $b
+
+Note however that these versions will not behave as nicely in scalar context.
+
+Finally, this technique can be used to implement a sort on a keyvalue pair
+list; e.g.:
+
+    @kvlist = unpairs sort { $a->key cmp $b->key } pairs @kvlist
+
+=head2 pairkeys
+
+    my @keys = pairkeys @kvlist;
+
+I<Since version 1.29.>
+
+A convenient shortcut to operating on even-sized lists of pairs, this function
+returns a list of the the first values of each of the pairs in the given list.
+It is a more efficient version of
+
+    @keys = pairmap { $a } @kvlist
+
+=head2 pairvalues
+
+    my @values = pairvalues @kvlist;
+
+I<Since version 1.29.>
+
+A convenient shortcut to operating on even-sized lists of pairs, this function
+returns a list of the the second values of each of the pairs in the given list.
+It is a more efficient version of
+
+    @values = pairmap { $b } @kvlist
 
 =head2 pairgrep
 
@@ -329,58 +462,6 @@ will be visible to the caller.
 
 See L</KNOWN BUGS> for a known-bug with C<pairmap>, and a workaround.
 
-=head2 pairs
-
-    my @pairs = pairs @kvlist;
-
-I<Since version 1.29.>
-
-A convenient shortcut to operating on even-sized lists of pairs, this function
-returns a list of ARRAY references, each containing two items from the given
-list. It is a more efficient version of
-
-    @pairs = pairmap { [ $a, $b ] } @kvlist
-
-It is most convenient to use in a C<foreach> loop, for example:
-
-    foreach my $pair ( pairs @KVLIST ) {
-       my ( $key, $value ) = @$pair;
-       ...
-    }
-
-Since version C<1.39> these ARRAY references are blessed objects, recognising
-the two methods C<key> and C<value>. The following code is equivalent:
-
-    foreach my $pair ( pairs @KVLIST ) {
-       my $key   = $pair->key;
-       my $value = $pair->value;
-       ...
-    }
-
-=head2 pairkeys
-
-    my @keys = pairkeys @kvlist;
-
-I<Since version 1.29.>
-
-A convenient shortcut to operating on even-sized lists of pairs, this function
-returns a list of the the first values of each of the pairs in the given list.
-It is a more efficient version of
-
-    @keys = pairmap { $a } @kvlist
-
-=head2 pairvalues
-
-    my @values = pairvalues @kvlist;
-
-I<Since version 1.29.>
-
-A convenient shortcut to operating on even-sized lists of pairs, this function
-returns a list of the the second values of each of the pairs in the given list.
-It is a more efficient version of
-
-    @values = pairmap { $b } @kvlist
-
 =cut
 
 =head1 OTHER FUNCTIONS
@@ -394,6 +475,72 @@ It is a more efficient version of
 Returns the values of the input in a random order
 
     @cards = shuffle 0..51      # 0..51 in a random order
+
+=head2 uniq
+
+    my @subset = uniq @values
+
+I<Since version 1.45.>
+
+Filters a list of values to remove subsequent duplicates, as judged by a
+DWIM-ish string equality or C<undef> test. Preserves the order of unique
+elements, and retains the first value of any duplicate set.
+
+    my $count = uniq @values
+
+In scalar context, returns the number of elements that would have been
+returned as a list.
+
+The C<undef> value is treated by this function as distinct from the empty
+string, and no warning will be produced. It is left as-is in the returned
+list. Subsequent C<undef> values are still considered identical to the first,
+and will be removed.
+
+=head2 uniqnum
+
+    my @subset = uniqnum @values
+
+I<Since version 1.44.>
+
+Filters a list of values to remove subsequent duplicates, as judged by a
+numerical equality test. Preserves the order of unique elements, and retains
+the first value of any duplicate set.
+
+    my $count = uniqnum @values
+
+In scalar context, returns the number of elements that would have been
+returned as a list.
+
+Note that C<undef> is treated much as other numerical operations treat it; it
+compares equal to zero but additionally produces a warning if such warnings
+are enabled (C<use warnings 'uninitialized';>). In addition, an C<undef> in
+the returned list is coerced into a numerical zero, so that the entire list of
+values returned by C<uniqnum> are well-behaved as numbers.
+
+Note also that multiple IEEE C<NaN> values are treated as duplicates of
+each other, regardless of any differences in their payloads, and despite
+the fact that C<< 0+'NaN' == 0+'NaN' >> yields false.
+
+=head2 uniqstr
+
+    my @subset = uniqstr @values
+
+I<Since version 1.45.>
+
+Filters a list of values to remove subsequent duplicates, as judged by a
+string equality test. Preserves the order of unique elements, and retains the
+first value of any duplicate set.
+
+    my $count = uniqstr @values
+
+In scalar context, returns the number of elements that would have been
+returned as a list.
+
+Note that C<undef> is treated much as other string operations treat it; it
+compares equal to the empty string but additionally produces a warning if such
+warnings are enabled (C<use warnings 'uninitialized';>). In addition, an
+C<undef> in the returned list is coerced into an empty string, so that the
+entire list of values returned by C<uniqstr> are well-behaved as strings.
 
 =cut
 
@@ -442,6 +589,21 @@ afterwards. Lexical variables that are only used during the lifetime of the
 block's execution will take their individual values for each invocation, as
 normal.
 
+=head2 uniqnum() on oversized bignums
+
+Due to the way that C<uniqnum()> compares numbers, it cannot distinguish
+differences between bignums (especially bigints) that are too large to fit in
+the native platform types. For example,
+
+ my $x = Math::BigInt->new( "1" x 100 );
+ my $y = $x + 1;
+
+ say for uniqnum( $x, $y );
+
+Will print just the value of C<$x>, believing that C<$y> is a numerically-
+equivalent value. This bug does not affect C<uniqstr()>, which will correctly
+observe that the two values stringify to different strings.
+
 =head1 SUGGESTED ADDITIONS
 
 The following are additions that have been requested, but I have been reluctant
@@ -469,3 +631,5 @@ Recent additions and current maintenance by
 Paul Evans, <leonerd@leonerd.org.uk>.
 
 =cut
+
+1;

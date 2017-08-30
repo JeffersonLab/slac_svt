@@ -1,0 +1,36 @@
+%NAME%
+iperf3
+
+%VERSION%
+3.1.7-1
+
+%DESC%
+Internet Protocol bandwidth measuring tool
+
+%URL%
+https://github.com/esnet/iperf
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1489206246
+
+%INSTALLDATE%
+1495690695
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu8@archlinuxarm.org>
+
+%SIZE%
+198656
+
+%LICENSE%
+BSD
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+glibc
+

@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>libkmod-loaded: libkmod Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="libkmod Reference Manual">
 <link rel="up" href="ch01.html" title="libkmod">
 <link rel="prev" href="libkmod-libkmod-module.html" title="libkmod-module">
 <link rel="next" href="api-index-full.html" title="API Index">
-<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -33,7 +33,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="libkmod-libkmod-loaded.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -116,8 +116,8 @@ not unref <em class="parameter"><code>ctx</code></em>
  before all the desired operations with the returned list are
 completed.</p>
 <div class="refsect3">
-<a name="id-1.2.6.5.2.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-new-from-loaded.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -138,7 +138,7 @@ completed.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.5.2.7"></a><h4>Returns</h4>
+<a name="kmod-module-new-from-loaded.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 on error.</p>
 </div>
 </div>
@@ -151,8 +151,8 @@ kmod_module_get_initstate (<em class="parameter"><code>const <span class="type">
 , as returned by Linux Kernel, by reading
 /sys filesystem.</p>
 <div class="refsect3">
-<a name="id-1.2.6.5.3.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-initstate.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -166,7 +166,7 @@ kmod_module_get_initstate (<em class="parameter"><code>const <span class="type">
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.5.3.6"></a><h4>Returns</h4>
+<a name="kmod-module-get-initstate.returns"></a><h4>Returns</h4>
 <p> &lt; 0 on error or module state if module is found in kernel, valid states are
 KMOD_MODULE_BUILTIN: module is builtin;
 KMOD_MODULE_LIVE: module is live in kernel;
@@ -181,8 +181,8 @@ KMOD_MODULE_GOING: module is being unloaded.</p>
 kmod_module_initstate_str (<em class="parameter"><code><span class="type">enum kmod_module_initstate</span> state</code></em>);</pre>
 <p>Translate a initstate to a string.</p>
 <div class="refsect3">
-<a name="id-1.2.6.5.4.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-initstate-str.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -196,7 +196,7 @@ kmod_module_initstate_str (<em class="parameter"><code><span class="type">enum k
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.5.4.6"></a><h4>Returns</h4>
+<a name="kmod-module-initstate-str.returns"></a><h4>Returns</h4>
 <p> the string associated to the <em class="parameter"><code>state</code></em>
 . This string is statically
 allocated, do not free it.</p>
@@ -212,8 +212,8 @@ the size is read from the coresize attribute in /sys/module. For older
 kernels, this falls back on /proc/modules and searches for the specified
 module to get its size.</p>
 <div class="refsect3">
-<a name="id-1.2.6.5.5.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-size.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -227,7 +227,7 @@ module to get its size.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.5.5.6"></a><h4>Returns</h4>
+<a name="kmod-module-get-size.returns"></a><h4>Returns</h4>
 <p> the size of this kmod module.</p>
 </div>
 </div>
@@ -240,8 +240,8 @@ kmod_module_get_refcnt (<em class="parameter"><code>const <span class="type">str
 , as returned by Linux Kernel, by reading
 /sys filesystem.</p>
 <div class="refsect3">
-<a name="id-1.2.6.5.6.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-refcnt.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -255,8 +255,8 @@ kmod_module_get_refcnt (<em class="parameter"><code>const <span class="type">str
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.5.6.6"></a><h4>Returns</h4>
-<p> 0 on success or &lt; 0 on failure.</p>
+<a name="kmod-module-get-refcnt.returns"></a><h4>Returns</h4>
+<p> the reference count on success or &lt; 0 on failure.</p>
 </div>
 </div>
 <hr>
@@ -269,8 +269,8 @@ kmod_module_get_holders (<em class="parameter"><code>const <span class="type">st
 Kernel. After use, free the <em class="parameter"><code>list</code></em>
  by calling <a class="link" href="libkmod-libkmod-module.html#kmod-module-unref-list" title="kmod_module_unref_list ()"><code class="function">kmod_module_unref_list()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.6.5.7.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-holders.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -284,7 +284,7 @@ Kernel. After use, free the <em class="parameter"><code>list</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.6.5.7.6"></a><h4>Returns</h4>
+<a name="kmod-module-get-holders.returns"></a><h4>Returns</h4>
 <p> a new list of kmod modules on success or NULL on failure.</p>
 </div>
 </div>
@@ -294,6 +294,6 @@ Kernel. After use, free the <em class="parameter"><code>list</code></em>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.24</div>
+<hr>Generated by GTK-Doc V1.25.1</div>
 </body>
 </html>

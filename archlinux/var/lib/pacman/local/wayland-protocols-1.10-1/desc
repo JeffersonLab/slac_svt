@@ -1,0 +1,36 @@
+%NAME%
+wayland-protocols
+
+%VERSION%
+1.10-1
+
+%DESC%
+Specifications of extended Wayland protocols
+
+%URL%
+https://wayland.freedesktop.org/
+
+%ARCH%
+any
+
+%BUILDDATE%
+1502498756
+
+%INSTALLDATE%
+1495690977
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu8@archlinuxarm.org>
+
+%SIZE%
+396288
+
+%REASON%
+1
+
+%LICENSE%
+MIT
+
+%VALIDATION%
+sha256
+

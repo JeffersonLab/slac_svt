@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="UP"
 TITLE="FcPattern"
 HREF="x102.html#AEN241"><LINK
@@ -46,7 +46,7 @@ VALIGN="bottom"
 ><A
 HREF="fcpatternadd-type.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -60,7 +60,7 @@ VALIGN="bottom"
 ><A
 HREF="fcpatternget-type.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ></TABLE
@@ -94,48 +94,16 @@ CLASS="FUNCSYNOPSIS"
 ><A
 NAME="AEN581"
 ></A
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="FUNCSYNOPSISINFO"
->#include &#60;fontconfig/fontconfig.h&#62;
+>#include &lt;fontconfig/fontconfig.h&gt;
 	</PRE
-></TD
-></TR
-></TABLE
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcResult <TT
-CLASS="FUNCTION"
->FcPatternGet</TT
-></CODE
->(FcPattern *<TT
-CLASS="PARAMETER"
-><I
->p</I
-></TT
->, const char *<TT
-CLASS="PARAMETER"
-><I
->object</I
-></TT
->, int <TT
-CLASS="PARAMETER"
-><I
->id</I
-></TT
->, FcValue *<TT
-CLASS="PARAMETER"
-><I
->v</I
-></TT
->);</CODE
+>FcResult FcPatternGet</CODE
+>(FcPattern *p, const char *object, int id, FcValue *v);</CODE
 ></P
 ><P
 ></P
@@ -149,22 +117,16 @@ NAME="AEN594"
 ><H2
 >Description</H2
 ><P
->Returns in <TT
+>Returns in <CODE
 CLASS="PARAMETER"
-><I
->v</I
-></TT
-> the <TT
+>v</CODE
+> the <CODE
 CLASS="PARAMETER"
-><I
->id</I
-></TT
+>id</CODE
 >'th value
-associated with the property <TT
+associated with the property <CODE
 CLASS="PARAMETER"
-><I
->object</I
-></TT
+>object</CODE
 >.
 The value returned is not a copy, but rather refers to the data stored
 within the pattern directly.  Applications must not free this value.
@@ -188,14 +150,14 @@ VALIGN="top"
 ><A
 HREF="fcpatternadd-type.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD
@@ -206,7 +168,7 @@ VALIGN="top"
 ><A
 HREF="fcpatternget-type.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ><TR

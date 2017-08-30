@@ -51,7 +51,7 @@ PERLVAR(I, scopestack_max, I32)
 PERLVAR(I, tmps_stack,	SV **)		/* mortals we've made */
 PERLVARI(I, tmps_ix,	SSize_t,	-1)
 PERLVARI(I, tmps_floor,	SSize_t,	-1)
-PERLVAR(I, tmps_max,	SSize_t)
+PERLVAR(I, tmps_max,	SSize_t)        /* first unalloced slot in tmps stack */
 
 PERLVARI(I, sub_generation, U32, 1)	/* incr to invalidate method cache */
 
@@ -59,9 +59,6 @@ PERLVAR(I, markstack,	I32 *)		/* stack_sp locations we're
 					   remembering */
 PERLVAR(I, markstack_ptr, I32 *)
 PERLVAR(I, markstack_max, I32 *)
-
-PERLVARI(I, sawalias,	bool,	FALSE)	/* must enable common-vars
-					   pessimisation */
 
 #ifdef PERL_HASH_RANDOMIZE_KEYS
 #ifdef USE_PERL_PERTURB_KEYS
@@ -76,18 +73,36 @@ PERLVAR(I, multideref_pc, UNOP_AUX_item *)
 
 /* Fields used by magic variables such as $@, $/ and so on */
 PERLVAR(I, curpm,	PMOP *)		/* what to do \ interps in REs from */
+PERLVAR(I, curpm_under,        PMOP *)                /* what to do \ interps in REs from */
 
 PERLVAR(I, tainting,	bool)		/* doing taint checks */
-PERLVAR(I, tainted,	bool)		/* using variables controlled by $< */
+PERLVARI(I, tainted,	bool, FALSE)	/* using variables controlled by $< */
+
+/* PL_delaymagic is currently used for two purposes: to assure simultaneous
+ * updates in ($<,$>) = ..., and to assure atomic update in push/unshift
+ * @ISA, It works like this: a few places such as pp_push set the DM_DELAY
+ * flag; then various places such as av_store() skip mg_set(ary) if this
+ * flag is set, and various magic vtable methods set flags like
+ * DM_ARRAY_ISA if they've seen something of that ilk. Finally when
+ * control returns to pp_push or whatever, it sees if any of those flags
+ * have been set, and if so finally calls mg_set().
+ *
+ * NB: PL_delaymagic is automatically saved and restored by JUMPENV_PUSH
+ * / POP. This removes the need to do ENTER/SAVEI16(PL_delaymagic)/LEAVE
+ * in hot code like pp_push.
+ */
 PERLVAR(I, delaymagic,	U16)		/* ($<,$>) = ... */
+
 PERLVAR(I, localizing,	U8)		/* are we processing a local() list? */
 PERLVAR(I, in_eval,	U8)		/* trap "fatal" errors? */
 PERLVAR(I, defgv,	GV *)           /* the *_ glob */
 /*
 
-=for apidoc mn|bool|PL_dowarn
+=for apidoc mn|U8|PL_dowarn
 
-The C variable which corresponds to Perl's $^W warning variable.
+The C variable that roughly corresponds to Perl's C<$^W> warning variable.
+However, C<$^W> is treated as a boolean, whereas C<PL_dowarn> is a
+collection of flag bits.
 
 =cut
 */
@@ -136,11 +151,11 @@ PERLVAR(I, comppad,	PAD *)		/* storage for lexically scoped temporaries */
 This is the C<undef> SV.  Always refer to this as C<&PL_sv_undef>.
 
 =for apidoc Amn|SV|PL_sv_no
-This is the C<false> SV.  See C<PL_sv_yes>.  Always refer to this as
+This is the C<false> SV.  See C<L</PL_sv_yes>>.  Always refer to this as
 C<&PL_sv_no>.
 
 =for apidoc Amn|SV|PL_sv_yes
-This is the C<true> SV.  See C<PL_sv_no>.  Always refer to this as
+This is the C<true> SV.  See C<L</PL_sv_no>>.  Always refer to this as
 C<&PL_sv_yes>.
 
 =cut
@@ -177,11 +192,6 @@ PERLVAR(I, statbuf,	Stat_t)
 PERLVAR(I, statcache,	Stat_t)		/* _ */
 PERLVAR(I, statgv,	GV *)
 PERLVARI(I, statname,	SV *,	NULL)
-
-#ifdef HAS_TIMES
-/* Will be removed soon after v5.22.0. See RT #121351 */
-PERLVAR(I, timesbuf,	struct tms)
-#endif
 
 /*
 =for apidoc mn|SV*|PL_rs
@@ -238,6 +248,7 @@ PERLVAR(I, exit_flags,	U8)		/* was exit() unexpected, etc. */
 
 PERLVAR(I, utf8locale,	bool)		/* utf8 locale detected */
 PERLVAR(I, in_utf8_CTYPE_locale, bool)
+PERLVAR(I, in_utf8_COLLATE_locale, bool)
 #ifdef USE_LOCALE_CTYPE
     PERLVAR(I, warn_locale, SV *)
 #endif
@@ -378,19 +389,19 @@ PERLVAR(I, DBline,	GV *)		/*  *DB::line   */
 When Perl is run in debugging mode, with the B<-d> switch, this GV contains
 the SV which holds the name of the sub being debugged.  This is the C
 variable which corresponds to Perl's $DB::sub variable.  See
-C<PL_DBsingle>.
+C<L</PL_DBsingle>>.
 
 =for apidoc mn|SV *|PL_DBsingle
 When Perl is run in debugging mode, with the B<-d> switch, this SV is a
 boolean which indicates whether subs are being single-stepped.
 Single-stepping is automatically turned on after every step.  This is the C
 variable which corresponds to Perl's $DB::single variable.  See
-C<PL_DBsub>.
+C<L</PL_DBsub>>.
 
 =for apidoc mn|SV *|PL_DBtrace
 Trace variable used when Perl is run in debugging mode, with the B<-d>
 switch.  This is the C variable which corresponds to Perl's $DB::trace
-variable.  See C<PL_DBsingle>.
+variable.  See C<L</PL_DBsingle>>.
 
 =cut
 */
@@ -482,8 +493,8 @@ PERLVAR(I, compiling,	COP)		/* compiling/done executing marker */
 
 PERLVAR(I, compcv,	CV *)		/* currently compiling subroutine */
 PERLVAR(I, comppad_name, PADNAMELIST *)	/* variable names for "my" variables */
-PERLVAR(I, comppad_name_fill,	I32)	/* last "introduced" variable offset */
-PERLVAR(I, comppad_name_floor,	I32)	/* start of vars in innermost block */
+PERLVAR(I, comppad_name_fill,	PADOFFSET)/* last "introduced" variable offset */
+PERLVAR(I, comppad_name_floor,	PADOFFSET)/* start of vars in innermost block */
 
 #ifdef HAVE_INTERP_INTERN
 PERLVAR(I, sys_intern,	struct interp_intern)
@@ -492,7 +503,8 @@ PERLVAR(I, sys_intern,	struct interp_intern)
 
 /* more statics moved here */
 PERLVAR(I, DBcv,	CV *)		/* from perl.c */
-PERLVARI(I, generation,	int,	100)	/* from op.c */
+PERLVARI(I, generation,	int,	100)	/* scan sequence# for OP_AASSIGN
+                                           compile-time common elem detection */
 
 PERLVAR(I, unicode, U32)	/* Unicode features: $ENV{PERL_UNICODE} or -C */
 
@@ -534,27 +546,31 @@ PERLVARA(I, body_roots,	PERL_ARENA_ROOTS_SIZE, void*) /* array of body roots */
 
 PERLVAR(I, debug,	VOL U32)	/* flags given to -D switch */
 
-PERLVARI(I, maxo,	int,	MAXO)	/* maximum number of ops */
+PERLVARI(I, padlist_generation, U32, 1)	/* id to identify padlist clones */
 
 PERLVARI(I, runops,	runops_proc_t, RUNOPS_DEFAULT)
 
 PERLVAR(I, subname,	SV *)		/* name of current subroutine */
 
 PERLVAR(I, subline,	I32)		/* line this subroutine began on */
-PERLVAR(I, min_intro_pending, I32)	/* start of vars to introduce */
+PERLVAR(I, min_intro_pending, PADOFFSET)/* start of vars to introduce */
 
-PERLVAR(I, max_intro_pending, I32)	/* end of vars to introduce */
-PERLVAR(I, padix,	I32)		/* lowest unused index - 1
+PERLVAR(I, max_intro_pending, PADOFFSET)/* end of vars to introduce */
+PERLVAR(I, padix,	PADOFFSET)	/* lowest unused index - 1
 					   in current "register" pad */
-PERLVAR(I, constpadix,	I32)		/* lowest unused for constants */
+PERLVAR(I, constpadix,	PADOFFSET)	/* lowest unused for constants */
 
-PERLVAR(I, padix_floor,	I32)		/* how low may inner block reset padix */
+PERLVAR(I, padix_floor,	PADOFFSET)	/* how low may inner block reset padix */
 
 #ifdef USE_LOCALE_COLLATE
 PERLVAR(I, collation_name, char *)	/* Name of current collation */
 PERLVAR(I, collxfrm_base, Size_t)	/* Basic overhead in *xfrm() */
 PERLVARI(I, collxfrm_mult,Size_t, 2)	/* Expansion factor in *xfrm() */
 PERLVARI(I, collation_ix, U32,	0)	/* Collation generation index */
+PERLVARI(I, strxfrm_NUL_replacement, U8, 0)  /* Code point to replace NULs */
+PERLVARI(I, strxfrm_is_behaved, bool, TRUE)
+                            /* Assume until proven otherwise that it works */
+PERLVARI(I, strxfrm_max_cp, U8, 0)      /* Highest collating cp in locale */
 PERLVARI(I, collation_standard, bool, TRUE)
 					/* Assume simple collation */
 #endif /* USE_LOCALE_COLLATE */
@@ -611,8 +627,11 @@ PERLVARA(I, utf8_swash_ptrs, POSIX_SWASH_COUNT, SV *)
 PERLVARA(I, Posix_ptrs, POSIX_CC_COUNT, SV *)
 PERLVARA(I, XPosix_ptrs, POSIX_CC_COUNT, SV *)
 PERLVAR(I, GCB_invlist, SV *)
+PERLVAR(I, LB_invlist, SV *)
 PERLVAR(I, SB_invlist, SV *)
 PERLVAR(I, WB_invlist, SV *)
+PERLVAR(I, Assigned_invlist, SV *)
+PERLVAR(I, seen_deprecated_macro, HV *)
 
 PERLVAR(I, last_swash_hv, HV *)
 PERLVAR(I, last_swash_tmps, U8 *)
@@ -681,9 +700,6 @@ PERLVARI(I, known_layers, PerlIO_list_t *, NULL)
 PERLVARI(I, def_layerlist, PerlIO_list_t *, NULL)
 #endif
 
-PERLVARI(I, encoding,	SV *,	NULL)	/* $^ENCODING */
-PERLVARI(I, lex_encoding, SV *,	NULL)	/* encoding pragma */
-
 PERLVAR(I, utf8_idstart, SV *)
 PERLVAR(I, utf8_idcont,	SV *)
 PERLVAR(I, utf8_xidstart, SV *)
@@ -751,9 +767,7 @@ PERLVAR(I, debug_pad,	struct perl_debug_pad)	/* always needed because of the re 
 /* Hook for File::Glob */
 PERLVARI(I, globhook,	globhook_t, NULL)
 
-PERLVARI(I, padlist_generation, U32, 1)	/* id to identify padlist clones */
-
-/* The last unconditional member of the interpreter structure when 5.22.0 was
+/* The last unconditional member of the interpreter structure when 5.18.0 was
    released. The offset of the end of this is baked into a global variable in 
    any shared perl library which will allow a sanity test in future perl
    releases.  */
@@ -767,8 +781,11 @@ PERLVARI(I, my_cxt_keys, const char **, NULL) /* per-module array of pointers to
 #  endif
 #endif
 
-#ifdef PERL_TRACK_MEMPOOL
-/* For use with the memory debugging code in util.c  */
+#if defined(PERL_IMPLICIT_CONTEXT) || defined(PERL_DEBUG_READONLY_COW)
+/* For use with the memory debugging code in util.c. This is used only in
+ * DEBUGGING builds (as long as the relevant structure is defined), but
+ * defining it in non-debug builds too means that we retain binary
+ * compatibility between otherwise-compatible plain and debug builds. */
 PERLVAR(I, memory_debug_header, struct perl_memory_debug_header)
 #endif
 
@@ -794,6 +811,8 @@ PERLVARA(I, op_exec_cnt, OP_max+2, UV)	/* Counts of executed OPs of the given ty
 #endif
 
 PERLVAR(I, random_state, PL_RANDOM_STATE_TYPE)
+
+PERLVARI(I, dump_re_max_len, STRLEN, 0)
 
 /* If you are adding a U8 or U16, check to see if there are 'Space' comments
  * above on where there are gaps which currently will be structure padding.  */

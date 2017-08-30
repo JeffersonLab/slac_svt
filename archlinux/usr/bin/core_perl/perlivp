@@ -2,7 +2,9 @@
     eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
         if $running_under_some_shell;
 
-# perlivp v5.22.0
+# perlivp v5.26.0
+
+BEGIN { pop @INC if $INC[-1] eq '.' }
 
 sub usage {
     warn "@_\n" if @_;
@@ -65,7 +67,7 @@ $tests_total++;
 
 print "## Checking Perl version via variable '\$]'.\n" if $opt{'p'};
 
-my $ivp_VERSION = "5.022000";
+my $ivp_VERSION = "5.026000";
 
 
 $label = 'Perl version correct';
@@ -172,7 +174,7 @@ if (defined($Config{'extensions'})) {
         next if $_ eq 'XS/APItest';
         next if $_ eq 'XS/Typemap';
            # VMS$ perl  -e "eval ""require \""Devel/DProf.pm\"";"" print $@"
-           # \NT> perl  -e "eval \"require 'Devel/DProf.pm'\"; print $@"
+           # \NT> perl  -e "eval \"require './Devel/DProf.pm'\"; print $@"
            # DProf: run perl with -d to use DProf.
            # Compilation failed in require at (eval 1) line 1.
         eval " require \"$_.pm\"; ";

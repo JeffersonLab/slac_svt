@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>6.37. pam_unix - traditional password authentication</title><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="Linux-PAM_SAG.html" title="The Linux-PAM System Administrators' Guide"><link rel="up" href="sag-module-reference.html" title="Chapter 6. A reference guide for available modules"><link rel="prev" href="sag-pam_umask.html" title="6.36. pam_umask - set the file mode creation mask"><link rel="next" href="sag-pam_userdb.html" title="6.38. pam_userdb - authenticate against a db database"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">6.37. pam_unix - traditional password authentication</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="sag-pam_umask.html">Prev</a> </td><th width="60%" align="center">Chapter 6. A reference guide for available modules</th><td width="20%" align="right"> <a accesskey="n" href="sag-pam_userdb.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="sag-pam_unix"></a>6.37. pam_unix - traditional password authentication</h2></div></div></div><div class="cmdsynopsis"><p><code class="command">pam_unix.so</code>  [
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>6.37. pam_unix - traditional password authentication</title><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="Linux-PAM_SAG.html" title="The Linux-PAM System Administrators' Guide"><link rel="up" href="sag-module-reference.html" title="Chapter 6. A reference guide for available modules"><link rel="prev" href="sag-pam_umask.html" title="6.36. pam_umask - set the file mode creation mask"><link rel="next" href="sag-pam_userdb.html" title="6.38. pam_userdb - authenticate against a db database"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">6.37. pam_unix - traditional password authentication</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="sag-pam_umask.html">Prev</a> </td><th width="60%" align="center">Chapter 6. A reference guide for available modules</th><td width="20%" align="right"> <a accesskey="n" href="sag-pam_userdb.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="sag-pam_unix"></a>6.37. pam_unix - traditional password authentication</h2></div></div></div><div class="cmdsynopsis"><p><code class="command">pam_unix.so</code>  [
         ...
       ]</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sag-pam_unix-description"></a>6.37.1. DESCRIPTION</h3></div></div></div><p>
       This is the standard Unix authentication module. It uses standard
@@ -37,6 +37,11 @@
       was <code class="function">fork()</code>d. The <code class="option">noreap</code> module
       argument can be used to suppress this temporary shielding and may be
       needed for use with certain applications.
+    </p><p>
+      The maximum length of a password supported by the pam_unix module
+      via the helper binary is <span class="emphasis"><em>PAM_MAX_RESP_SIZE</em></span>
+      - currently 512 bytes. The rest of the password provided by the
+      conversation function to the module will be ignored.
     </p><p>
       The password component of this module performs the task of updating
       the user's password. The default encryption hash is taken from the
@@ -99,11 +104,11 @@
             example of the stacking of the <span class="command"><strong>pam_cracklib</strong></span>
             module documented below).
           </p></dd><dt><span class="term">
-          <code class="option">not_set_pass</code>
+          <code class="option">authtok_type=<em class="replaceable"><code>type</code></em></code>
         </span></dt><dd><p>
-            This argument is used to inform the module that it is not to
-            pay attention to/make available the old or new passwords from/to
-            other (stacked) password modules.
+            This argument can be used to modify the password prompt
+            when changing passwords to include the type of the password.
+            Empty by default.
           </p></dd><dt><span class="term">
           <code class="option">nis</code>
         </span></dt><dd><p>
@@ -115,6 +120,8 @@
             user are saved in <code class="filename">/etc/security/opasswd</code>
             in order to force password change history and keep the user
             from alternating between the same password too frequently.
+            The MD5 password hash algorithm is used for storing the
+            old passwords.
             Instead of this option the <span class="command"><strong>pam_pwhistory</strong></span>
             module should be used.
           </p></dd><dt><span class="term">
@@ -169,6 +176,19 @@
             Set a minimum password length of <em class="replaceable"><code>n</code></em>
             characters. The max. for DES crypt based passwords are 8
             characters.
+          </p></dd><dt><span class="term">
+          <code class="option">no_pass_expiry</code>
+        </span></dt><dd><p>
+            When set ignore password expiration as defined by the
+            <span class="emphasis"><em>shadow</em></span> entry of the user. The option has an
+            effect only in case <span class="emphasis"><em>pam_unix</em></span> was not used
+            for the authentication or it returned authentication failure
+            meaning that other authentication source or method succeeded.
+            The example can be public key authentication in
+            <span class="emphasis"><em>sshd</em></span>. The module will return
+            <span class="emphasis"><em>PAM_SUCCESS</em></span> instead of eventual
+            <span class="emphasis"><em>PAM_NEW_AUTHTOK_REQD</em></span> or
+            <span class="emphasis"><em>PAM_AUTHTOK_EXPIRED</em></span>.
           </p></dd></dl></div><p>
       Invalid arguments are logged with  <span class="citerefentry"><span class="refentrytitle">syslog</span>(3)</span>.
     </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sag-pam_unix-types"></a>6.37.3. MODULE TYPES PROVIDED</h3></div></div></div><p>

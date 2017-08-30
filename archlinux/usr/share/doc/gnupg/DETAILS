@@ -15,6 +15,7 @@ This is the DETAILS file for GnuPG which specifies some internals and
 parts of the external API for GPG and GPGSM.
 
 * Format of the colon listings
+
   The format is a based on colon separated record, each recods starts
   with a tag string and extends to the end of the line.  Here is an
   example:
@@ -31,10 +32,19 @@ sub:r:1536:20:5CE086B5B5A18FF4:899817788:1025961788:::::esc:
 fpr:::::::::AB059359A3B81F410FCFF97F5CE086B5B5A18FF4:
 #+end_example
 
+Note that new version of GnuPG or the use of certain options may add
+new fields to the output.  Parsers should not assume a limit on the
+number of fields per line.  Some fields are not yet used or only used
+with certain record types; parsers should ignore fields they are not
+aware of.  New versions of GnuPG or the use of certain options may add
+new types of records as well.  Parsers should ignore any record whose
+type they do not recognize for forward-compatibility.
+
 The double =--with-fingerprint= prints the fingerprint for the subkeys
 too.  Old versions of gpg used a slightly different format and required
 the use of the option =--fixed-list-mode= to conform to the format
 described here.
+
 
 ** Description of the fields
 *** Field 1 - Type of record
@@ -45,7 +55,7 @@ described here.
     - sub :: Subkey (secondary key)
     - sec :: Secret key
     - ssb :: Secret subkey (secondary key)
-    - uid :: User id (only field 10 is used).
+    - uid :: User id
     - uat :: User attribute (same as user id except for field 10).
     - sig :: Signature
     - rev :: Revocation signature
@@ -53,6 +63,7 @@ described here.
     - pkd :: Public key data [*]
     - grp :: Keygrip
     - rvk :: Revocation key
+    - tfs :: TOFU statistics [*]
     - tru :: Trust database information [*]
     - spk :: Signature subpacket [*]
     - cfg :: Configuration data [*]
@@ -83,7 +94,7 @@ described here.
            ultimately valid.
     - w :: The key has a well known private part.
     - s :: The key has special validity.  This means that it might be
-           self-signed and expected to be used in the STEED sytem.
+           self-signed and expected to be used in the STEED system.
 
     If the validity information is given for a UID or UAT record, it
     describes the validity calculated based on this user ID.  If given
@@ -112,7 +123,7 @@ described here.
 
     The creation date of the key is given in UTC.  For UID and UAT
     records, this is used for the self-signature date.  Note that the
-    date is usally printed in seconds since epoch, however, we are
+    date is usually printed in seconds since epoch, however, we are
     migrating to an ISO 8601 format (e.g. "19660205T091500").  This is
     currently only relevant for X.509.  A simple way to detect the new
     format is to scan for the 'T'.  Note that old versions of gpg
@@ -128,7 +139,7 @@ described here.
     Used for serial number in crt records.  For UID and UAT records,
     this is a hash of the user ID contents used to represent that
     exact user ID.  For trust signatures, this is the trust depth
-    seperated by the trust value by a space.
+    separated by the trust value by a space.
 
 *** Field 9 -  Ownertrust
 
@@ -138,6 +149,7 @@ described here.
     the regular expression value, quoted as in field 10.
 
 *** Field 10 - User-ID
+
     The value is quoted like a C string to avoid control characters
     (the colon is quoted =\x3a=).  For a "pub" record this field is
     not used on --fixed-list-mode.  A UAT record puts the attribute
@@ -145,6 +157,7 @@ described here.
     subpacket size.  In gpgsm the issuer name comes here.  A FPR
     record stores the fingerprint here.  The fingerprint of a
     revocation key is stored here.
+
 *** Field 11 - Signature class
 
     Signature class as per RFC-4880.  This is a 2 digit hexnumber
@@ -176,7 +189,7 @@ described here.
     only filled if the issuer certificate is available. The root has
     been reached if this is the same string as the fingerprint. The
     advantage of using this value is that it is guaranteed to have
-    been been build by the same lookup algorithm as gpgsm uses.
+    been built by the same lookup algorithm as gpgsm uses.
 
     For "uid" records this field lists the preferences in the same way
     gpg's --edit-key menu does.
@@ -207,6 +220,29 @@ described here.
     For pub, sub, sec, and ssb records this field is used for the ECC
     curve name.
 
+*** Field 18 - Compliance flags
+
+    Space separated list of asserted compliance modes for this key.
+
+    Valid values are:
+
+    - 8  :: The key is compliant with RFC4880bis
+    - 23 :: The key is compliant with compliance mode "de-vs".
+
+*** Field 19 - Last update
+
+    The timestamp of the last update of a key or user ID.  The update
+    time of a key is defined a lookup of the key via its unique
+    identifier (fingerprint); the field is empty if not known.  The
+    update time of a user ID is defined by a lookup of the key using a
+    trusted mapping from mail address to key.
+
+*** Field 20 - Origin
+
+    The origin of the key or the user ID.  This is an integer
+    optionally followed by a space and an URL.  This goes along with
+    the previous field.  The URL is quoted in C style.
+
 ** Special fields
 
 *** PKD - Public key data
@@ -218,6 +254,22 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
     !  !------ for information number of bits in the value
     !--------- index (eg. DSA goes from 0 to 3: p,q,g,y)
 #+end_example
+
+*** TFS - TOFU statistics
+
+    This field may follows a UID record to convey information about
+    the TOFU database.  The information is similar to a TOFU_STATS
+    status line.
+
+    - Field 2 :: tfs record version (must be 1)
+    - Field 3 :: validity -  A number with validity code.
+    - Field 4 :: signcount - The number of signatures seen.
+    - Field 5 :: encrcount - The number of encryptions done.
+    - Field 6 :: policy - A string with the policy
+    - Field 7 :: signture-first-seen - a timestamp or 0 if not known.
+    - Field 8 :: signature-most-recent-seen - a timestamp or 0 if not known.
+    - Field 9 :: encryption-first-done - a timestamp or 0 if not known.
+    - Field 10 :: encryption-most-recent-done - a timestamp or 0 if not known.
 
 *** TRU - Trust database information
     Example for a "tru" trust base record:
@@ -333,14 +385,18 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
 
   Every line is prefixed with "[GNUPG:] ", followed by a keyword with
   the type of the status line and some arguments depending on the type
-  (maybe none); an application should always be prepared to see more
-  arguments in future versions.
+  (maybe none); an application should always be willing to ignore
+  unknown keywords that may be emitted by future versions of GnuPG.
+  Also, new versions of GnuPG may add arguments to existing keywords.
+  Any additional arguments should be ignored for forward-compatibility.
 
 ** General status codes
-*** NEWSIG
+*** NEWSIG [<signers_uid>]
     Is issued right before a signature verification starts.  This is
-    useful to define a context for parsing ERROR status messages.  No
-    arguments are currently defined.
+    useful to define a context for parsing ERROR status messages.
+    arguments are currently defined.  If SIGNERS_UID is given and is
+    not "-" this is the percent escape value of the OpenPGP Signer's
+    User ID signature sub-packet.
 
 *** GOODSIG  <long_keyid_or_fpr>  <username>
     The signature with the keyid is good.  For each signature only one
@@ -455,6 +511,12 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
 *** END_DECRYPTION
     Mark the end of the actual decryption process.  This are also
     emitted when in --list-only mode.
+*** DECRYPTION_KEY <fpr> <fpr2> <otrust>
+    This line is emitted when a public key decryption succeeded in
+    providing a session key.  <fpr> is the hexified fingerprint of the
+    actual key used for descryption.  <fpr2> is the fingerprint of the
+    primary key.  <otrust> is the letter with the ownertrust; this is
+    in general a 'u' which stands for ultimately trusted.
 *** DECRYPTION_INFO <mdc_method> <sym_algo>
     Print information about the symmetric encryption algorithm and the
     MDC method.  This will be emitted even if the decryption fails.
@@ -516,14 +578,17 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
     letter 'T'.
 
 *** NOTATION_
-    There are actually two related status codes to convey notation
+    There are actually three related status codes to convey notation
     data:
 
     - NOTATION_NAME <name>
+    - NOTATION_FLAGS <critical> <human_readable>
     - NOTATION_DATA <string>
 
-    <name> and <string> are %XX escaped; the data may be split among
-    several NOTATION_DATA lines.
+    <name> and <string> are %XX escaped.  The data may be split among
+    several NOTATION_DATA lines.  NOTATION_FLAGS is emitted after
+    NOTATION_NAME and gives the critical and human readable flags;
+    the flag values are either 0 or 1.
 
 *** POLICY_URL <string>
     Note that URL in <string> is %XX escaped.
@@ -544,7 +609,7 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
     that case, this status tag does not appear.
 
 *** ATTRIBUTE <arguments>
-    The list or argemnts are:
+    The list or arguments are:
     - <fpr>
     - <octets>
     - <type>
@@ -572,6 +637,23 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
     This indicates that a signature subpacket was seen.  The format is
     the same as the "spk" record above.
 
+*** ENCRYPTION_COMPLIANCE_MODE <flags>
+    Indicates that the current encryption operation was in compliance
+    with the given set of modes for all recipients.  "flags" is a
+    space separated list of numerical flags, see "Field 18 -
+    Compliance flags" above.
+
+*** DECRYPTION_COMPLIANCE_MODE <flags>
+    Indicates that the current decryption operation is in compliance
+    with the given set of modes.  "flags" is a space separated list of
+    numerical flags, see "Field 18 - Compliance flags" above.
+
+*** VERIFICATION_COMPLIANCE_MODE <flags>
+    Indicates that the current signature verification operation is in
+    compliance with the given set of modes.  "flags" is a space
+    separated list of numerical flags, see "Field 18 - Compliance
+    flags" above.
+
 ** Key related
 *** INV_RECP, INV_SGNR
     The two similar status codes:
@@ -598,17 +680,28 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
        - 13 :: Key disabled
        - 14 :: Syntax error in specification
 
+    If no specific reason was given a previously emitted status code
+    KEY_CONSIDERED may be used to analyzed the problem.
+
     Note that for historical reasons the INV_RECP status is also used
     for gpgsm's SIGNER command where it relates to signer's of course.
     Newer GnuPG versions are using INV_SGNR; applications should
     ignore the INV_RECP during the sender's command processing once
     they have seen an INV_SGNR.  Different codes are used so that they
     can be distinguish while doing an encrypt+sign operation.
+
 *** NO_RECP <reserved>
     Issued if no recipients are usable.
 
 *** NO_SGNR <reserved>
     Issued if no senders are usable.
+
+*** KEY_CONSIDERED <fpr> <flags>
+    Issued to explian the lookup of a key.  FPR is the hexified
+    fingerprint of the primary key.  The bit values for FLAGS are:
+
+    - 1 :: The key has not been selected.
+    - 2 :: All subkeys of the key are expired or have been revoked.
 
 *** KEYEXPIRED <expire-timestamp>
     The key has expired.  expire-timestamp is the expiration time in
@@ -657,22 +750,104 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
 
     VALIDATION_MODEL describes the algorithm used to check the
     validity of the key.  The defaults are the standard Web of Trust
-    model for gpg and the the standard X.509 model for gpgsm.  The
+    model for gpg and the standard X.509 model for gpgsm.  The
     defined values are
 
        - pgp   :: The standard PGP WoT.
        - shell :: The standard X.509 model.
        - chain :: The chain model.
        - steed :: The STEED model.
+       - tofu  :: The TOFU model
 
     Note that the term =TRUST_= in the status names is used for
     historic reasons; we now speak of validity.
 
-*** PKA_TRUST_
-    This is is one:
+*** TOFU_USER <fingerprint_in_hex> <mbox>
 
-    - PKA_TRUST_GOOD <mailbox>
-    - PKA_TRUST_BAD  <mailbox>
+    This status identifies the key and the userid for all following
+    Tofu information.  The fingerprint is the fingerprint of the
+    primary key and the mbox is in general the addr-spec part of the
+    userid encoded in UTF-8 and percent escaped.  The fingerprint is
+    identical for all TOFU_USER lines up to a NEWSIG line.
+
+*** TOFU_STATS <MANY_ARGS>
+
+    Statistics for the current user id.
+
+    The <MANY_ARGS> are the usual space delimited arguments.  Here we
+    have too many of them to fit on one printed line and thus they are
+    given on 3 printed lines:
+
+    : <summary> <sign-count> <encryption-count>
+    : [<policy> [<tm1> <tm2> <tm3> <tm4>
+    : [<validity> [<sign-days> <encrypt-days>]]]]
+
+    Values for SUMMARY are:
+    - 0 :: attention, an interaction with the user is required (conflict)
+    - 1 :: key with no verification/encryption history
+    - 2 :: key with little history
+    - 3 :: key with enough history for basic trust
+    - 4 :: key with a lot of history
+
+    Values for POLICY are:
+    - none    :: No Policy set
+    - auto    :: Policy is "auto"
+    - good    :: Policy is "good"
+    - bad     :: Policy is "bad"
+    - ask     :: Policy is "ask"
+    - unknown :: Policy is "unknown" (TOFU information does not
+                 contribute to the key's validity)
+
+    TM1 is the time the first message was verified.  TM2 is the time
+    the most recent message was verified.  TM3 is the time the first
+    message was encrypted.  TM4 is the most recent encryption. All may
+    either be seconds since Epoch or an ISO time string
+    (yyyymmddThhmmss).
+
+    VALIDITY is the same as SUMMARY with the exception that VALIDITY
+    doesn't reflect whether the key needs attention.  That is it never
+    takes on value 0.  Instead, if there is a conflict, VALIDITY still
+    reflects the key's validity (values: 1-4).
+
+    SUMMARY values use the euclidean distance (m = sqrt(a² + b²)) rather
+    then the sum of the magnitudes (m = a + b) to ensure a balance between
+    verified signatures and encrypted messages.
+
+    Values are calculated based on the number of days where a key was used
+    for verifying a signature or to encrypt to it.
+    The ranges for the values are:
+
+    - 1 :: signature_days + encryption_days == 0
+    - 2 :: 1 <= sqrt(signature_days² + encryption_days²) < 8
+    - 3 :: 8 <= sqrt(signature_days² + encryption_days²) < 42
+    - 4 :: sqrt(signature_days² + encryption_days²) >= 42
+
+    SIGN-COUNT and ENCRYPTION-COUNT are the number of messages that we
+    have seen that have been signed by this key / encryption to this
+    key.
+
+    SIGN-DAYS and ENCRYPTION-DAYS are similar, but the number of days
+    (in UTC) on which we have seen messages signed by this key /
+    encrypted to this key.
+
+*** TOFU_STATS_SHORT <long_string>
+
+    Information about the TOFU binding for the signature.
+    Example: "15 signatures verified. 10 messages encrypted"
+
+*** TOFU_STATS_LONG <long_string>
+
+    Information about the TOFU binding for the signature in verbose
+    format.  The LONG_STRING is percent escaped.
+    Example: 'Verified 9 messages signed by "Werner Koch
+    (dist sig)" in the past 3 minutes, 40 seconds.  The most
+    recent message was verified 4 seconds ago.'
+
+*** PKA_TRUST_
+    This is one of:
+
+    - PKA_TRUST_GOOD <addr-spec>
+    - PKA_TRUST_BAD  <addr-spec>
 
     Depending on the outcome of the PKA check one of the above status
     codes is emitted in addition to a =TRUST_*= status.
@@ -764,6 +939,21 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
     - <not_imported>
     - <skipped_v3_keys>
 
+*** EXPORTED  <fingerprint>
+    The key with <fingerprint> has been exported.  The fingerprint is
+    the fingerprint of the primary key even if the primary key has
+    been replaced by a stub key during secret key export.
+
+*** EXPORT_RES <args>
+
+    Final statistics on export process (this is one long line). The
+    args are a list of unsigned numbers separated by white space:
+
+    - <count>
+    - <secret_count>
+    - <exported>
+
+
 ** Smartcard related
 *** CARDCTRL <what> [<serialno>]
     This is used to control smartcard operations.  Defined values for
@@ -821,11 +1011,24 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
     should not contain spaces.  The error code is a either a string
     commencing with a letter or such a string prefixed with a
     numerical error code and an underscore; e.g.: "151011327_EOF".
-
+*** WARNING <location> <error code> [<text>]
+    This is a generic warning status message, it might be followed by
+    error location specific data. <error code> and <location>
+    should not contain spaces.  The error code is a either a string
+    commencing with a letter or such a string prefixed with a
+    numerical error code and an underscore; e.g.: "151011327_EOF".
 *** SUCCESS [<location>]
-    Postive confirimation that an operation succeeded.  <location> is
-    optional but if given should not contain spaces.  Used only with a
-    few commands.
+    Positive confirmation that an operation succeeded.  It is used
+    similar to ISO-C's EXIT_SUCCESS.  <location> is optional but if
+    given should not contain spaces.  Used only with a few commands.
+
+*** FAILURE <location> <error_code>
+    This is the counterpart to SUCCESS and used to indicate a program
+    failure.  It is used similar to ISO-C's EXIT_FAILURE but allows
+    conveying more information, in particular a gpg-error error code.
+    That numerical error code may optionally have a suffix made of an
+    underscore and a string with an error symbol like "151011327_EOF".
+    A dash may be used instead of <location>.
 
 *** BADARMOR
     The ASCII armor is corrupted.  No arguments yet.
@@ -837,7 +1040,7 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
     - 3 :: Ambigious specification
     - 4 :: Key is stored on a smartcard.
 
-*** PROGRESS <what> <char> <cur> <total>
+*** PROGRESS <what> <char> <cur> <total> [<units>]
     Used by the primegen and Public key functions to indicate
     progress.  <char> is the character displayed with no --status-fd
     enabled, with the linefeed replaced by an 'X'.  <cur> is the
@@ -861,6 +1064,9 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
                           the data of a smartcard.
            - card_busy :: A smartcard is still working
 
+    <units> is sometines used to describe the units for <current> and
+    <total>.  For example "B", "KiB", or "MiB".
+
 *** BACKUP_KEY_CREATED <fingerprint> <fname>
     A backup of a key identified by <fingerprint> has been writte to
     the file <fname>; <fname> is percent-escaped.
@@ -869,9 +1075,9 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
     <name> is a percent-plus escaped filename describing the
     mountpoint for the current operation (e.g. used by "g13 --mount").
     This may either be the specified mountpoint or one randomly
-    choosen by g13.
+    chosen by g13.
 
-*** PINENTRY_LAUNCHED <pid>
+*** PINENTRY_LAUNCHED <pid>[:<extra>]
     This status line is emitted by gpg to notify a client that a
     Pinentry has been launched.  <pid> is the PID of the Pinentry.  It
     may be used to display a hint to the user but can't be used to
@@ -916,11 +1122,6 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
   - Byte 4-15 :: Reserved, and currently unused.
 
   All other data after this header is raw image (JPEG) data.
-
-
-* Unattended key generation
-
-   Please see the GnuPG manual for a description.
 
 
 * Layout of the TrustDB
@@ -1054,6 +1255,55 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
               stored in the version info record.
 
 
+* Database scheme for the TOFU info
+
+#+begin_src sql
+--
+-- The VERSION table holds the version of our TOFU data structures.
+--
+CREATE TABLE version (
+  version integer -- As of now this is always 1
+);
+
+--
+-- The BINDINGS table associates mail addresses with keys.
+--
+CREATE TABLE bindings (
+  oid integer primary key autoincrement,
+  fingerprint text, -- The key's fingerprint in hex
+  email text,       -- The normalized mail address destilled from user_id
+  user_id text,     -- The unmodified user id
+  time integer,     -- The time this binding was first observed.
+  policy boolean check
+       (policy in (1, 2, 3, 4, 5)), -- The trust policy with the values:
+                                    --   1 := Auto
+                                    --   2 := Good
+                                    --   3 := Unknown
+                                    --   4 := Bad
+                                    --   5 := Ask
+  conflict string,  -- NULL or a hex formatted fingerprint.
+  unique (fingerprint, email)
+);
+
+CREATE INDEX bindings_fingerprint_email on bindings (fingerprint, email);
+CREATE INDEX bindings_email on bindings (email);
+
+--
+-- The SIGNATURES table records all data signatures we verified
+--
+CREATE TABLE signatures (
+  binding integer not null, -- Link to bindings table,
+                            -- references bindings.oid.
+  sig_digest text,          -- The digest of the signed message.
+  origin text,              -- String describing who initially fed
+                            -- the signature to gpg (e.g. "email:claws").
+  sig_time integer,         -- Timestamp from the signature.
+  time integer,             -- Time this record was created.
+  primary key (binding, sig_digest, origin)
+);
+#+end_src
+
+
 * GNU extensions to the S2K algorithm
 
   1 octet  - S2K Usage: either 254 or 255.
@@ -1077,7 +1327,48 @@ pkd:0:1024:B665B1435F4C2 .... FF26ABB:
   S2K Specifier with an offset of 1000.
 
 
+* Format of the OpenPGP TRUST packet
+
+  According to RFC4880 (5.10), the trust packet (aka ring trust) is
+  only used within keyrings and contains data that records the user's
+  specifications of which key holds trusted introducers.  The RFC also
+  states that the format of this packet is implementation defined and
+  SHOULD NOT be emitted to output streams or should be ignored on
+  import.  GnuPG uses this packet in several additional ways:
+
+  - 1 octet :: Trust-Value (only used by Subtype SIG)
+  - 1 octet :: Signature-Cache (only used by Subtype SIG; value must
+               be less than 128)
+  - 3 octets :: Fixed value: "gpg"
+  - 1 octet  :: Subtype
+               - 0 :: Signature cache (SIG)
+               - 1 :: Key source on the primary key (KEY)
+               - 2 :: Key source on a user id (UID)
+  - 1 octet :: Key Source; i.e. the origin of the key:
+               - 0 :: Unknown source.
+               - 1 :: Public keyserver.
+               - 2 :: Preferred keyserver.
+               - 3 :: OpenPGP DANE.
+               - 4 :: Web Key Directory.
+               - 5 :: Import from a trusted URL.
+               - 6 :: Import from a trusted file.
+               - 7 :: Self generated.
+  - 4 octets :: Time of last update.  This is a a four-octet scalar
+                with the seconds since Epoch.
+  - 1 octet  :: Scalar with the length of the following field.
+  - N octets :: String with the URL of the source.  This may be a
+                zero-length string.
+
+  If the packets contains only two octets a Subtype of 0 is assumed;
+  this is the only format recognized by GnuPG versions < 2.1.18.
+  Trust-Value and Signature-Cache must be zero for all subtypes other
+  than SIG.
+
+
 * Keyserver helper message format
+
+  *This information is obsolete*
+  (Keyserver helpers have been replaced by dirmngr)
 
   The keyserver may be contacted by a Unix Domain socket or via TCP.
 
@@ -1136,6 +1427,43 @@ Status codes are:
 
 
 
+* Debug flags
+
+This tables gives the flag values for the --debug option along with
+the alternative names used by the components.
+
+|       | gpg     | gpgsm   | agent   | scd     | dirmngr | g13     | wks     |
+|-------+---------+---------+---------+---------+---------+---------+---------|
+|     1 | packet  | x509    |         |         | x509    | mount   | mime    |
+|     2 | mpi     | mpi     | mpi     | mpi     |         |         | parser  |
+|     4 | crypto  | crypto  | crypto  | crypto  | crypto  | crypto  | crypto  |
+|     8 | filter  |         |         |         |         |         |         |
+|    16 | iobuf   |         |         |         | dns     |         |         |
+|    32 | memory  | memory  | memory  | memory  | memory  | memory  | memory  |
+|    64 | cache   | cache   | cache   | cache   | cache   |         |         |
+|   128 | memstat | memstat | memstat | memstat | memstat | memstat | memstat |
+|   256 | trust   |         |         |         |         |         |         |
+|   512 | hashing | hashing | hashing | hashing | hashing |         |         |
+|  1024 | ipc     | ipc     | ipc     | ipc     | ipc     | ipc     | ipc     |
+|  2048 |         |         |         | cardio  | network |         |         |
+|  4096 | clock   |         |         | reader  |         |         |         |
+|  8192 | lookup  |         |         |         | lookup  |         |         |
+| 16384 | extprog |         |         |         |         |         | extprog |
+
+Description of some debug flags:
+
+  - cardio :: Used by scdaemon to trace the APDUs exchange with the
+              card.
+  - clock  :: Show execution times of certain functions.
+  - crypto :: Trace crypto operations.
+  - hashing :: Create files with the hashed data.
+  - ipc :: Trace the Assuan commands.
+  - mpi :: Show the values of the MPIs.
+  - reader :: Used by scdaemon to trace card reader related code.  For
+              example: Open and close reader.
+
+
+
 * Miscellaneous notes
 
 ** v3 fingerprints
@@ -1179,7 +1507,7 @@ Status codes are:
       /pks/lookup/<gnupg_formatierte_user_id>?op=<operation>
 
    This can be implemented using Hurd's translator mechanism.
-   However, I think the whole key server stuff has to be re-thought;
+   However, I think the whole keyserver stuff has to be re-thought;
    I have some ideas and probably create a white paper.
 ** Algorithm names for the "keygen.algo" prompt
 
@@ -1209,5 +1537,5 @@ Status codes are:
    If one of the "foo/*" names are used a "keygen.flags" prompt needs
    to be answered as well.  Instead of toggling the predefined flags,
    it is also possible to set them direct: Use a "=" character
-   directly followed by a comination of "a" (for authentication), "s"
+   directly followed by a combination of "a" (for authentication), "s"
    (for signing), or "c" (for certification).

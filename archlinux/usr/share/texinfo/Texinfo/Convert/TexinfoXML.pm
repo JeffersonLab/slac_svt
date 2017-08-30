@@ -1,6 +1,6 @@
 # TexinfoXML.pm: output tree as Texinfo XML.
 #
-# Copyright 2011, 2012, 2013 Free Software Foundation, Inc.
+# Copyright 2011, 2012, 2013, 2016 Free Software Foundation, Inc.
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
 @EXPORT = qw(
 );
 
-$VERSION = '5.1.90';
+$VERSION = '6.4';
 
 # XML specific
 my %defaults = (
@@ -436,12 +436,11 @@ sub converter_initialize($)
          if $self->{'expanded_formats_hash'}->{$raw};
   } 
   if ($self->{'parser'}) {
-    my ($index_names, $merged_indices)
-       = $self->{'parser'}->indices_information();
-    $self->{'index_names'} = $index_names;
+    $self->{'index_names'} = $self->{'parser'}->indices_information();
   }
 }
 
+# Main output function for the XML file.
 sub output($$)
 {
   my $self = shift;
@@ -859,7 +858,7 @@ sub _convert($$;$)
                     and $root->{'parent'}->{'type'}
                     and $root->{'parent'}->{'type'} eq 'row') {
           print STDERR "BUG: multitable cell command not in a row "
-            .Texinfo::Parser::_print_current($root);
+            .Texinfo::Common::_print_current($root);
         }
         
         $result .= $self->open_element('entry', ['command', 
@@ -1220,11 +1219,18 @@ sub _convert($$;$)
         }
       } elsif ($Texinfo::Common::ref_commands{$root->{'cmdname'}}) {
         if ($root->{'extra'}->{'brace_command_contents'}) {
+          my $normalized;
           if ($root->{'extra'}->{'node_argument'}
-              and $root->{'extra'}->{'node_argument'}->{'node_content'}
-              and defined($root->{'extra'}->{'node_argument'}->{'normalized'})) {
-            push @$attribute, ('label', 
-                 $root->{'extra'}->{'node_argument'}->{'normalized'});
+              and $root->{'extra'}->{'node_argument'}->{'node_content'}) {
+            my $normalized;
+            if (defined($root->{'extra'}->{'node_argument'}->{'normalized'})) {
+              $normalized = $root->{'extra'}->{'node_argument'}->{'normalized'};
+            } else {
+              $normalized = Texinfo::Convert::NodeNameNormalization::normalize_node( {'contents' => $root->{'extra'}->{'node_argument'}->{'node_content'} } );
+            }
+            if ($normalized) {
+              push @$attribute, ('label', $normalized);
+            }
           }
           my $manual;
           my $manual_arg_index = 3;
@@ -1277,8 +1283,11 @@ sub _convert($$;$)
                and $root->{'extra'}->{'enumerate_specification'}) {
         push @$attribute,('first', $root->{'extra'}->{'enumerate_specification'});
       } elsif ($root->{'cmdname'} eq 'float' and $root->{'extra'}) {
-        if (defined($root->{'extra'}->{'normalized'})) {
-          push @$attribute, ('name', $root->{'extra'}->{'normalized'});
+        if (defined($root->{'extra'}->{'node_content'})) {
+          my $normalized =
+            Texinfo::Convert::NodeNameNormalization::normalize_node (
+                   { 'contents' => $root->{'extra'}->{'node_content'} });
+          push @$attribute, ('name', $normalized);
         }
         if ($root->{'extra'}->{'type'} and 
             defined($root->{'extra'}->{'type'}->{'normalized'})) {
@@ -1358,8 +1367,47 @@ sub _convert($$;$)
             my $contents_possible_comment;
             # in that case the end of line is in the columnfractions line
             # or in the columnprototypes.  
-            if ($root->{'cmdname'} eq 'multitable' and $root->{'extra'}) {
-              if ($root->{'extra'}->{'prototypes_line'}) {
+
+            if ($root->{'cmdname'} eq 'multitable') {
+              if (not $root->{'extra'}->{'columnfractions'}) {
+                # Like 'prototypes' extra value, but keeping spaces information
+                my @prototype_line;
+                if (defined $root->{'args'}[0]
+                    and defined $root->{'args'}[0]->{'type'}
+                    and $root->{'args'}[0]->{'type'} eq 'block_line_arg') {
+                  foreach my $content (@{$root->{'args'}[0]{'contents'}}) {
+                    if ($content->{'type'} and $content->{'type'} eq 'bracketed') {
+                      push @prototype_line, $content;
+                    } elsif ($content->{'text'}) {
+                      # The regexp breaks between characters, with a non space followed
+                      # by a space or a space followed by non space.  It is like \b, but
+                      # for \s \S, and not \w \W.
+                      foreach my $prototype_or_space (split /(?<=\S)(?=\s)|(?=\S)(?<=\s)/, 
+                        $content->{'text'}) {
+                        if ($prototype_or_space =~ /\S/) {
+                          push @prototype_line, {'text' => $prototype_or_space,
+                            'type' => 'row_prototype' };
+                        } elsif ($prototype_or_space =~ /\s/) {
+                          push @prototype_line, {'text' => $prototype_or_space,
+                            'type' => 'prototype_space' };
+                        }
+                      }
+                    } else {
+                      # FIXME could this happen?  Should be a debug message?
+                      if (!$content->{'cmdname'}) { 
+                      } elsif ($content->{'cmdname'} eq 'c' 
+                          or $content->{'cmdname'} eq 'comment') {
+                      } else {
+                        push @prototype_line, $content;
+                      }
+                    }
+                  }
+                  $root->{'extra'}->{'prototypes_line'} = \@prototype_line;
+                }
+              }
+
+              if ($root->{'extra'}
+                    and $root->{'extra'}->{'prototypes_line'}) {
                 $result .= $self->open_element('columnprototypes');
                 my $first_proto = 1;
                 foreach my $prototype (@{$root->{'extra'}->{'prototypes_line'}}) {
@@ -1385,7 +1433,8 @@ sub _convert($$;$)
                 $result .= $self->close_element('columnprototypes');
                 $contents_possible_comment 
                   = $root->{'args'}->[-1]->{'contents'};
-              } elsif ($root->{'extra'}->{'columnfractions'}) {
+              } elsif ($root->{'extra'}
+                         and $root->{'extra'}->{'columnfractions'}) {
                 my $cmd;
                 foreach my $content (@{$root->{'args'}->[0]->{'contents'}}) {
                   if ($content->{'cmdname'}
@@ -1647,6 +1696,7 @@ sub _convert($$;$)
 1;
 
 __END__
+# $Id: template.pod 6140 2015-02-22 23:34:38Z karl $
 # Automatically generated from maintain/template.pod
 
 =head1 NAME
@@ -1659,6 +1709,8 @@ Texinfo::Convert::TexinfoXML - Convert Texinfo tree to TexinfoXML
     = Texinfo::Convert::TexinfoXML->converter({'parser' => $parser});
 
   $converter->output($tree);
+  $converter->convert($tree);
+  $converter->convert_tree($tree);
 
 =head1 DESCRIPTION
 
@@ -1670,7 +1722,7 @@ Texinfo::Convert::TexinfoXML converts a Texinfo tree to TexinfoXML.
 
 =item $converter = Texinfo::Convert::TexinfoXML->converter($options)
 
-Initialize an TexinfoXML converter.  
+Initialize converter from Texinfo to TexinfoXML.  
 
 The I<$options> hash reference holds options for the converter.  In
 this option hash reference a parser object may be associated with the 
@@ -1693,14 +1745,8 @@ the resulting output.
 =item $result = $converter->convert_tree($tree)
 
 Convert a Texinfo tree portion I<$tree> and return the resulting 
-output.  This function do not try to output a full document but only
-portions of document.  For a full document use C<convert>.
-
-=item $result = $converter->output_internal_links()
-
-Returns text representing the links in the document.  At present the format 
-should follow the C<--internal-links> option of texi2any/makeinfo specification
-and this is only relevant for HTML.
+output.  This function does not try to output a full document but only
+portions.  For a full document use C<convert>.
 
 =back
 
@@ -1710,7 +1756,7 @@ Patrice Dumas, E<lt>pertusus@free.frE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2012 Free Software Foundation, Inc.
+Copyright 2015 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

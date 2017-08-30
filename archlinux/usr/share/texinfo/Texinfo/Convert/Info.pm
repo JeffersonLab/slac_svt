@@ -1,6 +1,7 @@
 # Info.pm: output tree as Info.
 #
-# Copyright 2010, 2011, 2012 Free Software Foundation, Inc.
+# Copyright 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017
+# Free Software Foundation, Inc.
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,6 +26,9 @@ use strict;
 use Texinfo::Convert::Plaintext;
 use Texinfo::Convert::Text;
 
+use Texinfo::Convert::Paragraph;
+
+
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
 @ISA = qw(Texinfo::Convert::Plaintext);
@@ -45,12 +49,15 @@ use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
 @EXPORT = qw(
 );
 
-$VERSION = '5.1.90';
+$VERSION = '6.4';
 
 my $STDIN_DOCU_NAME = 'stdin';
 
 my %defaults = Texinfo::Convert::Plaintext::converter_defaults(undef, undef);
 $defaults{'SHOW_MENU'} = 1;
+$defaults{'EXTENSION'} = 'info';
+$defaults{'USE_SETFILENAME_EXTENSION'} = 1;
+$defaults{'OUTFILE'} = undef;
 
 sub converter_defaults($$)
 {
@@ -82,7 +89,7 @@ sub output($)
   pop @{$self->{'count_context'}};
   return undef unless $self->_create_destination_directory();
 
-  my $header_bytes = $self->count_bytes($header);
+  my $header_bytes = Texinfo::Convert::Plaintext::count_bytes($self, $header);
   my $complete_header_bytes = $header_bytes;
   my $elements = Texinfo::Structuring::split_by_node($root);
 
@@ -91,10 +98,8 @@ sub output($)
     if ($self->get_conf('VERBOSE')) {
       print STDERR "Output file $self->{'output_file'}\n";
     }
-    $fh = $self->Texinfo::Common::open_out($self->{'output_file'});
+    $fh = _open_info_file($self, $self->{'output_file'});
     if (!$fh) {
-      $self->document_error(sprintf($self->__("could not open %s for writing: %s"),
-                                    $self->{'output_file'}, $!));
       return undef;
     }
   }
@@ -128,12 +133,12 @@ sub output($)
     my @nodes = @$elements;
     while (@nodes) {
       my $node = shift @nodes;
-      my $node_text = $self->_convert_node($node);
+      my $node_text = $self->_convert_element($node);
       if (!$first_node) {
         $first_node = 1;
         if (defined($self->{'text_before_first_node'})) {
           $complete_header .= $self->{'text_before_first_node'};
-          $complete_header_bytes += $self->count_bytes($self->{'text_before_first_node'});
+          $complete_header_bytes += Texinfo::Convert::Plaintext::count_bytes($self, $self->{'text_before_first_node'});
         }
         # for the first node, header is prepended, not complete_header
         # as 'text_before_first_node' is already part of the node
@@ -145,6 +150,7 @@ sub output($)
       } else {
         $result .= $node_text;
       }
+      $self->_update_count_context();
       if (defined($self->get_conf('SPLIT_SIZE')) 
           and $self->{'count_context'}->[-1]->{'bytes'} > 
                   $out_file_nr * $self->get_conf('SPLIT_SIZE') 
@@ -193,15 +199,12 @@ sub output($)
           print STDERR "New output file ".
                 $self->{'output_file'}.'-'.$out_file_nr."\n";
         }
-        $fh = $self->Texinfo::Common::open_out (
-                               $self->{'output_file'}.'-'.$out_file_nr); 
+        $fh = _open_info_file($self, $self->{'output_file'}.'-'.$out_file_nr); 
         if (!$fh) {
-           $self->document_error(sprintf(
-                  $self->__("could not open %s for writing: %s"),
-                  $self->{'output_file'}.'-'.$out_file_nr, $!));
-           return undef;
+          return undef;
         }
         print $fh $complete_header;
+        $self->_update_count_context();
         $self->{'count_context'}->[-1]->{'bytes'} += $complete_header_bytes;
         push @indirect_files, [$self->{'output_filename'}.'-'.$out_file_nr,
                                $self->{'count_context'}->[-1]->{'bytes'}];
@@ -220,11 +223,8 @@ sub output($)
     if ($self->get_conf('VERBOSE')) {
       print STDERR "Outputing the split manual file $self->{'output_file'}\n";
     }
-    $fh = $self->Texinfo::Common::open_out($self->{'output_file'});
+    $fh = _open_info_file($self, $self->{'output_file'});
     if (!$fh) {
-      $self->document_error(sprintf(
-            $self->__("could not open %s for writing: %s"),
-            $self->{'output_file'}, $!));
       return undef;
     }
     $tag_text = $complete_header;
@@ -241,25 +241,28 @@ sub output($)
   # This may happen for anchors in @insertcopying
   my %seen_anchors;
   foreach my $label (@{$self->{'count_context'}->[-1]->{'locations'}}) {
-    next unless ($label->{'root'} and $label->{'root'}->{'extra'} 
-                  and defined($label->{'root'}->{'extra'}->{'normalized'}));
+    next unless ($label->{'root'} and $label->{'root'}->{'extra'}
+                   and defined($label->{'root'}->{'extra'}->{'node_content'}));
     my $prefix;
+    
     if ($label->{'root'}->{'cmdname'} eq 'node') {
       $prefix = 'Node';
     } else {
-      if ($seen_anchors{$label->{'root'}->{'extra'}->{'normalized'}}) {
-        $self->line_error(sprintf($self->__("\@%s output more than once: %s"),
-                       $label->{'root'}->{'cmdname'},
-                 Texinfo::Convert::Texinfo::convert({'contents' =>
-                      $label->{'root'}->{'extra'}->{'node_content'}})),
-                      $label->{'root'}->{'line_nr'});
-        next;
-      } else {
-        $seen_anchors{$label->{'root'}->{'extra'}->{'normalized'}} = $label;
-      }
       $prefix = 'Ref';
     }
     my ($label_text, $byte_count) = $self->_node_line($label->{'root'});
+
+    if ($seen_anchors{$label_text}) {
+      $self->line_error(sprintf($self->__("\@%s output more than once: %s"),
+          $label->{'root'}->{'cmdname'},
+          Texinfo::Convert::Texinfo::convert({'contents' =>
+              $label->{'root'}->{'extra'}->{'node_content'}})),
+        $label->{'root'}->{'line_nr'});
+      next;
+    } else {
+      $seen_anchors{$label_text} = 1;
+    }
+
     $tag_text .=  "$prefix: $label_text\x{7F}$label->{'bytes'}\n";
   }
   $tag_text .=  "\x{1F}\nEnd Tag Table\n";
@@ -286,25 +289,42 @@ sub output($)
   return $result;
 }
 
+# Wrapper around Texinfo::Common::open_out.  Open the file with any CR-LF
+# conversion disabled.  We need this for tag tables to be correct under
+# MS-Windows.   Return filehandle or undef on failure.
+sub _open_info_file($$)
+{
+  my $self = shift;
+  my $filename = shift;
+  my $fh = $self->Texinfo::Common::open_out($filename, undef, 'use_binmode');
+  if (!$fh) {
+    $self->document_error(sprintf(
+        $self->__("could not open %s for writing: %s"),
+        $filename, $!));
+    return undef;
+  }
+  return $fh;
+}
+
 sub _info_header($)
 {
   my $self = shift;
 
   $self->_set_global_multiple_commands();
   my $paragraph = Texinfo::Convert::Paragraph->new();
-  my $result = $paragraph->add_text("This is ");
+  my $result = add_text($paragraph, "This is ");
   # This ensures that spaces in file are kept.
-  $result .= $paragraph->add_next($self->{'output_filename'});
+  $result .= add_next($paragraph, $self->{'output_filename'});
   my $program = $self->get_conf('PROGRAM');
   my $version = $self->get_conf('PACKAGE_VERSION');
   if (defined($program) and $program ne '') {
-    $result .= $paragraph->add_text(", produced by $program version $version from ");
+    $result .= add_text($paragraph, ", produced by $program version $version from ");
   } else {
-    $result .= $paragraph->add_text(", produced from ");
+    $result .= add_text($paragraph, ", produced from ");
   }
-  $result .= $paragraph->add_next($self->{'input_basename'});
-  $result .= $paragraph->add_text('.');
-  $result .= $paragraph->end();
+  $result .= add_next($paragraph, $self->{'input_basename'});
+  $result .= add_text($paragraph, '.');
+  $result .= Texinfo::Convert::Paragraph::end($paragraph);
   $result .= "\n";
   $self->{'empty_lines_count'} = 1;
 
@@ -375,7 +395,7 @@ sub _node($$)
   my $node = shift;
   
   my $result = '';
-  return '' if (!defined($node->{'extra'}->{'normalized'}));
+  return '' if (!defined($node->{'extra'}->{'node_content'}));
   if (!$self->{'empty_lines_count'}) {
     $result .= "\n";
     $self->_add_text_count("\n");
@@ -401,13 +421,22 @@ sub _node($$)
   $result .= $node_begin;
   $self->_add_text_count($node_begin);
   my ($node_text, $byte_count) = $self->_node_line($node);
-  if ($node_text =~ /,/ and $self->get_conf('INFO_SPECIAL_CHARS_WARNING')) {
-    $self->line_warn(sprintf($self->__(
-               "\@node name should not contain `,': %s"), $node_text),
-                             $node->{'line_nr'});
+  my $pre_quote = '';
+  my $post_quote = '';
+  if ($node_text =~ /,/) {
+    if ($self->get_conf('INFO_SPECIAL_CHARS_WARNING')) {
+      $self->line_warn(sprintf($self->__(
+                 "\@node name should not contain `,': %s"), $node_text),
+                               $node->{'line_nr'});
+    }
+    if ($self->get_conf('INFO_SPECIAL_CHARS_QUOTE')) {
+      $pre_quote = "\x{7f}";
+      $post_quote = $pre_quote;
+      $self->{'count_context'}->[-1]->{'bytes'} += 2;
+    }
   }
   $self->{'count_context'}->[-1]->{'bytes'} += $byte_count;
-  $result .= $node_text;
+  $result .= $pre_quote . $node_text . $post_quote;
   foreach my $direction(@directions) {
     if ($node->{'node_'.lc($direction)}) {
       my $node_direction = $node->{'node_'.lc($direction)};
@@ -508,6 +537,7 @@ sub _image($$)
 1;
 
 __END__
+# $Id: template.pod 6140 2015-02-22 23:34:38Z karl $
 # Automatically generated from maintain/template.pod
 
 =head1 NAME
@@ -520,6 +550,8 @@ Texinfo::Convert::Info - Convert Texinfo tree to Info
     = Texinfo::Convert::Info->converter({'parser' => $parser});
 
   $converter->output($tree);
+  $converter->convert($tree);
+  $converter->convert_tree($tree);
 
 =head1 DESCRIPTION
 
@@ -531,7 +563,7 @@ Texinfo::Convert::Info converts a Texinfo tree to Info.
 
 =item $converter = Texinfo::Convert::Info->converter($options)
 
-Initialize an Info converter.  
+Initialize converter from Texinfo to Info.  
 
 The I<$options> hash reference holds options for the converter.  In
 this option hash reference a parser object may be associated with the 
@@ -554,14 +586,8 @@ the resulting output.
 =item $result = $converter->convert_tree($tree)
 
 Convert a Texinfo tree portion I<$tree> and return the resulting 
-output.  This function do not try to output a full document but only
-portions of document.  For a full document use C<convert>.
-
-=item $result = $converter->output_internal_links()
-
-Returns text representing the links in the document.  At present the format 
-should follow the C<--internal-links> option of texi2any/makeinfo specification
-and this is only relevant for HTML.
+output.  This function does not try to output a full document but only
+portions.  For a full document use C<convert>.
 
 =back
 
@@ -571,7 +597,7 @@ Patrice Dumas, E<lt>pertusus@free.frE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2012 Free Software Foundation, Inc.
+Copyright 2015 Free Software Foundation, Inc.
 
 This library is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

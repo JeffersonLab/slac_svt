@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,14 +33,13 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.65 2009/08/08 17:52:46 tom Exp $
- *	tic.h - Global variables and structures for the terminfo
- *			compiler.
+ * $Id: tic.h,v 1.73 2017/03/18 17:14:19 tom Exp $
+ *	tic.h - Global variables and structures for the terminfo compiler.
  */
 
 #ifndef __TIC_H
 #define __TIC_H
-
+/* *INDENT-OFF* */
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -86,6 +85,8 @@ extern "C" {
 
 #define IS_TIC_MAGIC(p)	(LOW_MSB(p) == MAGIC)
 
+#define quick_prefix(s) (!strncmp((s), "b64:", 4) || !strncmp((s), "hex:", 4))
+
 /*
  * The "maximum" here is misleading; XSI guarantees minimum values, which a
  * given implementation may exceed.
@@ -127,11 +128,6 @@ extern "C" {
 #define DEBUG(n, a)	/*nothing*/
 #endif
 
-extern NCURSES_EXPORT_VAR(unsigned) _nc_tracing;
-extern NCURSES_EXPORT(void) _nc_tracef (char *, ...) GCC_PRINTFLIKE(1,2);
-extern NCURSES_EXPORT(const char *) _nc_visbuf (const char *);
-extern NCURSES_EXPORT(const char *) _nc_visbuf2 (int, const char *);
-
 /*
  * These are the types of tokens returned by the scanner.  The first
  * three are also used in the hash table of capability names.  The scanner
@@ -148,49 +144,33 @@ extern NCURSES_EXPORT(const char *) _nc_visbuf2 (int, const char *);
 
 #define NO_PUSHBACK	-1	/* used in pushtype to indicate no pushback */
 
-	/*
-	 *	The global structure in which the specific parts of a
-	 *	scanned token are returned.
-	 *
-	 */
+/*
+ * The global structure in which the specific parts of a
+ * scanned token are returned.
+ */
 
 struct token
 {
-	char	*tk_name;		/* name of capability */
+	char	*tk_name;	/* name of capability */
 	int	tk_valnumber;	/* value of capability (if a number) */
 	char	*tk_valstring;	/* value of capability (if a string) */
 };
 
-extern NCURSES_EXPORT_VAR(struct token)	_nc_curr_token;
-
-	/*
-	 * Offsets to string capabilities, with the corresponding functionkey
-	 * codes.
-	 */
+/*
+ * Offsets to string capabilities, with the corresponding functionkey codes.
+ */
 struct tinfo_fkeys {
 	unsigned offset;
 	chtype code;
 	};
 
-#if	BROKEN_LINKER
-
-#define	_nc_tinfo_fkeys	_nc_tinfo_fkeysf()
-extern NCURSES_EXPORT(const struct tinfo_fkeys *) _nc_tinfo_fkeysf (void);
-
-#else
-
-extern NCURSES_EXPORT_VAR(const struct tinfo_fkeys) _nc_tinfo_fkeys[];
-
-#endif
-
 typedef short HashValue;
 
-	/*
-	 * The file comp_captab.c contains an array of these structures, one
-	 * per possible capability.  These are indexed by a hash table array of
-	 * pointers to the same structures for use by the parser.
-	 */
-
+/*
+ * The file comp_captab.c contains an array of these structures, one per
+ * possible capability.  These are indexed by a hash table array of pointers to
+ * the same structures for use by the parser.
+ */
 struct name_table_entry
 {
 	const char *nte_name;	/* name to hash on */
@@ -199,10 +179,9 @@ struct name_table_entry
 	HashValue nte_link;	/* index in table of next hash, or -1 */
 };
 
-	/*
-	 * Use this structure to hide differences between terminfo and termcap
-	 * tables.
-	 */
+/*
+ * Use this structure to hide differences between terminfo and termcap tables.
+ */
 typedef struct {
 	unsigned table_size;
 	const HashValue *table_data;
@@ -217,12 +196,13 @@ struct alias
 	const char	*source;
 };
 
-extern NCURSES_EXPORT(const struct name_table_entry *) _nc_get_table (bool);
-extern NCURSES_EXPORT(const HashData *) _nc_get_hash_info (bool);
-extern NCURSES_EXPORT(const HashValue *) _nc_get_hash_table (bool);
-extern NCURSES_EXPORT(const struct alias *) _nc_get_alias_table (bool);
-
 #define NOTFOUND	((struct name_table_entry *) 0)
+
+/*
+ * The casts are required for correct sign-propagation with systems such as
+ * AIX, IRIX64, Solaris which default to unsigned characters.  The C standard
+ * leaves this detail unspecified.
+ */
 
 /* out-of-band values for representing absent capabilities */
 #define ABSENT_BOOLEAN		((signed char)-1)	/* 255 */
@@ -248,6 +228,12 @@ extern NCURSES_EXPORT(const struct alias *) _nc_get_alias_table (bool);
 #define TERMINFO "/usr/share/terminfo"
 #endif
 
+#ifdef NCURSES_TERM_ENTRY_H_incl
+
+/*
+ * These entrypoints are used only by the ncurses utilities such as tic.
+ */
+#ifdef NCURSES_INTERNALS
 /* access.c */
 extern NCURSES_EXPORT(unsigned) _nc_pathlast (const char *);
 extern NCURSES_EXPORT(bool) _nc_is_abs_path (const char *);
@@ -256,9 +242,12 @@ extern NCURSES_EXPORT(bool) _nc_is_file_path (const char *);
 extern NCURSES_EXPORT(char *) _nc_basename (char *);
 extern NCURSES_EXPORT(char *) _nc_rootname (char *);
 
+/* comp_captab.c */
+extern NCURSES_EXPORT(const struct name_table_entry *) _nc_get_table (bool);
+extern NCURSES_EXPORT(const HashData *) _nc_get_hash_info (bool);
+extern NCURSES_EXPORT(const struct alias *) _nc_get_alias_table (bool);
+
 /* comp_hash.c: name lookup */
-extern NCURSES_EXPORT(struct name_table_entry const *) _nc_find_entry
-	(const char *, const HashValue *);
 extern NCURSES_EXPORT(struct name_table_entry const *) _nc_find_type_entry
 	(const char *, int, bool);
 
@@ -266,10 +255,10 @@ extern NCURSES_EXPORT(struct name_table_entry const *) _nc_find_type_entry
 extern NCURSES_EXPORT(int)  _nc_get_token (bool);
 extern NCURSES_EXPORT(void) _nc_panic_mode (char);
 extern NCURSES_EXPORT(void) _nc_push_token (int);
-extern NCURSES_EXPORT(void) _nc_reset_input (FILE *, char *);
 extern NCURSES_EXPORT_VAR(int) _nc_curr_col;
 extern NCURSES_EXPORT_VAR(int) _nc_curr_line;
 extern NCURSES_EXPORT_VAR(int) _nc_syntax;
+extern NCURSES_EXPORT_VAR(int) _nc_strict_bsd;
 extern NCURSES_EXPORT_VAR(long) _nc_comment_end;
 extern NCURSES_EXPORT_VAR(long) _nc_comment_start;
 extern NCURSES_EXPORT_VAR(long) _nc_curr_file_pos;
@@ -287,11 +276,8 @@ extern NCURSES_EXPORT(void) _nc_syserr_abort (const char *const,...) GCC_PRINTFL
 extern NCURSES_EXPORT(void) _nc_warning (const char *const,...) GCC_PRINTFLIKE(1,2);
 extern NCURSES_EXPORT_VAR(bool) _nc_suppress_warnings;
 
-/* comp_expand.c: expand string into readable form */
-extern NCURSES_EXPORT(char *) _nc_tic_expand (const char *, bool, int);
-
-/* comp_scan.c: decode string from readable form */
-extern NCURSES_EXPORT(int) _nc_trans_string (char *, char *);
+/* comp_scan.c */
+extern NCURSES_EXPORT_VAR(struct token)	_nc_curr_token;
 
 /* captoinfo.c: capability conversion */
 extern NCURSES_EXPORT(char *) _nc_captoinfo (const char *, const char *, int const);
@@ -300,6 +286,14 @@ extern NCURSES_EXPORT(char *) _nc_infotocap (const char *, const char *, int con
 /* home_terminfo.c */
 extern NCURSES_EXPORT(char *) _nc_home_terminfo (void);
 
+/* init_keytry.c */
+#if	BROKEN_LINKER
+#define	_nc_tinfo_fkeys	_nc_tinfo_fkeysf()
+extern NCURSES_EXPORT(const struct tinfo_fkeys *) _nc_tinfo_fkeysf (void);
+#else
+extern NCURSES_EXPORT_VAR(const struct tinfo_fkeys) _nc_tinfo_fkeys[];
+#endif
+
 /* lib_tparm.c */
 #define NUM_PARM 9
 
@@ -307,30 +301,18 @@ extern NCURSES_EXPORT_VAR(int) _nc_tparm_err;
 
 extern NCURSES_EXPORT(int) _nc_tparm_analyze(const char *, char **, int *);
 
+/* lib_trace.c */
+extern NCURSES_EXPORT_VAR(unsigned) _nc_tracing;
+extern NCURSES_EXPORT(const char *) _nc_visbuf (const char *);
+extern NCURSES_EXPORT(const char *) _nc_visbuf2 (int, const char *);
+
 /* lib_tputs.c */
-extern NCURSES_EXPORT_VAR(int) _nc_nulls_sent;		/* Add one for every null sent */
+extern NCURSES_EXPORT_VAR(int) _nc_nulls_sent;	/* Add one for every null sent */
 
 /* comp_main.c: compiler main */
 extern const char * _nc_progname;
 
 /* db_iterator.c */
-typedef enum {
-    dbdTIC = 0,
-#if USE_DATABASE
-    dbdEnvOnce,
-    dbdHome,
-    dbdEnvList,
-    dbdCfgList,
-    dbdCfgOnce,
-#endif
-#if USE_TERMCAP
-    dbdEnvOnce2,
-    dbdEnvList2,
-    dbdCfgList2,
-#endif
-    dbdLAST
-} DBDIRS;
-
 extern NCURSES_EXPORT(const char *) _nc_next_db(DBDIRS *, int *);
 extern NCURSES_EXPORT(const char *) _nc_tic_dir (const char *);
 extern NCURSES_EXPORT(void) _nc_first_db(DBDIRS *, int *);
@@ -339,8 +321,31 @@ extern NCURSES_EXPORT(void) _nc_last_db(void);
 /* write_entry.c */
 extern NCURSES_EXPORT(int) _nc_tic_written (void);
 
+#endif /* NCURSES_INTERNALS */
+
+/*
+ * These entrypoints are used by tack.
+ */
+
+/* comp_hash.c: name lookup */
+extern NCURSES_EXPORT(struct name_table_entry const *) _nc_find_entry
+	(const char *, const HashValue *);
+extern NCURSES_EXPORT(const HashValue *) _nc_get_hash_table (bool);
+
+/* comp_scan.c: lexical analysis */
+extern NCURSES_EXPORT(void) _nc_reset_input (FILE *, char *);
+
+/* comp_expand.c: expand string into readable form */
+extern NCURSES_EXPORT(char *) _nc_tic_expand (const char *, bool, int);
+
+/* comp_scan.c: decode string from readable form */
+extern NCURSES_EXPORT(int) _nc_trans_string (char *, char *);
+
+#endif /* NCURSES_TERM_ENTRY_H_incl */
+
 #ifdef __cplusplus
 }
 #endif
 
+/* *INDENT-ON* */
 #endif /* __TIC_H */

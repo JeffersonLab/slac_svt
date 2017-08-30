@@ -5,7 +5,7 @@ use 5.008;
 use strict;
 use warnings;
 
-our $VERSION = '2.01';
+our $VERSION = '2.15';
 my $XS_VERSION = $VERSION;
 $VERSION = eval $VERSION;
 
@@ -134,7 +134,7 @@ threads - Perl interpreter-based threads
 
 =head1 VERSION
 
-This document describes threads version 2.01
+This document describes threads version 2.15
 
 =head1 WARNING
 
@@ -366,7 +366,7 @@ key) will cause its ID to be used as the value:
     use threads qw(stringify);
 
     my $thr = threads->create(...);
-    print("Thread $thr started...\n");  # Prints out: Thread 1 started...
+    print("Thread $thr started\n");  # Prints: Thread 1 started
 
 =item threads->object($tid)
 
@@ -691,7 +691,8 @@ threaded applications.
 To specify a particular stack size for any individual thread, call
 C<-E<gt>create()> with a hash reference as the first argument:
 
-    my $thr = threads->create({'stack_size' => 32*4096}, \&foo, @args);
+    my $thr = threads->create({'stack_size' => 32*4096},
+                              \&foo, @args);
 
 =item $thr2 = $thr1->create(FUNCTION, ARGS)
 
@@ -699,7 +700,8 @@ This creates a new thread (C<$thr2>) that inherits the stack size from an
 existing thread (C<$thr1>).  This is shorthand for the following:
 
     my $stack_size = $thr1->get_stack_size();
-    my $thr2 = threads->create({'stack_size' => $stack_size}, FUNCTION, ARGS);
+    my $thr2 = threads->create({'stack_size' => $stack_size},
+                               FUNCTION, ARGS);
 
 =back
 
@@ -1059,6 +1061,18 @@ In prior perl versions, spawning threads with open directory handles would
 crash the interpreter.
 L<[perl #75154]|http://rt.perl.org/rt3/Public/Bug/Display.html?id=75154>
 
+=item Detached threads and global destruction
+
+If the main thread exits while there are detached threads which are still
+running, then Perl's global destruction phase is not executed because
+otherwise certain global structures that control the operation of threads and
+that are allocated in the main thread's memory may get destroyed before the
+detached thread is destroyed.
+
+If you are using any code that requires the execution of the global
+destruction phase for clean up (e.g., removing temp files), then do not use
+detached threads, but rather join all threads before exiting the program.
+
 =item Perl Bugs and the CPAN Version of L<threads>
 
 Support for threads extends beyond the code in this module (i.e.,
@@ -1084,8 +1098,11 @@ Perl 5.8.0 or later
 
 =head1 SEE ALSO
 
-L<threads> Discussion Forum on CPAN:
-L<http://www.cpanforum.com/dist/threads>
+threads on MetaCPAN:
+L<https://metacpan.org/release/threads>
+
+Code repository for CPAN distribution:
+L<https://github.com/Dual-Life/threads>
 
 L<threads::shared>, L<perlthrtut>
 
@@ -1097,6 +1114,8 @@ L<http://lists.perl.org/list/ithreads.html>
 
 Stack size discussion:
 L<http://www.perlmonks.org/?node_id=532956>
+
+Sample code in the I<examples> directory of this distribution on CPAN.
 
 =head1 AUTHOR
 

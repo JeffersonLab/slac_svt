@@ -1,0 +1,36 @@
+%NAME%
+tcsh
+
+%VERSION%
+6.20.00-1
+
+%DESC%
+Enhanced version of the Berkeley C shell.
+
+%URL%
+http://www.tcsh.org/Welcome
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1488039561
+
+%INSTALLDATE%
+1495690835
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu4@archlinuxarm.org>
+
+%SIZE%
+1130496
+
+%LICENSE%
+BSD
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+ncurses
+

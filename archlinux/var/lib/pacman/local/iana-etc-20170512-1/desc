@@ -1,0 +1,36 @@
+%NAME%
+iana-etc
+
+%VERSION%
+20170512-1
+
+%DESC%
+/etc/protocols and /etc/services provided by IANA
+
+%URL%
+http://www.iana.org/protocols
+
+%ARCH%
+any
+
+%BUILDDATE%
+1494884921
+
+%INSTALLDATE%
+1495690450
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu6@archlinuxarm.org>
+
+%SIZE%
+4002816
+
+%REASON%
+1
+
+%LICENSE%
+custom:none
+
+%VALIDATION%
+sha256
+

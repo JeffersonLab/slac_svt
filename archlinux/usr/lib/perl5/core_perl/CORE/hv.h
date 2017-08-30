@@ -43,12 +43,17 @@ struct he {
 
 /* hash key -- defined separately for use as shared pointer */
 struct hek {
-    U32		hek_hash;	/* hash of key */
-    I32		hek_len;	/* length of hash key */
-    char	hek_key[1];	/* variable-length hash key */
+    U32         hek_hash;        /* computed hash of key */
+    I32         hek_len;        /* length of the hash key */
+    /* Be careful! Sometimes we store a pointer in the hek_key
+     * buffer, which means it must be 8 byte aligned or things
+     * dont work on aligned platforms like HPUX
+     * Also beware, the last byte of the hek_key buffer is a
+     * hidden flags byte about the key. */
+     char       hek_key[1];        /* variable-length hash key */
     /* the hash-key is \0-terminated */
     /* after the \0 there is a byte for flags, such as whether the key
-       is UTF-8 */
+       is UTF-8 or WAS-UTF-8, or an SV */
 };
 
 struct shared_he {
@@ -82,6 +87,7 @@ struct mro_meta {
     const struct mro_alg *mro_which; /* which mro alg is in use? */
     HV      *isa;            /* Everything this class @ISA */
     HV      *super;          /* SUPER method cache */
+    CV      *destroy;        /* DESTROY method if destroy_gen non-zero */
     U32     destroy_gen;     /* Generation number of DESTROY cache */
 };
 
@@ -118,7 +124,6 @@ struct xpvhv_aux {
     U32         xhv_last_rand;  /* last random value for hash traversal,
                                    used to detect each() after insert for warnings */
 #endif
-    U32         xhv_fill_lazy;
     U32         xhv_aux_flags;      /* assorted extra flags */
 };
 
@@ -152,14 +157,14 @@ Null HV pointer.
 =head1 Hash Manipulation Functions
 
 =for apidoc Am|char*|HvNAME|HV* stash
-Returns the package name of a stash, or NULL if C<stash> isn't a stash.
-See C<SvSTASH>, C<CvSTASH>.
+Returns the package name of a stash, or C<NULL> if C<stash> isn't a stash.
+See C<L</SvSTASH>>, C<L</CvSTASH>>.
 
 =for apidoc Am|STRLEN|HvNAMELEN|HV *stash
 Returns the length of the stash's name.
 
 =for apidoc Am|unsigned char|HvNAMEUTF8|HV *stash
-Returns true if the name is in UTF8 encoding.
+Returns true if the name is in UTF-8 encoding.
 
 =for apidoc Am|char*|HvENAME|HV* stash
 Returns the effective name of a stash, or NULL if there is none.  The
@@ -173,7 +178,7 @@ caches.
 Returns the length of the stash's effective name.
 
 =for apidoc Am|unsigned char|HvENAMEUTF8|HV *stash
-Returns true if the effective name is in UTF8 encoding.
+Returns true if the effective name is in UTF-8 encoding.
 
 =for apidoc Am|void*|HeKEY|HE* he
 Returns the actual pointer stored in the key slot of the hash entry.  The
@@ -208,7 +213,7 @@ variable C<PL_na>, though this is rather less efficient than using a local
 variable.  Remember though, that hash keys in perl are free to contain
 embedded nulls, so using C<strlen()> or similar is not a good way to find
 the length of hash keys.  This is very similar to the C<SvPV()> macro
-described elsewhere in this document.  See also C<HeUTF8>.
+described elsewhere in this document.  See also C<L</HeUTF8>>.
 
 If you are using C<HePV> to get values to pass to C<newSVpvn()> to create a
 new SV, you should consider using C<newSVhek(HeKEY_hek(he))> as it is more
@@ -320,7 +325,7 @@ C<SV*>.
    ((SvOOK(hv) && HvAUX(hv)->xhv_name_u.xhvnameu_name && HvAUX(hv)->xhv_name_count != -1) \
 				 ? HEK_UTF8(HvENAME_HEK_NN(hv)) : 0)
 
-/* the number of keys (including any placeholders) */
+/* the number of keys (including any placeholders) - NOT PART OF THE API */
 #define XHvTOTALKEYS(xhv)	((xhv)->xhv_keys)
 
 /*
@@ -402,7 +407,8 @@ C<SV*>.
 #define HVhek_UTF8	0x01 /* Key is utf8 encoded. */
 #define HVhek_WASUTF8	0x02 /* Key is bytes here, but was supplied as utf8. */
 #define HVhek_UNSHARED	0x08 /* This key isn't a shared hash key. */
-#define HVhek_FREEKEY	0x100 /* Internal flag to say key is malloc()ed.  */
+/* the following flags are options for functions, they are not stored in heks */
+#define HVhek_FREEKEY	0x100 /* Internal flag to say key is Newx()ed.  */
 #define HVhek_PLACEHOLD	0x200 /* Internal flag to create placeholder.
                                * (may change, but Storable is a core module) */
 #define HVhek_KEYCANONICAL 0x400 /* Internal flag - key is in canonical form.
@@ -455,8 +461,7 @@ C<SV*>.
 		      (val), (hash)))
 
 #define hv_exists_ent(hv, keysv, hash)					\
-    (hv_common((hv), (keysv), NULL, 0, 0, HV_FETCH_ISEXISTS, 0, (hash))	\
-     ? TRUE : FALSE)
+    cBOOL(hv_common((hv), (keysv), NULL, 0, 0, HV_FETCH_ISEXISTS, 0, (hash)))
 #define hv_fetch_ent(hv, keysv, lval, hash)				\
     ((HE *) hv_common((hv), (keysv), NULL, 0, 0,			\
 		      ((lval) ? HV_FETCH_LVALUE : 0), NULL, (hash)))
@@ -474,9 +479,10 @@ C<SV*>.
 			      (HV_FETCH_ISSTORE|HV_FETCH_JUST_SV),	\
 			      (val), (hash)))
 
+
+
 #define hv_exists(hv, key, klen)					\
-    (hv_common_key_len((hv), (key), (klen), HV_FETCH_ISEXISTS, NULL, 0) \
-     ? TRUE : FALSE)
+    cBOOL(hv_common_key_len((hv), (key), (klen), HV_FETCH_ISEXISTS, NULL, 0))
 
 #define hv_fetch(hv, key, klen, lval)					\
     ((SV**) hv_common_key_len((hv), (key), (klen), (lval)		\
@@ -486,6 +492,24 @@ C<SV*>.
 #define hv_delete(hv, key, klen, flags)					\
     (MUTABLE_SV(hv_common_key_len((hv), (key), (klen),			\
 				  (flags) | HV_DELETE, NULL, 0)))
+
+/* Provide 's' suffix subs for constant strings (and avoid needing to count
+ * chars). See STR_WITH_LEN in handy.h - because these are macros we cant use
+ * STR_WITH_LEN to do the work, we have to unroll it. */
+#define hv_existss(hv, key) \
+    hv_exists((hv), ("" key ""), (sizeof(key)-1))
+
+#define hv_fetchs(hv, key, lval) \
+    hv_fetch((hv), ("" key ""), (sizeof(key)-1), (lval))
+
+#define hv_deletes(hv, key, flags) \
+    hv_delete((hv), ("" key ""), (sizeof(key)-1), (flags))
+
+#define hv_name_sets(hv, name, flags) \
+    hv_name_set((hv),("" name ""),(sizeof(name)-1), flags)
+
+#define hv_stores(hv, key, val) \
+    hv_store((hv), ("" key ""), (sizeof(key)-1), (val), 0)
 
 #ifdef PERL_CORE
 # define hv_storehek(hv, hek, val) \
@@ -543,8 +567,8 @@ struct refcounted_he {
 /*
 =for apidoc m|SV *|refcounted_he_fetch_pvs|const struct refcounted_he *chain|const char *key|U32 flags
 
-Like L</refcounted_he_fetch_pvn>, but takes a literal string instead of
-a string/length pair, and no precomputed hash.
+Like L</refcounted_he_fetch_pvn>, but takes a C<NUL>-terminated literal string
+instead of a string/length pair, and no precomputed hash.
 
 =cut
 */
@@ -555,8 +579,8 @@ a string/length pair, and no precomputed hash.
 /*
 =for apidoc m|struct refcounted_he *|refcounted_he_new_pvs|struct refcounted_he *parent|const char *key|SV *value|U32 flags
 
-Like L</refcounted_he_new_pvn>, but takes a literal string instead of
-a string/length pair, and no precomputed hash.
+Like L</refcounted_he_new_pvn>, but takes a C<NUL>-terminated literal string
+instead of a string/length pair, and no precomputed hash.
 
 =cut
 */

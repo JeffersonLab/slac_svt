@@ -1,25 +1,16 @@
-# $Id: encoding.pm,v 2.14 2015/03/14 02:44:39 dankogai Exp dankogai $
+# $Id: encoding.pm,v 2.19 2016/11/01 13:30:38 dankogai Exp $
 package encoding;
-our $VERSION = sprintf "%d.%02d", q$Revision: 2.14 $ =~ /(\d+)/g;
+our $VERSION = sprintf "%d.%02d", q$Revision: 2.19 $ =~ /(\d+)/g;
 
 use Encode;
 use strict;
 use warnings;
 
-use constant DEBUG => !!$ENV{PERL_ENCODE_DEBUG};
-
-BEGIN {
-    if ( ord("A") == 193 ) {
-        require Carp;
-        Carp::croak("encoding: pragma does not support EBCDIC platforms");
-    }
-}
-
-our $HAS_PERLIO = 0;
-eval { require PerlIO::encoding };
-unless ($@) {
-    $HAS_PERLIO = ( PerlIO::encoding->VERSION >= 0.02 );
-}
+use constant {
+    DEBUG => !!$ENV{PERL_ENCODE_DEBUG},
+    HAS_PERLIO => eval { require PerlIO::encoding; PerlIO::encoding->VERSION(0.02) },
+    PERL_5_21_7 => $^V && $^V ge v5.21.7,
+};
 
 sub _exception {
     my $name = shift;
@@ -39,73 +30,93 @@ sub in_locale { $^H & ( $locale::hint_bits || 0 ) }
 sub _get_locale_encoding {
     my $locale_encoding;
 
+    if ($^O eq 'MSWin32') {
+        my @tries = (
+            # First try to get the OutputCP. This will work only if we
+            # are attached to a console
+            'Win32.pm' => 'Win32::GetConsoleOutputCP',
+            'Win32/Console.pm' => 'Win32::Console::OutputCP',
+            # If above failed, this means that we are a GUI app
+            # Let's assume that the ANSI codepage is what matters
+            'Win32.pm' => 'Win32::GetACP',
+        );
+        while (@tries) {
+            my $cp = eval {
+                require $tries[0];
+                no strict 'refs';
+                &{$tries[1]}()
+            };
+            if ($cp) {
+                if ($cp == 65001) { # Code page for UTF-8
+                    $locale_encoding = 'UTF-8';
+                } else {
+                    $locale_encoding = 'cp' . $cp;
+                }
+                return $locale_encoding;
+            }
+            splice(@tries, 0, 2)
+        }
+    }
+
     # I18N::Langinfo isn't available everywhere
-    eval {
+    $locale_encoding = eval {
         require I18N::Langinfo;
-        I18N::Langinfo->import(qw(langinfo CODESET));
-        $locale_encoding = langinfo( CODESET() );
+        find_encoding(
+            I18N::Langinfo::langinfo( I18N::Langinfo::CODESET() )
+        )->name
     };
+    return $locale_encoding if defined $locale_encoding;
 
-    my $country_language;
-
-    no warnings 'uninitialized';
-
-    if ( (not $locale_encoding) && in_locale() ) {
-        if ( $ENV{LC_ALL} =~ /^([^.]+)\.([^.@]+)(@.*)?$/ ) {
+    eval {
+        require POSIX;
+        # Get the current locale
+        # Remember that MSVCRT impl is quite different from Unixes
+        my $locale = POSIX::setlocale(POSIX::LC_CTYPE());
+        if ( $locale =~ /^([^.]+)\.([^.@]+)(?:@.*)?$/ ) {
+            my $country_language;
             ( $country_language, $locale_encoding ) = ( $1, $2 );
-        }
-        elsif ( $ENV{LANG} =~ /^([^.]+)\.([^.@]+)(@.*)?$/ ) {
-            ( $country_language, $locale_encoding ) = ( $1, $2 );
-        }
 
-        # LANGUAGE affects only LC_MESSAGES only on glibc
-    }
-    elsif ( not $locale_encoding ) {
-        if (   $ENV{LC_ALL} =~ /\butf-?8\b/i
-            || $ENV{LANG} =~ /\butf-?8\b/i )
-        {
-            $locale_encoding = 'utf8';
+            # Could do more heuristics based on the country and language
+            # since we have Locale::Country and Locale::Language available.
+            # TODO: get a database of Language -> Encoding mappings
+            # (the Estonian database at http://www.eki.ee/letter/
+            # would be excellent!) --jhi
+            if (lc($locale_encoding) eq 'euc') {
+                if ( $country_language =~ /^ja_JP|japan(?:ese)?$/i ) {
+                    $locale_encoding = 'euc-jp';
+                }
+                elsif ( $country_language =~ /^ko_KR|korean?$/i ) {
+                    $locale_encoding = 'euc-kr';
+                }
+                elsif ( $country_language =~ /^zh_CN|chin(?:a|ese)$/i ) {
+                    $locale_encoding = 'euc-cn';
+                }
+                elsif ( $country_language =~ /^zh_TW|taiwan(?:ese)?$/i ) {
+                    $locale_encoding = 'euc-tw';
+                }
+                else {
+                    require Carp;
+                    Carp::croak(
+                        "encoding: Locale encoding '$locale_encoding' too ambiguous"
+                    );
+                }
+            }
         }
-
-        # Could do more heuristics based on the country and language
-        # parts of LC_ALL and LANG (the parts before the dot (if any)),
-        # since we have Locale::Country and Locale::Language available.
-        # TODO: get a database of Language -> Encoding mappings
-        # (the Estonian database at http://www.eki.ee/letter/
-        # would be excellent!) --jhi
-    }
-    if (   defined $locale_encoding
-        && lc($locale_encoding) eq 'euc'
-        && defined $country_language )
-    {
-        if ( $country_language =~ /^ja_JP|japan(?:ese)?$/i ) {
-            $locale_encoding = 'euc-jp';
-        }
-        elsif ( $country_language =~ /^ko_KR|korean?$/i ) {
-            $locale_encoding = 'euc-kr';
-        }
-        elsif ( $country_language =~ /^zh_CN|chin(?:a|ese)$/i ) {
-            $locale_encoding = 'euc-cn';
-        }
-        elsif ( $country_language =~ /^zh_TW|taiwan(?:ese)?$/i ) {
-            $locale_encoding = 'euc-tw';
-        }
-        else {
-            require Carp;
-            Carp::croak(
-                "encoding: Locale encoding '$locale_encoding' too ambiguous"
-            );
-        }
-    }
+    };
 
     return $locale_encoding;
 }
 
 sub import {
-    if ($] >= 5.017) {
-	warnings::warnif("deprecated",
-			 "Use of the encoding pragma is deprecated")
+
+    if ( ord("A") == 193 ) {
+        require Carp;
+        Carp::croak("encoding: pragma does not support EBCDIC platforms");
     }
+
+    my $deprecate =
+        $] >= 5.017 ? "Use of the encoding pragma is deprecated" : 0;
+
     my $class = shift;
     my $name  = shift;
     if (!$name){
@@ -130,9 +141,15 @@ sub import {
     }
     $name = $enc->name;    # canonize
     unless ( $arg{Filter} ) {
+        if ($] >= 5.025003) {
+            require Carp;
+            Carp::croak("The encoding pragma is no longer supported");
+        }
+        warnings::warnif("deprecated",$deprecate) if $deprecate;
+
         DEBUG and warn "_exception($name) = ", _exception($name);
         if (! _exception($name)) {
-            if (!$^V || $^V lt v5.21.7) {
+            if (!PERL_5_21_7) {
                 ${^ENCODING} = $enc;
             }
             else {
@@ -143,11 +160,15 @@ sub import {
                 ${^E_NCODING} = $enc;
             }
         }
-        $HAS_PERLIO or return 1;
+        if (! HAS_PERLIO ) {
+            return 1;
+        }
     }
     else {
+        warnings::warnif("deprecated",$deprecate) if $deprecate;
+
         defined( ${^ENCODING} ) and undef ${^ENCODING};
-        undef ${^E_NCODING} if $^V && $^V ge v5.21.7;
+        undef ${^E_NCODING} if PERL_5_21_7;
 
         # implicitly 'use utf8'
         require utf8;      # to fetch $utf8::hint_bits;
@@ -197,8 +218,8 @@ sub import {
 sub unimport {
     no warnings;
     undef ${^ENCODING};
-    undef ${^E_NCODING} if $^V && $^V ge v5.21.7;
-    if ($HAS_PERLIO) {
+    undef ${^E_NCODING} if PERL_5_21_7;
+    if (HAS_PERLIO) {
         binmode( STDIN,  ":raw" );
         binmode( STDOUT, ":raw" );
     }
@@ -268,6 +289,10 @@ Old code should be converted to UTF-8, via something like the recipe in the
 L</SYNOPSIS> (though this simple approach may require manual adjustments
 afterwards).
 
+If UTF-8 is not an option, it is recommended that one use a simple source
+filter, such as that provided by L<Filter::Encoding> on CPAN or this
+pragma's own C<Filter> option (see below).
+
 The only legitimate use of this pragma is almost certainly just one per file,
 near the top, with file scope, as the file is likely going to only be written
 in one encoding.  Further restrictions apply in Perls before v5.22 (see
@@ -278,6 +303,9 @@ There are two basic modes of operation (plus turning if off):
 =over 4
 
 =item C<use encoding ['I<ENCNAME>'] ;>
+
+Please note: This mode of operation is no longer supported as of Perl
+v5.26.
 
 This is the normal operation.  It translates various literals encountered in
 the Perl source file from the encoding I<ENCNAME> into UTF-8, and similarly

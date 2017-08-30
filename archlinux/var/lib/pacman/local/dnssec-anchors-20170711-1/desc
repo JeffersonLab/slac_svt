@@ -1,0 +1,36 @@
+%NAME%
+dnssec-anchors
+
+%VERSION%
+20170711-1
+
+%DESC%
+DNSSEC trust anchors for the root zone
+
+%URL%
+https://data.iana.org/root-anchors/
+
+%ARCH%
+any
+
+%BUILDDATE%
+1500500915
+
+%INSTALLDATE%
+1495690617
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu6@archlinuxarm.org>
+
+%SIZE%
+26624
+
+%REASON%
+1
+
+%LICENSE%
+custom:NoCopyright
+
+%VALIDATION%
+sha256
+

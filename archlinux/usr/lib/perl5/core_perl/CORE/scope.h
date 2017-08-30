@@ -8,7 +8,7 @@
  *
  */
 
-/* *** these are ordered by number of of auto-popped args */
+/* *** Update arg_counts[] in scope.c if you modify these */
 
 /* zero args */
 
@@ -17,11 +17,9 @@
 #define SAVEt_CLEARSV		2
 #define SAVEt_REGCONTEXT	3
 
-#define SAVEt_ARG0_MAX		3
-
 /* one arg */
 
-#define SAVEt_GP_ALIASED_SV	4
+#define SAVEt_TMPSFLOOR		4
 #define SAVEt_BOOL		5
 #define SAVEt_COMPILE_WARNINGS	6
 #define SAVEt_COMPPAD		7
@@ -40,8 +38,6 @@
 #define SAVEt_STACK_POS		20
 #define SAVEt_READONLY_OFF	21
 #define SAVEt_FREEPADNAME	22
-
-#define SAVEt_ARG1_MAX		22
 
 /* two args */
 
@@ -71,8 +67,6 @@
 #define SAVEt_ADELETE		46
 #define SAVEt_APTR		47
 
-#define SAVEt_ARG2_MAX		47
-
 /* three args */
 
 #define SAVEt_HELEM		48
@@ -100,8 +94,8 @@
  * macros */
 #define SS_MAXPUSH 4
 
-#define SSCHECK(need) if (UNLIKELY(PL_savestack_ix + (I32)(need) + SS_MAXPUSH > PL_savestack_max)) savestack_grow()
-#define SSGROW(need) if (UNLIKELY(PL_savestack_ix + (I32)(need) + SS_MAXPUSH > PL_savestack_max)) savestack_grow_cnt(need + SS_MAXPUSH)
+#define SSCHECK(need) if (UNLIKELY(PL_savestack_ix + (I32)(need) > PL_savestack_max)) savestack_grow()
+#define SSGROW(need) if (UNLIKELY(PL_savestack_ix + (I32)(need) > PL_savestack_max)) savestack_grow_cnt(need)
 #define SSPUSHINT(i) (PL_savestack[PL_savestack_ix++].any_i32 = (I32)(i))
 #define SSPUSHLONG(i) (PL_savestack[PL_savestack_ix++].any_long = (long)(i))
 #define SSPUSHBOOL(p) (PL_savestack[PL_savestack_ix++].any_bool = (p))
@@ -119,7 +113,9 @@
  * of the grow() can be done. These changes reduce the code of something
  * like save_pushptrptr() to half its former size.
  * Of course, doing the size check *after* pushing means we must always
- * ensure there are SS_MAXPUSH free slots on the savestack
+ * ensure there are SS_MAXPUSH free slots on the savestack. This ensured
+ * bt savestack_grow() and savestack_grow_cnt always allocating SS_MAXPUSH
+ * slots more than asked for, or that it sets PL_savestack_max to
  *
  * These are for internal core use only and are subject to change */
 
@@ -131,9 +127,9 @@
     assert((need) <= SS_MAXPUSH);                               \
     ix += (need);                                               \
     PL_savestack_ix = ix;                                       \
-    assert(ix <= PL_savestack_max);                             \
-    if (UNLIKELY((ix + SS_MAXPUSH) > PL_savestack_max)) savestack_grow(); \
-    assert(PL_savestack_ix + SS_MAXPUSH <= PL_savestack_max);
+    assert(ix <= PL_savestack_max + SS_MAXPUSH);                \
+    if (UNLIKELY(ix > PL_savestack_max)) savestack_grow();      \
+    assert(PL_savestack_ix <= PL_savestack_max);
 
 #define SS_ADD_INT(i)   ((ssp++)->any_i32 = (I32)(i))
 #define SS_ADD_LONG(i)  ((ssp++)->any_long = (long)(i))
@@ -158,38 +154,34 @@
 =head1 Callback Functions
 
 =for apidoc Ams||SAVETMPS
-Opening bracket for temporaries on a callback.  See C<FREETMPS> and
+Opening bracket for temporaries on a callback.  See C<L</FREETMPS>> and
 L<perlcall>.
 
 =for apidoc Ams||FREETMPS
-Closing bracket for temporaries on a callback.  See C<SAVETMPS> and
+Closing bracket for temporaries on a callback.  See C<L</SAVETMPS>> and
 L<perlcall>.
 
 =for apidoc Ams||ENTER
-Opening bracket on a callback.  See C<LEAVE> and L<perlcall>.
+Opening bracket on a callback.  See C<L</LEAVE>> and L<perlcall>.
 
 =for apidoc Ams||LEAVE
-Closing bracket on a callback.  See C<ENTER> and L<perlcall>.
+Closing bracket on a callback.  See C<L</ENTER>> and L<perlcall>.
 
-=over
+=for apidoc Ams||ENTER_with_name(name)
 
-=item ENTER_with_name(name)
-
-Same as C<ENTER>, but when debugging is enabled it also associates the
+Same as C<L</ENTER>>, but when debugging is enabled it also associates the
 given literal string with the new scope.
 
-=item LEAVE_with_name(name)
+=for apidoc Ams||LEAVE_with_name(name)
 
-Same as C<LEAVE>, but when debugging is enabled it first checks that the
-scope has the given name. Name must be a literal string.
-
-=back
+Same as C<L</LEAVE>>, but when debugging is enabled it first checks that the
+scope has the given name. C<name> must be a C<NUL>-terminated literal string.
 
 =cut
 */
 
-#define SAVETMPS Perl_save_strlen(aTHX_ (STRLEN *)&PL_tmps_floor), \
-		 PL_tmps_floor = PL_tmps_ix
+#define SAVETMPS Perl_savetmps(aTHX)
+
 #define FREETMPS if (PL_tmps_ix > PL_tmps_floor) free_tmps()
 
 #ifdef DEBUGGING
@@ -308,7 +300,7 @@ scope has the given name. Name must be a literal string.
 #define SAVECOPLINE(c)		SAVEI32(CopLINE(c))
 
 /* SSNEW() temporarily allocates a specified number of bytes of data on the
- * savestack.  It returns an integer index into the savestack, because a
+ * savestack.  It returns an I32 index into the savestack, because a
  * pointer would get broken if the savestack is moved on reallocation.
  * SSNEWa() works like SSNEW(), but also aligns the data to the specified
  * number of bytes.  MEM_ALIGNBYTES is perhaps the most useful.  The

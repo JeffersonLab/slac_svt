@@ -2,39 +2,32 @@
                       =========================
                              Version 2.1
 
-          Copyright 1997-2015 Werner Koch
-          Copyright 1998-2015 Free Software Foundation, Inc.
+          Copyright 1997-2017 Werner Koch
+          Copyright 1998-2017 Free Software Foundation, Inc.
 
 
 * INTRODUCTION
 
   GnuPG is a complete and free implementation of the OpenPGP standard
-  as defined by RFC4880 (also known as PGP).  GnuPG allows to encrypt
-  and sign data and communication, features a versatile key management
-  system as well as access modules for public key directories.
+  as defined by RFC4880 (also known as PGP).  GnuPG enables encryption
+  and signing of data and communication, and features a versatile key
+  management system as well as access modules for public key
+  directories.
 
   GnuPG, also known as GPG, is a command line tool with features for
   easy integration with other applications.  A wealth of frontend
-  applications and libraries making use of GnuPG are available.  Since
-  version 2 GnuPG provides support for S/MIME and Secure Shell in
-  addition to OpenPGP.
+  applications and libraries are available that make use of GnuPG.
+  Starting with version 2 GnuPG provides support for S/MIME and Secure
+  Shell in addition to OpenPGP.
 
   GnuPG is Free Software (meaning that it respects your freedom). It
   can be freely used, modified and distributed under the terms of the
   GNU General Public License.
 
-  We are currently maintaining three branches of GnuPG:
-
-  - 2.1 (i.e. this release) is the latest development with a lot of
-    new features.
-
-  - 2.0 is the current stable version for general use.
-
-  - 1.4 is the old standalone version which is most suitable for older
-    or embedded platforms.
-
-  You may not install 2.1 and 2.0 at the same time.  However, it is
-  possible to install 1.4 along with any of the 2.x versions.
+  Note that the 2.0 series of GnuPG will reach end-of-life on
+  2017-12-31.  It is not possible to install a 2.1.x version along
+  with any 2.0.x version.  However, it is possible to install GnuPG
+  1.4 along with a 2.x version.
 
 
 * BUILD INSTRUCTIONS
@@ -67,9 +60,12 @@
 
     ./configure
     make
+    make check
     make install
 
-  (Before doing install you might need to become root.)
+  The "make check" is optional but highly recommended.  To run even
+  more tests you may add "--enable-all-tests" to the configure run.
+  Before running the "make install" you might need to become root.
 
   If everything succeeds, you have a working GnuPG with support for
   OpenPGP, S/MIME, ssh-agent, and smartcards.  Note that there is no
@@ -116,6 +112,16 @@
   Add other options as needed.
 
 
+*** Systems without a full C99 compiler
+
+  If you run into problems with your compiler complaining about dns.c
+  you may use
+
+    ./configure --disable-libdns
+
+  Add other options as needed.
+
+
 * MIGRATION from 1.4 or 2.0 to 2.1
 
   The major change in 2.1 is gpg-agent taking care of the OpenPGP
@@ -136,6 +142,30 @@
   use of the GnuPG directories.  Dirmngr is started by gpg or gpgsm as
   needed. There is no more need to install a separate Dirmngr package.
 
+* RECOMMENDATIONS
+
+** Socket directory
+
+  GnuPG uses Unix domain sockets to connect its components (on Windows
+  an emulation of these sockets is used).  Depending on the type of
+  the file system, it is sometimes not possible to use the GnuPG home
+  directory (i.e. ~/.gnupg) as the location for the sockets.  To solve
+  this problem GnuPG prefers the use of a per-user directory below the
+  the /run (or /var/run) hierarchy for the the sockets.  It is thus
+  suggested to create per-user directories on system or session
+  startup.  For example the following snippet can be used in
+  /etc/rc.local to create these directories:
+
+      [ ! -d /run/user ] && mkdir /run/user
+      awk -F: </etc/passwd '$3 >= 1000 && $3 < 65000 {print $3}' \
+        | ( while read uid rest; do
+              if [ ! -d "/run/user/$uid" ]; then
+                mkdir /run/user/$uid
+                chown $uid /run/user/$uid
+                chmod 700 /run/user/$uid
+              fi
+            done )
+
 
 * DOCUMENTATION
 
@@ -150,16 +180,15 @@
   is at [[https://gnupg.org/documentation/manuals/gnupg-devel/]] .
 
 
-* GnuPG 1.4 and GnuPG 2.0
+* Installing GnuPG 2.2. and GnuPG 1.4
 
-  GnuPG 2.0 is a newer version of GnuPG with additional support for
-  S/MIME.  It has a different design philosophy that splits
-  functionality up into several modules.  Both versions may be
-  installed simultaneously without any conflict (gpg is called gpg2 in
-  GnuPG 2).  In fact, the gpg version from GnuPG 1.4 is able to make
-  use of the gpg-agent as included in GnuPG 2 and allows for seamless
-  passphrase caching.  The advantage of GnuPG 1.4 is its smaller size
-  and no dependency on other modules at run and build time.
+  GnuPG 2.2 is a current version of GnuPG with state of the art
+  security design and many more features.  To install both versions
+  alongside, it is suggested to rename the 1.4 version of "gpg" to
+  "gpg1" as well as the corresponding man page.  Newer releases of the
+  1.4 branch will likely do this by default.  In case this is not
+  possible, the 2.2 version can be installed under the name "gpg2"
+  using the configure option --enable-gpg-is-gpg2.
 
 
 * HOW TO GET MORE INFORMATION
@@ -169,7 +198,7 @@
   "https://gnupg.org/faq/whats-new-in-2.1.html" .
 
   The primary WWW page is "https://www.gnupg.org"
-             or using TOR "http://ic6au7wa3f6naxjq.onion"
+             or using Tor "http://ic6au7wa3f6naxjq.onion"
   The primary FTP site is "ftp://ftp.gnupg.org/gcrypt/"
 
   See [[https://gnupg.org/download/mirrors.html]] for a list of
@@ -200,7 +229,7 @@
   https://www.gnupg.org/documentation/mailing-lists.html for archives
   of the mailing lists.
 
-  Please direct bug reports to http://bugs.gnupg.org or post them
+  Please direct bug reports to [[http://bugs.gnupg.org]] or post them
   direct to the mailing list <gnupg-devel@gnupg.org>.
 
   Please direct questions about GnuPG to the users mailing list or one

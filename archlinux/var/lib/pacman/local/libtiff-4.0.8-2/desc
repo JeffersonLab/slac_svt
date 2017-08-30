@@ -1,0 +1,44 @@
+%NAME%
+libtiff
+
+%VERSION%
+4.0.8-2
+
+%DESC%
+Library for manipulation of TIFF images
+
+%URL%
+http://www.simplesystems.org/libtiff/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1500279599
+
+%INSTALLDATE%
+1495690915
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu6@archlinuxarm.org>
+
+%SIZE%
+2541568
+
+%REASON%
+1
+
+%LICENSE%
+custom
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+libjpeg
+zlib
+xz
+
+%OPTDEPENDS%
+freeglut: for using tiffgt
+

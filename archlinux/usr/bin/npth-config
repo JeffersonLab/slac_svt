@@ -19,7 +19,7 @@ LANG=C
 
 # NPTH's own cflags and libs
 cflags="-I${prefix}/include "
-libs="-L${exec_prefix}/lib -lnpth -lpthread "
+libs="-L${exec_prefix}/lib -lnpth  -lpthread "
 
 output=""
 
@@ -71,7 +71,7 @@ while test $# -gt 0; do
 	    with_glib=yes
 	    ;;
         --version)
-            echo "1.2"
+            echo "1.5"
 	    exit 0
 	    ;;
         --api-version)

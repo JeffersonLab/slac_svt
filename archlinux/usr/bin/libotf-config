@@ -1,0 +1,63 @@
+#!/bin/sh
+# libotf-config -- helper script for libotf.
+# Copyright (C) 2003, 2004
+#   National Institute of Advanced Industrial Science and Technology (AIST)
+#   Registration Number H15PRO167
+# See the end for copying conditions.
+
+prefix=/usr
+exec_prefix=${prefix}
+
+help ()
+{
+  echo "Usage: otflib-config [--version | --libs | --cflags ]"
+}
+
+if test $# -eq 0; then
+  help 1>&2
+  exit 0
+fi
+
+case $1 in
+--version)
+  echo "0.9.13";;
+
+--libs)
+  if test "${exec_prefix}/lib" != "/usr/lib"; then
+    echo "-lfreetype -lz -lbz2 -lpng16 -lharfbuzz -L${exec_prefix}/lib -lotf"
+  else
+    echo "-lfreetype -lz -lbz2 -lpng16 -lharfbuzz -lotf"
+  fi;;
+
+--cflags)
+  if test "${prefix}/include" != "/usr/include"; then
+    echo "-I/usr/include/freetype2 -I${prefix}/include"
+  else
+    echo "-I/usr/include/freetype2"
+  fi;;
+
+*)
+    help
+    exit 1;;
+esac
+
+# Copyright (C) 2003, 2004
+#   National Institute of Advanced Industrial Science and Technology (AIST)
+#   Registration Number H15PRO167
+
+# This file is part of libotf.
+
+# Libotf is free software; you can redistribute it and/or modify it
+# under the terms of the GNU Lesser General Public License as published
+# by the Free Software Foundation; either version 2.1 of the License, or
+# (at your option) any later version.
+
+# Libotf is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
+# License for more details.
+
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library, in a file named COPYING; if not,
+# write to the Free Software Foundation, Inc., 59 Temple Place, Suite
+# 330, Boston, MA 02111-1307, USA.

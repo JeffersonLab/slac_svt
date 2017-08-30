@@ -6,12 +6,18 @@
 shopt -s extglob
 
 _list='--list'
-_optcolor=1 _optverbose=
+_optcolor=1
 _f_functions=/usr/lib/initcpio/functions
+
+declare -A bsdcpio_options=(
+    [list]='--list'
+    [input]='-i'
+    [quiet]='--quiet'
+)
 
 usage() {
     cat<<USAGE
-lsinitcpio 18
+lsinitcpio 23
 usage: ${0##*/} [action] [options] <initramfs>
 
   Actions:
@@ -31,7 +37,7 @@ USAGE
 
 version() {
     cat<<EOF
-lsinitcpio 18
+lsinitcpio 23
 EOF
 }
 
@@ -69,7 +75,10 @@ size_to_human() {
 }
 
 detect_filetype() {
-    case $(hexdump -n 6 -e '"%c"' "$1") in
+    local bytes
+
+    read -rd '' bytes < <(hexdump -n 6 -e '"%c"' "$1")
+    case $bytes in
         '070701')
             # no compression
             echo
@@ -81,17 +90,20 @@ detect_filetype() {
             ;;
     esac
 
-    if [[ $(hexdump -n 4 -e '"%c"' "$1") = $'\x89LZO' ]]; then
+    read -rd '' bytes < <(hexdump -n 4 -e '"%c"' "$1")
+    if [[ $bytes = $'\x89LZO' ]]; then
         echo 'lzop'
         return
     fi
 
-    if [[ $(hexdump -n 2 -e '"%x"' "$1") = '8b1f' ]]; then
+    read -rd '' bytes < <(hexdump -n 2 -e '"%x"' "$1")
+    if [[ $bytes = '8b1f' ]]; then
         echo 'gzip'
         return
     fi
 
-    case $(hexdump -n 4 -e '"%x"' "$1") in
+    read -rd '' bytes < <(hexdump -n 4 -e '"%x"' "$1")
+    case $bytes in
         184d2204)
             error 'Newer lz4 stream format detected! This may not boot!'
             echo 'lz4'
@@ -103,7 +115,8 @@ detect_filetype() {
             ;;
     esac
 
-    if [[ $(hexdump -n 3 -e '"%c"' "$1") == 'BZh' ]]; then
+    read -rd '' bytes < <(hexdump -n 3 -e '"%c"' "$1")
+    if [[ $bytes == 'BZh' ]]; then
         echo 'bzip2'
         return
     fi
@@ -112,7 +125,8 @@ detect_filetype() {
     # do it without reading large portions of the stream. this
     # check is good enough for GNU tar, apparently, so it's good
     # enough for me.
-    if [[ $(hexdump -n 3 -e '"%x"' "$1") = '5d' ]]; then
+    read -rd '' bytes < <(hexdump -n 3 -e '"%x"' "$1")
+    if [[ $bytes = '5d' ]]; then
         echo 'lzma'
         return
     fi
@@ -139,7 +153,7 @@ analyze_image() {
     zsize=$(stat -c %s "$_image")
 
     # calculate compression ratio
-    TIMEFORMAT=%R decomptime=$({ time decomp "$_image" >/dev/null; } 2>&1)
+    decomptime=$(TIMEFORMAT=%R; { time decomp "$_image" >/dev/null; } 2>&1)
     if [[ $_compress ]]; then
         fullsize=$(decomp "$_image" | wc -c)
         ratio=.$(( zsize * 1000 / fullsize % 1000 ))
@@ -237,26 +251,35 @@ unset _opt_short _opt_long OPTRET
 while :; do
     case $1 in
         -a|--analyze)
-            _optanalyze=1 ;;
+            _optanalyze=1
+            ;;
         -c|--config)
-            _optshowconfig=1 ;;
+            _optshowconfig=1
+            ;;
         -h|--help)
             usage
-            exit 0 ;;
+            exit 0
+            ;;
         -l|--list)
-            _optlistcontents=1 ;;
+            _optlistcontents=1
+            ;;
         -n|--nocolor)
-            _optcolor=0 ;;
+            _optcolor=0
+            ;;
         -V|--version)
             version
-            exit 0 ;;
+            exit 0
+            ;;
         -v|--verbose)
-            _optverbose='--verbose' ;;
+            bsdcpio_options['verbose']='--verbose'
+            ;;
         -x|--extract)
-            unset _list ;;
+            unset 'bsdcpio_options[list]'
+            ;;
         --)
             shift
-            break 2 ;;
+            break 2
+            ;;
     esac
     shift
 done
@@ -287,7 +310,7 @@ elif (( _optshowconfig )); then
     decomp "$_image" | bsdtar xOf - buildconfig 2>/dev/null ||
         die 'Failed to extract config from image (mkinitcpio too old?)'
 else
-    decomp "$_image" | bsdcpio -i --quiet $_optverbose $_list
+    decomp "$_image" | bsdcpio "${bsdcpio_options[@]}"
 fi
 
 # vim: set ft=sh ts=4 sw=4 et:

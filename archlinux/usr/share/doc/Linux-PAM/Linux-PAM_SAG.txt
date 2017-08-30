@@ -1351,6 +1351,10 @@ are expanded to the values for the user from his passwd entry.
 The "#" character at start of line (no space at front) can be used to mark this
 line as a comment line.
 
+The /etc/environment file specifies the environment variables to be set. The
+file must consist of simple NAME=VALUE pairs on separate lines. The pam_env(8)
+module will read the file after the pam_env.conf file.
+
 6.6.3. OPTIONS
 
 conffile=/path/to/pam_env.conf
@@ -1489,7 +1493,8 @@ debug
 expose_authtok
 
     During authentication the calling command can read the password from stdin
-    (3).
+    (3). Only first PAM_MAX_RESP_SIZE bytes of a password are provided to the
+    command.
 
 log=file
 
@@ -4081,7 +4086,8 @@ pam_tally was written by Tim Baverstock and Tomas Mraz.
 
 pam_tally2.so [ file=/path/to/counter ] [ onerr=[fail|succeed] ] [ magic_root ]
 [ even_deny_root ] [ deny=n ] [ lock_time=n ] [ unlock_time=n ] [
-root_unlock_time=n ] [ serialize ] [ audit ] [ silent ] [ no_log_info ]
+root_unlock_time=n ] [ serialize ] [ audit ] [ silent ] [ no_log_info ] [ debug
+]
 
 pam_tally2 [ --file /path/to/counter ] [ --user username ] [ --reset[=n] ] [
 --quiet ]
@@ -4131,6 +4137,11 @@ GLOBAL OPTIONS
     no_log_info
 
         Don't log informative messages via syslog(3).
+
+    debug
+
+        Always log tally count when it is incremented as a debug level message
+        to the system log.
 
 AUTH OPTIONS
 
@@ -4584,6 +4595,10 @@ child they didn't know was fork()d. The noreap module argument can be used to
 suppress this temporary shielding and may be needed for use with certain
 applications.
 
+The maximum length of a password supported by the pam_unix module via the
+helper binary is PAM_MAX_RESP_SIZE - currently 512 bytes. The rest of the
+password provided by the conversation function to the module will be ignored.
+
 The password component of this module performs the task of updating the user's
 password. The default encryption hash is taken from the ENCRYPT_METHOD variable
 from /etc/login.defs
@@ -4641,11 +4656,10 @@ use_authtok
     one provided by a previously stacked password module (this is used in the
     example of the stacking of the pam_cracklib module documented below).
 
-not_set_pass
+authtok_type=type
 
-    This argument is used to inform the module that it is not to pay attention
-    to/make available the old or new passwords from/to other (stacked) password
-    modules.
+    This argument can be used to modify the password prompt when changing
+    passwords to include the type of the password. Empty by default.
 
 nis
 
@@ -4655,7 +4669,8 @@ remember=n
 
     The last n passwords for each user are saved in /etc/security/opasswd in
     order to force password change history and keep the user from alternating
-    between the same password too frequently. Instead of this option the 
+    between the same password too frequently. The MD5 password hash algorithm
+    is used for storing the old passwords. Instead of this option the 
     pam_pwhistory module should be used.
 
 shadow
@@ -4703,6 +4718,15 @@ minlen=n
 
     Set a minimum password length of n characters. The max. for DES crypt based
     passwords are 8 characters.
+
+no_pass_expiry
+
+    When set ignore password expiration as defined by the shadow entry of the
+    user. The option has an effect only in case pam_unix was not used for the
+    authentication or it returned authentication failure meaning that other
+    authentication source or method succeeded. The example can be public key
+    authentication in sshd. The module will return PAM_SUCCESS instead of
+    eventual PAM_NEW_AUTHTOK_REQD or PAM_AUTHTOK_EXPIRED.
 
 Invalid arguments are logged with syslog(3).
 
@@ -4924,7 +4948,7 @@ group=name
 
 root_only
 
-    The check for wheel membership is done only.
+    The check for wheel membership is done only when the target user UID is 0.
 
 trust
 

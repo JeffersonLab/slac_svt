@@ -1,0 +1,40 @@
+%NAME%
+autofs
+
+%VERSION%
+5.1.3-1
+
+%DESC%
+A kernel-based automounter for Linux.
+
+%URL%
+https://www.kernel.org/pub/linux/daemons/autofs/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1500738063
+
+%INSTALLDATE%
+1495690504
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu5@archlinuxarm.org>
+
+%SIZE%
+2850816
+
+%LICENSE%
+GPL2
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+libxml2
+
+%OPTDEPENDS%
+krb5: for LDAP support
+sssd: for SSSD integration
+

@@ -1556,7 +1556,7 @@ int pam_misc_setenv( pamh,       
 pam_handle_t *pamh;
 const char *name;
 const char *value;
-intreadonly;
+int readonly;
  
 
 5.1.4.1. DESCRIPTION

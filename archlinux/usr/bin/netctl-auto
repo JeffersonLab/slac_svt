@@ -1,12 +1,14 @@
 #! /bin/bash
 # Contributed by: Sebastian Wicki <gandro@gmx.net>
 
-. /usr/lib/network/globals
-. "$SUBR_DIR/wpa"
+. /usr/lib/netctl/globals
+. "$SUBR_DIR/interface"
 . "$SUBR_DIR/rfkill"
+. "$SUBR_DIR/wpa"
 
 : ${ACTIOND:=wpa_actiond -p /run/wpa_supplicant}
 : ${ACTION_SCRIPT:=$SUBR_DIR/auto.action}
+
 
 usage() {
     cat << END
@@ -14,13 +16,14 @@ Usage: netctl-auto {COMMAND} ...
                    [--help|--version]
 
 Commands:
-  list                 List available profiles (active='*', disabled='!')
-  current              List currently active profiles
-  switch-to [PROFILE]  Switch to a profile, enable it if necessary
-  enable [PROFILE]     Enable a profile for automatic selection
-  disable [PROFILE]    Disable a profile temporarily for automatic selection
-  enable-all           Enable all profiles for automatic selection
-  disable-all          Disable all profiles temporarily for automatic selection
+  list                  List available profiles (active='*', disabled='!')
+  switch-to [PROFILE]   Switch to a profile, enable it if necessary
+  is-active [PROFILE]   Check whether a profile is active
+  enable [PROFILE]      Enable a profile for automatic selection
+  disable [PROFILE]     Disable a profile for automatic selection
+  enable-all            Enable all profiles for automatic selection
+  disable-all           Disable all profiles for automatic selection
+  is-enabled [PROFILE]  Check whether a profile is enabled
 END
 }
 
@@ -57,30 +60,30 @@ list_wpa_profiles() {
     done
 }
 
-## Get WPA supplicant network id and interface for the given profile
+## Get the WPA supplicant network id and interface for the given profile
 ## Output format: INTERFACE ID
 # $1: profile name
 get_wpa_network_id() {
     local interface id flag profile
     while read -r interface id flag profile; do
-        if [[ "$1" == "$profile" ]]; then
+        if [[ $profile == "$1" ]]; then
             echo "$interface" "$id"
             return 0
         fi
     done < <(list_wpa_profiles)
 
-    report_error "Profile '$1' does not exist or is not available" >&2
+    report_error "Profile '$1' does not exist or is not available"
     return 1
 }
 
-## Enable or disable profiles in WPA supplicant
+## Enable or disable profiles in the WPA supplicant
 # $1: profile action: "enable", "disable", "enable-all" or "disable-all"
 # $2: profile name if action is "enable" or "disable"
 profile_enable_disable() {
     local action="$1" profile="$2"
     local id interfaces wpa_cmd
 
-    if [[ -n "$profile" ]]; then
+    if [[ $profile ]]; then
         read -r interfaces id < <(get_wpa_network_id "$profile") || return 1
     else
         interfaces=$(list_netctl_auto_interfaces)
@@ -139,53 +142,76 @@ switch_to() {
 
     # select_network will disable all other networks on that interface
     wpa_call "$interface" select_network "$id" >/dev/null
-    if ! wpa_wait_until_state "$timeout" "$interface" "COMPLETED"; then
-        report_error "WPA association/authentication failed for interface '$interface'"
-    fi
+    wpa_wait_until_completed "$timeout" "$interface"
 
     reenable_networks
 }
 
-## List currently active profiles
-current() {
-    local interface
-    for interface in $(list_netctl_auto_interfaces); do
-        local state=$(wpa_get_state "$interface")
-        if [[ "$state" == "COMPLETED" ]]; then
-            wpa_call "$interface" status | sed -n 's/^id_str=//p'
+## Check whether a profile is active
+# $1: profile name
+is_active() {
+    local interface id flag profile
+    while read -r interface id flag profile; do
+        if [[ $profile == "$1" ]]; then
+            if [[ $flag == "a" ]]; then
+                echo "active"
+                return 0
+            else
+                echo "inactive"
+                return 1
+            fi
         fi
-    done
+    done < <(list_wpa_profiles)
+    echo "unknown profile: '$1'"
+    return 1
+}
+
+## Check whether a profile is enabled
+# $1: profile name
+is_enabled() {
+    local interface id flag profile
+    while read -r interface id flag profile; do
+        if [[ $profile == "$1" ]]; then
+            if [[ $flag != "d" ]]; then
+                echo "enabled"
+                return 0
+            else
+                echo "disabled"
+                return 1
+            fi
+        fi
+    done < <(list_wpa_profiles)
+    echo "unknown profile: '$1'"
+    return 1
 }
 
 ## List all available profiles and their status
 list() {
     local interface id flag profile
-    while read -r interface id flag profile; do
+    list_wpa_profiles | while read -r interface id flag profile; do
         echo "$(echo $flag | tr 'aed' '* !')" "$profile"
-    done < <(list_wpa_profiles)
+    done
 }
 
 ## Start and generate config file for the WPA supplicant, start wpa_actiond
 # $1: interface
 start() {
     local interface="$1"
-    local pidfile="$STATE_DIR/wpa_actiond_$1.pid"
+    local pidfile="$STATE_DIR/wpa_actiond-$interface.pid"
 
-    if wpa_is_active "$interface"; then
-        exit_error "The interface ($interface) is already in use"
-    fi
-    if [[ -x "$PROFILE_DIR/interfaces/$interface" ]]; then
-        source "$PROFILE_DIR/interfaces/$interface"
+    if interface_is_up "$interface"; then
+        exit_error "The interface '$interface' is already up"
     fi
     if [[ $RFKill ]]; then
         rf_enable "$interface" "$RFKill" || return 1
     fi
 
-
     local wpa_conf
     if ! wpa_conf=$(wpa_make_config_file "$interface"); then
         exit_error "Could not create the configuration file for interface '$interface'"
     fi
+    # Disable p2p to prevent wpa_supplicant from creating another control interface.
+    echo "p2p_disabled=1" >> "$wpa_conf"
 
     local profile
     list_profiles | while read -r profile; do
@@ -209,25 +235,31 @@ start() {
             return 0
         fi
         wpa_stop "$interface"
+        bring_interface_down "$interface"
     fi
+    # Systemd executes cleanup on failure
     return 1
 }
 
-## Stop wpa_supplicant and wpa_actiond
+## Stop the WPA supplicant and wpa_actiond
 # $1: interface
 stop() {
     local interface="$1"
-    local pidfile="$STATE_DIR/wpa_actiond_$1.pid"
+    local pidfile="$STATE_DIR/wpa_actiond-$interface.pid"
 
     [[ -e "$pidfile" ]] && kill "$(< "$pidfile")"
-    if [[ -x "$PROFILE_DIR/interfaces/$interface" ]]; then
-        source "$PROFILE_DIR/interfaces/$interface"
-    fi
     timeout_wait 1 '! wpa_is_active "$interface"' || wpa_stop "$interface"
-    ip link set dev "$interface" down
+    bring_interface_down "$interface"
     [[ $RFKill ]] && rf_disable "$interface" "$RFKill"
     return 0
 }
+
+## Remove WPA supplicant configuration files
+# $1: interface
+clean() {
+    wpa_destroy_config_file "$1"
+}
+
 
 case $# in
   1)
@@ -236,7 +268,7 @@ case $# in
         report_notice "netctl version $NETCTL_VERSION";;
       --help)
         usage;;
-      list|current)
+      list)
         "$1";;
       enable-all|disable-all)
         profile_enable_disable "$1";;
@@ -247,13 +279,14 @@ case $# in
     case $1 in
       enable|disable)
         profile_enable_disable "$1" "$2";;
-      switch-to)
-        switch_to "$2";;
-      start|stop)
+      switch-to|is-active|is-enabled)
+        "${1//-/_}" "$2";;
+      start|stop|clean)
         if [[ -t 0 ]]; then
-            exit_error "Use 'systemctl $1 netctl-auto@$2' to $1 netctl-auto."
+            exit_error "Use 'systemctl ${1/clean/stop} netctl-auto@$2' to $1 netctl-auto."
         fi
         ensure_root "$(basename "$0")"
+        load_interface_config "$2"
         "$1" "$2";;
       *)
         exit_error "$(usage)";;
@@ -261,5 +294,6 @@ case $# in
   *)
     exit_error "$(usage)";;
 esac
+
 
 # vim: ft=sh ts=4 et sw=4:

@@ -1,0 +1,37 @@
+%NAME%
+fontconfig
+
+%VERSION%
+2.12.4-1
+
+%DESC%
+A library for configuring and customizing font access
+
+%URL%
+https://www.freedesktop.org/wiki/Software/fontconfig/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1501267392
+
+%INSTALLDATE%
+1495690623
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu9@archlinuxarm.org>
+
+%SIZE%
+1982464
+
+%LICENSE%
+custom
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+expat
+freetype2
+

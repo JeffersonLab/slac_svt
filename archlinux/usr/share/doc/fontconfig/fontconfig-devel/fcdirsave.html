@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="UP"
 TITLE="File and Directory routines"
 HREF="x102.html#AEN3867"><LINK
@@ -46,7 +46,7 @@ VALIGN="bottom"
 ><A
 HREF="fcdirscan.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -60,7 +60,7 @@ VALIGN="bottom"
 ><A
 HREF="fcdircacheunlink.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ></TABLE
@@ -94,43 +94,16 @@ CLASS="FUNCSYNOPSIS"
 ><A
 NAME="AEN3966"
 ></A
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="FUNCSYNOPSISINFO"
->#include &#60;fontconfig/fontconfig.h&#62;
+>#include &lt;fontconfig/fontconfig.h&gt;
 	</PRE
-></TD
-></TR
-></TABLE
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcBool <TT
-CLASS="FUNCTION"
->FcDirSave</TT
-></CODE
->(FcFontSet *<TT
-CLASS="PARAMETER"
-><I
->set</I
-></TT
->, FcStrSet *<TT
-CLASS="PARAMETER"
-><I
->dirs</I
-></TT
->, const FcChar8 *<TT
-CLASS="PARAMETER"
-><I
->dir</I
-></TT
->);</CODE
+>FcBool FcDirSave</CODE
+>(FcFontSet *set, FcStrSet *dirs, const FcChar8 *dir);</CODE
 ></P
 ><P
 ></P
@@ -145,23 +118,17 @@ NAME="AEN3977"
 >Description</H2
 ><P
 >This function now does nothing aside from returning FcFalse. It used to creates the
-per-directory cache file for <TT
+per-directory cache file for <CODE
 CLASS="PARAMETER"
-><I
->dir</I
-></TT
+>dir</CODE
 > and populates it
-with the fonts in <TT
+with the fonts in <CODE
 CLASS="PARAMETER"
-><I
->set</I
-></TT
+>set</CODE
 > and subdirectories in
-<TT
+<CODE
 CLASS="PARAMETER"
-><I
->dirs</I
-></TT
+>dirs</CODE
 >. All of this functionality is now automatically
 managed by FcDirCacheLoad and FcDirCacheRead.
 	    </P
@@ -184,14 +151,14 @@ VALIGN="top"
 ><A
 HREF="fcdirscan.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD
@@ -202,7 +169,7 @@ VALIGN="top"
 ><A
 HREF="fcdircacheunlink.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ><TR

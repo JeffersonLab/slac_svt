@@ -117,6 +117,8 @@ typedef struct timespec scm_t_timespec;
 /* Define to 1 if `readdir64_r ()' is available.  */
 #define SCM_HAVE_READDIR64_R 1 /* 0 or 1 */
 typedef scm_t_int64 scm_t_off;
+#define SCM_T_OFF_MAX SCM_T_INT64_MAX
+#define SCM_T_OFF_MIN SCM_T_INT64_MIN
 /* Define to 1 if the compiler supports the `__thread' storage class.  */
 #define SCM_HAVE_THREAD_STORAGE_CLASS
 

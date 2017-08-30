@@ -1,12 +1,12 @@
 #! /bin/bash
 
-. /usr/lib/network/globals
-. "$SUBR_DIR/wpa"
+. /usr/lib/netctl/globals
+. "$SUBR_DIR/interface"
 . "$SUBR_DIR/rfkill"
+. "$SUBR_DIR/wpa"
 
 
-usage()
-{
+usage() {
     cat << END
 Usage: wifi-menu [-h | --help] [-o | --obscure] [INTERFACE]
 
@@ -21,8 +21,7 @@ END
 }
 
 # Prepares $1 for use in a special quoting context
-quote_safe()
-{
+quote_safe() {
     if [[ "$1" = \"* ]]; then
         printf '""%s"' "$1"
     else
@@ -32,8 +31,7 @@ quote_safe()
 
 # Fills PROFILES and ESSIDS with the profile names and essids of the profiles
 # for interface $1.
-init_profiles()
-{
+init_profiles() {
     local i=0 essid profile
     while read -r profile; do
         essid=$(
@@ -63,9 +61,8 @@ init_profiles()
 }
 
 # Builds ENTRIES as an argument list for dialog based on scan results in $1.
-init_entries()
-{
-    local i=0 flags signal ssid
+init_entries() {
+    local i=0 sep=$'\t' flags signal ssid
     while IFS=$'\t' read -r signal flags ssid; do
         ENTRIES[i++]="--"  # $ssid might look like an option to dialog.
         ENTRIES[i++]=$ssid
@@ -73,7 +70,7 @@ init_entries()
             if in_array "$(ssid_to_profile "$ssid")" "${GENERATED[@]}"; then
                 ENTRIES[i]="."  # Automatically generated
             else
-                ENTRIES[i]="+"  # Handmade
+                ENTRIES[i]=":"  # Handmade
             fi
         else
             ENTRIES[i]=" "  # Not present
@@ -82,18 +79,17 @@ init_entries()
             ENTRIES[i]="*"  # Currently connected
         fi
         if [[ "$flags" =~ WPA2|WPA|WEP ]]; then
-            ENTRIES[i]+=":${BASH_REMATCH[0],,}"
+            ENTRIES[i]+="${sep}${BASH_REMATCH[0],,}"
         else
-            ENTRIES[i]+=":none"
+            ENTRIES[i]+="${sep}none"
         fi
-        ENTRIES[i]+="   :$signal"
+        ENTRIES[i]+="   ${sep}${signal}"
         (( ++i ))
     done < "$1"
 }
 
 # Finds a profile name for ssid $1.
-ssid_to_profile()
-{
+ssid_to_profile() {
     local i
     for i in $(seq 0 $((${#ESSIDS[@]}-1))); do
         if [[ "$1" = "${ESSIDS[i]}" ]]; then
@@ -105,8 +101,7 @@ ssid_to_profile()
 }
 
 # Ask the user for the name of the new profile
-confirm_profile()
-{
+confirm_profile() {
     local msg="Enter a name for the new profile\n"
     PROFILE=$(dialog --inputbox "$msg" 10 50 "$PROFILE" --stdout) || return $?
     if [[ "$PROFILE" = */* ]]; then
@@ -120,8 +115,7 @@ Do you want to overwrite it?"
 }
 
 # Creates a profile for ssid $1.
-create_profile()
-{
+create_profile() {
     local box flags key msg security
     PROFILE="$INTERFACE-${1//\//_}"
     [[ -e "$PROFILE_DIR/$PROFILE" ]] && PROFILE+=".wifi-menu"
@@ -133,7 +127,11 @@ create_profile()
         security=none
     fi
     if [[ "$flags" =~ PSK|WEP ]]; then
-        [[ "$OBSCURE" ]] && box="--insecure --passwordbox" || box="--inputbox"
+        if is_yes "${OBSCURE:-no}"; then
+            box="--insecure --passwordbox"
+        else
+            box="--inputbox"
+        fi
         msg="Enter $security security key for\n'$1'"
         key=$(dialog $box "$msg" 10 40 --stdout) || return $?
         if [[ "${BASH_REMATCH[0]}" = "WEP" ]]; then
@@ -143,7 +141,7 @@ create_profile()
                 key=$(quote_safe "$key")
             fi
         elif [[ "${#key}" -ge 8 && "${#key}" -le 63 ]]; then
-            if [[ "$OBSCURE" ]]; then
+            if is_yes "${OBSCURE:-no}"; then
                 key="\"$(wpa_passphrase "$1" "$key" | sed -n "s/^[[:space:]]*psk=//p")"
             else
                 key=$(quote_safe "$key")
@@ -169,23 +167,22 @@ EOF
 
 # Connects to ssid $1 using an available profile or an automatically created
 # one if none exists.
-connect_to_ssid()
-{
+connect_to_ssid() {
     local msg
     PROFILE=$(ssid_to_profile "$1")
     if [[ $? -ne 0 ]]; then
         PROFILE=$(create_profile "$1") || return $?
-        NEW_PROFILE=1
+        NEW_PROFILE=yes
     fi
     clear
     if systemctl is-active --quiet "netctl-auto@$INTERFACE.service"; then
         report_notice "Interface '$INTERFACE' is controlled by netctl-auto"
-        if (( NEW_PROFILE )); then
+        if is_yes "${NEW_PROFILE:-no}"; then
             do_debug systemctl restart "netctl-auto@$INTERFACE.service"
         fi
-        do_debug netctl-auto switch-to $PROFILE
+        do_debug netctl-auto switch-to "$PROFILE"
     elif ! netctl switch-to "$PROFILE"; then
-        if (( NEW_PROFILE )); then
+        if is_yes "${NEW_PROFILE:-no}"; then
             msg="         CONNECTING FAILED
 
 Do you want to keep the generated profile ('$PROFILE')?"
@@ -204,7 +201,7 @@ while [[ "$1" = -* ]]; do
             exit
             ;;
         -o|--obscure)
-            OBSCURE=1
+            OBSCURE=yes
             shift
             ;;
         -*)
@@ -235,20 +232,17 @@ if [[ -z "$INTERFACE" ]]; then
     fi
     INTERFACE=${INTERFACE:15:-10}
     report_debug "Using interface '$INTERFACE'"
-fi
-if [[ -x "$PROFILE_DIR/interfaces/$INTERFACE" ]]; then
-    source "$PROFILE_DIR/interfaces/$INTERFACE"
-fi
-
-cd /  # We do not want to spawn anything that can block unmounting
-if [[ ! -d "/sys/class/net/$INTERFACE" ]]; then
+elif ! is_interface "$INTERFACE"; then
     exit_error "No such interface: $INTERFACE"
 fi
+load_interface_config "$INTERFACE"
+
+cd /  # We do not want to spawn anything that can block unmounting
 if [[ "$RFKill" && "$(rf_status "$INTERFACE" "$RFKill")" ]]; then
     if ! rf_enable "$INTERFACE" "$RFKill"; then
         exit_error "Could not unblock transmission on interface '$INTERFACE'"
     fi
-    RF_UNBLOCKED=1
+    RF_UNBLOCKED=yes
 fi
 
 echo -n "Scanning for networks... "
@@ -256,7 +250,7 @@ CONNECTION=$(wpa_call "$INTERFACE" status 2> /dev/null | sed -n "s/^ssid=//p")
 NETWORKS=$(wpa_supplicant_scan "$INTERFACE" 3,4,5)
 RETURN=$?
 
-if (( RF_UNBLOCKED )); then
+if is_yes "${RF_UNBLOCKED:-no}"; then
     rf_disable "$INTERFACE" "$RFKill"
 fi
 
@@ -268,10 +262,9 @@ if (( RETURN == 0 )); then
     MSG="Select the network you wish to use
 Flags description:
  * - active connection present
- + - handmade profile present
+ : - handmade profile present
  . - automatically generated profile present"
-    CHOICE=$(dialog --column-separator : --menu "$MSG" 24 50 12 \
-                 "${ENTRIES[@]}" --stdout)
+    CHOICE=$(dialog --menu "$MSG" 24 50 12 "${ENTRIES[@]}" --stdout)
     RETURN=$?
     if (( RETURN == 0 )); then
         connect_to_ssid "$CHOICE"

@@ -18,10 +18,10 @@ get_filename_component(_libxml2_rootdir ${CMAKE_CURRENT_LIST_DIR}/../../../ ABSO
 
 set(LIBXML2_VERSION_MAJOR  2)
 set(LIBXML2_VERSION_MINOR  9)
-set(LIBXML2_VERSION_MICRO  2)
-set(LIBXML2_VERSION_STRING "2.9.2")
+set(LIBXML2_VERSION_MICRO  4)
+set(LIBXML2_VERSION_STRING "2.9.4")
 set(LIBXML2_INSTALL_PREFIX ${_libxml2_rootdir})
-set(LIBXML2_INCLUDE_DIRS   ${_libxml2_rootdir}/include)
+set(LIBXML2_INCLUDE_DIRS   ${_libxml2_rootdir}/include ${_libxml2_rootdir}/include/libxml2)
 set(LIBXML2_LIBRARY_DIR    ${_libxml2_rootdir}/lib)
 set(LIBXML2_LIBRARIES      -L${LIBXML2_LIBRARY_DIR} -lxml2)
 
@@ -42,7 +42,7 @@ if(1)
   list(APPEND LIBXML2_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS})
 endif()
 
-list(APPEND LIBXML2_LIBRARIES   -lm  )
+list(APPEND LIBXML2_LIBRARIES -licui18n -licuuc -licudata  -lm  )
 
 # whether libxml2 has dso support
 set(LIBXML2_MODULES 1)

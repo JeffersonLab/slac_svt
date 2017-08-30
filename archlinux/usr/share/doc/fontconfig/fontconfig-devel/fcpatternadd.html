@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="UP"
 TITLE="FcPattern"
 HREF="x102.html#AEN241"><LINK
@@ -46,7 +46,7 @@ VALIGN="bottom"
 ><A
 HREF="fcpatternhash.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -60,7 +60,7 @@ VALIGN="bottom"
 ><A
 HREF="fcpatternaddweak.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ></TABLE
@@ -94,48 +94,16 @@ CLASS="FUNCSYNOPSIS"
 ><A
 NAME="AEN424"
 ></A
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="FUNCSYNOPSISINFO"
->#include &#60;fontconfig/fontconfig.h&#62;
+>#include &lt;fontconfig/fontconfig.h&gt;
 	</PRE
-></TD
-></TR
-></TABLE
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcBool <TT
-CLASS="FUNCTION"
->FcPatternAdd</TT
-></CODE
->(FcPattern *<TT
-CLASS="PARAMETER"
-><I
->p</I
-></TT
->, const char *<TT
-CLASS="PARAMETER"
-><I
->object</I
-></TT
->, FcValue <TT
-CLASS="PARAMETER"
-><I
->value</I
-></TT
->, FcBool <TT
-CLASS="PARAMETER"
-><I
->append</I
-></TT
->);</CODE
+>FcBool FcPatternAdd</CODE
+>(FcPattern *p, const char *object, FcValue value, FcBool append);</CODE
 ></P
 ><P
 ></P
@@ -150,11 +118,9 @@ NAME="AEN437"
 >Description</H2
 ><P
 >Adds a single value to the list of values associated with the property named
-`object<TT
+`object<CODE
 CLASS="PARAMETER"
-><I
->.  If `append</I
-></TT
+>.  If `append</CODE
 > is FcTrue, the value is added at the end of any
 existing list, otherwise it is inserted at the beginning.  `value' is saved
 (with FcValueSave) when inserted into the pattern so that the library
@@ -179,14 +145,14 @@ VALIGN="top"
 ><A
 HREF="fcpatternhash.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD
@@ -197,7 +163,7 @@ VALIGN="top"
 ><A
 HREF="fcpatternaddweak.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ><TR

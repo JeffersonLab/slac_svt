@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="UP"
 TITLE="FcCharSet"
 HREF="x102.html#AEN1549"><LINK
@@ -46,7 +46,7 @@ VALIGN="bottom"
 ><A
 HREF="fccharsetissubset.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -60,7 +60,7 @@ VALIGN="bottom"
 ><A
 HREF="fccharsetnextpage.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ></TABLE
@@ -94,43 +94,16 @@ CLASS="FUNCSYNOPSIS"
 ><A
 NAME="AEN1903"
 ></A
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="FUNCSYNOPSISINFO"
->#include &#60;fontconfig/fontconfig.h&#62;
+>#include &lt;fontconfig/fontconfig.h&gt;
 	</PRE
-></TD
-></TR
-></TABLE
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcChar32 <TT
-CLASS="FUNCTION"
->FcCharSetFirstPage</TT
-></CODE
->(const FcCharSet *<TT
-CLASS="PARAMETER"
-><I
->a</I
-></TT
->, FcChar32[FC_CHARSET_MAP_SIZE] <TT
-CLASS="PARAMETER"
-><I
->map</I
-></TT
->, FcChar32 *<TT
-CLASS="PARAMETER"
-><I
->next</I
-></TT
->);</CODE
+>FcChar32 FcCharSetFirstPage</CODE
+>(const FcCharSet *a, FcChar32[FC_CHARSET_MAP_SIZE] map, FcChar32 *next);</CODE
 ></P
 ><P
 ></P
@@ -144,65 +117,44 @@ NAME="AEN1914"
 ><H2
 >Description</H2
 ><P
->Builds an array of bits in <TT
+>Builds an array of bits in <CODE
 CLASS="PARAMETER"
-><I
->map</I
-></TT
+>map</CODE
 > marking the
-first page of Unicode coverage of <TT
+first page of Unicode coverage of <CODE
 CLASS="PARAMETER"
-><I
->a</I
-></TT
+>a</CODE
 >.
-<TT
+<CODE
 CLASS="PARAMETER"
-><I
->*next</I
-></TT
+>*next</CODE
 > is set to contains the base code point
-for the next page in <TT
+for the next page in <CODE
 CLASS="PARAMETER"
-><I
->a</I
-></TT
+>a</CODE
 >.  Returns the base code
 point for the page, or <CODE
 CLASS="CONSTANT"
 >FC_CHARSET_DONE</CODE
 > if
-<TT
+<CODE
 CLASS="PARAMETER"
-><I
->a</I
-></TT
+>a</CODE
 > contains no pages.  As an example, if
-<TT
+<CODE
 CLASS="FUNCTION"
->FcCharSetFirstPage</TT
+>FcCharSetFirstPage</CODE
 > returns
 <TT
 CLASS="LITERAL"
 >0x300</TT
-> and fills <TT
+> and fills <CODE
 CLASS="PARAMETER"
-><I
->map</I
-></TT
+>map</CODE
 > with
-<TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
-><PRE
+<PRE
 CLASS="LITERALLAYOUT"
 >0xffffffff 0xffffffff 0x01000008 0x44300002 0xffffd7f0 0xfffffffb 0xffff7fff 0xffff0003</PRE
-></TD
-></TR
-></TABLE
 >
 Then the page contains code points <TT
 CLASS="LITERAL"
@@ -212,41 +164,31 @@ CLASS="LITERAL"
 CLASS="LITERAL"
 >0x33f</TT
 > (the first 64 code points on the page)
-because <TT
+because <CODE
 CLASS="PARAMETER"
-><I
->map[0]</I
-></TT
+>map[0]</CODE
 > and
-<TT
+<CODE
 CLASS="PARAMETER"
-><I
->map[1]</I
-></TT
+>map[1]</CODE
 > both have all their bits set.  It also
 contains code points <TT
 CLASS="LITERAL"
 >0x343</TT
-> (<TT
+> (<CODE
 CLASS="PARAMETER"
-><I
 >0x300 + 32*2
-+ (4-1)</I
-></TT
++ (4-1)</CODE
 >) and <TT
 CLASS="LITERAL"
 >0x35e</TT
-> (<TT
+> (<CODE
 CLASS="PARAMETER"
-><I
 >0x300 +
-32*2 + (31-1)</I
-></TT
->) because <TT
+32*2 + (31-1)</CODE
+>) because <CODE
 CLASS="PARAMETER"
-><I
->map[2]</I
-></TT
+>map[2]</CODE
 > has
 the 4th and 31st bits set.  The code points represented by
 <TT
@@ -274,14 +216,14 @@ VALIGN="top"
 ><A
 HREF="fccharsetissubset.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD
@@ -292,7 +234,7 @@ VALIGN="top"
 ><A
 HREF="fccharsetnextpage.html"
 ACCESSKEY="N"
->Next &#62;&#62;&#62;</A
+>Next</A
 ></TD
 ></TR
 ><TR

@@ -1,0 +1,17 @@
+%FILES%
+usr/
+usr/lib/
+usr/lib/LLVMgold.so
+usr/lib/bfd-plugins/
+usr/lib/bfd-plugins/LLVMgold.so
+usr/lib/libLLVM-4.0.1.so
+usr/lib/libLLVM-4.0.so
+usr/lib/libLLVM.so
+usr/lib/libLTO.so
+usr/lib/libLTO.so.4
+usr/lib/libLTO.so.4.0.1
+usr/share/
+usr/share/licenses/
+usr/share/licenses/llvm-libs/
+usr/share/licenses/llvm-libs/LICENSE
+

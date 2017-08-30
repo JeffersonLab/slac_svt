@@ -1,0 +1,42 @@
+%NAME%
+alsa-lib
+
+%VERSION%
+1.1.4.1-1
+
+%DESC%
+An alternative implementation of Linux sound support
+
+%URL%
+http://www.alsa-project.org
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1496546418
+
+%INSTALLDATE%
+1495690999
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu6@archlinuxarm.org>
+
+%SIZE%
+1897472
+
+%REASON%
+1
+
+%LICENSE%
+GPL
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+glibc
+
+%OPTDEPENDS%
+python2: for python smixer plugin
+

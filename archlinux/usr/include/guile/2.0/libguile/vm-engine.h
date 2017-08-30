@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2009, 2010, 2011, 2012 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2009-2012, 2014, 2015 Free Software Foundation, Inc.
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -74,14 +74,14 @@
 #define FP_REG asm("%r16")
 #endif
 #ifdef __mc68000__
-#define IP_REG asm("a5")
+#define IP_REG asm("a3")
 #define SP_REG asm("a4")
 #define FP_REG
 #endif
 #ifdef __arm__
 #define IP_REG asm("r9")
 #define SP_REG asm("r8")
-#define FP_REG asm("r7")
+#define FP_REG
 #endif
 #endif
 
@@ -284,7 +284,7 @@
   do { if (SCM_UNLIKELY (sp >= stack_limit)) goto handle_overflow; } while (0)
 
 
-#ifdef VM_CHECK_UNDERFLOW
+#if VM_CHECK_UNDERFLOW
 #define PRE_CHECK_UNDERFLOW(N)                  \
   VM_ASSERT (sp - (N) > SCM_FRAME_UPPER_ADDRESS (fp), vm_error_stack_underflow ())
 #define CHECK_UNDERFLOW() PRE_CHECK_UNDERFLOW (0)

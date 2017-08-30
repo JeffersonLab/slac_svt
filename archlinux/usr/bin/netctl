@@ -1,6 +1,6 @@
 #! /bin/bash
 
-. /usr/lib/network/globals
+. /usr/lib/netctl/globals
 
 
 usage() {
@@ -9,51 +9,35 @@ Usage: netctl {COMMAND} [PROFILE]
               [--help|--version]
 
 Commands:
-  list                  List available profiles
-  store                 Save which profiles are active
-  restore               Load saved profiles
-  stop-all              Stops all profiles
-  start [PROFILE]       Start a profile
-  stop [PROFILE]        Stop a profile
-  restart [PROFILE]     Restart a profile
-  switch-to [PROFILE]   Switch to a profile
-  status [PROFILE]      Show runtime status of a profile
-  enable [PROFILE]      Enable the systemd unit for a profile
-  disable [PROFILE]     Disable the systemd unit for a profile
-  reenable [PROFILE]    Reenable the systemd unit for a profile
-  is-enabled [PROFILE]  Check whether a profile is enabled
-  edit [PROFILE]        Edit a profile
+  list                   List available profiles
+  store                  Save which profiles are active
+  restore                Load saved profiles
+  stop-all               Stops all profiles
+  start [PROFILE]        Start a profile
+  stop [PROFILE]         Stop a profile
+  restart [PROFILE]      Restart a profile
+  switch-to [PROFILE]    Switch to a profile
+  is-active [PROFILE]    Check whether a profile is active
+  status [PROFILE]       Show runtime status of a profile
+  enable [PROFILE]       Enable the systemd unit for a profile
+  disable [PROFILE]      Disable the systemd unit for a profile
+  reenable [PROFILE]     Reenable the systemd unit for a profile
+  is-enabled [PROFILE]   Check whether a profile is enabled
+  edit [PROFILE]         Edit a profile
+  wait-online [PROFILE]  Wait for a profile to finish connecting
 END
 }
 
-sd_booted() {
-    [[ -d /run/systemd/system ]]
-}
-
-sd_escape() {
-    local IFS=''
-    # Prevent a recursion loop on backspaces
-    set -- "${@//\\/\\x5c}"
-    while [[ "$*" =~ [^[:alnum:].:_/\\] ]]; do
-        set -- "${@//$BASH_REMATCH/$(printf '\\x%x' "'$BASH_REMATCH")}"
-    done
-    printf '%s\n' "${@//\//-}"
-}
-
-# Wrapper around systemctl to convert profile names to unit names
-sd_call() {
-    local command=$1
-    shift
-    set -- $(sd_escape "$@")
-    systemctl $command $(printf 'netctl@%s.service\n' "$@")
-}
-
 list() {
-    local indicators=( '*' ' ' )
+    local indicators=( ' ' '+' '*' ) i
     list_profiles | while read -r Profile; do
-        sd_call "is-active --quiet" "$Profile" &> /dev/null
-        # Make the return value boolean
-        printf '%s %s\n' "${indicators[!! $?]}" "$Profile"
+        if sd_call "is-active --quiet" "$Profile" &> /dev/null; then
+            [[ $(sd_status_text "$Profile") == "online" ]]
+            (( i = 2 - $? ))
+        else
+            (( i = 0 ))
+        fi
+        printf '%s %s\n' "${indicators[i]}" "$Profile"
     done
 }
 
@@ -80,7 +64,7 @@ restore() {
 stop_all() {
     # We cannot pipe to mapfile, as the end of a pipe is inside a subshell
     mapfile -t Profiles < <(list_profiles)
-    [[ $Profiles ]] && do_debug sd_call stop "${Profiles[@]}" 2> \
+    (( ${#Profiles[@]} )) && do_debug sd_call stop "${Profiles[@]}" 2> \
       >(grep -Fv "not loaded" >&2)
 }
 
@@ -98,13 +82,13 @@ switch_to() {
     fi
     mapfile -t AllProfiles < <(list_profiles)
     mapfile -t Profiles < <(grep -Fl "$InterfaceLine" "${AllProfiles[@]}")
-    [[ $Profiles ]] && do_debug sd_call stop "${Profiles[@]}" 2> \
+    (( ${#Profiles[@]} )) && do_debug sd_call stop "${Profiles[@]}" 2> \
       >(grep -Fv "not loaded" >&2)
     do_debug sd_call start "$1"
 }
 
 unit_enable() {
-    local unit="/etc/systemd/system/netctl@$(sd_escape "$1").service"
+    local unit="/etc/systemd/system/netctl@$(systemd-escape "$1").service"
     if [[ -e $unit ]]; then
         report_error "A unit file for profile '$1' already exists"
         return 1
@@ -113,18 +97,18 @@ unit_enable() {
     do_readable touch "$unit"
     echo ".include /usr/lib/systemd/system/netctl@.service" > "$unit"
     echo -e "\n[Unit]" >> "$unit"
-    [[ -n $Description ]] && echo "Description=$Description" >> "$unit"
+    [[ $Description ]] && echo "Description=$Description" >> "$unit"
     declare -p BindsToInterfaces &> /dev/null || BindsToInterfaces=$Interface
     if (( ${#BindsToInterfaces[@]} )); then
         : ${InterfaceRoot=sys/subsystem/net/devices/}
-        printf "BindsTo=$(sd_escape "$InterfaceRoot")%s.device\n" \
-               $(sd_escape "${BindsToInterfaces[@]}") >> "$unit"
-        printf "After=$(sd_escape "$InterfaceRoot")%s.device\n" \
-               $(sd_escape "${BindsToInterfaces[@]}") >> "$unit"
+        printf "BindsTo=$(systemd-escape "$InterfaceRoot")%s.device\n" \
+               $(systemd-escape "${BindsToInterfaces[@]}") >> "$unit"
+        printf "After=$(systemd-escape "$InterfaceRoot")%s.device\n" \
+               $(systemd-escape "${BindsToInterfaces[@]}") >> "$unit"
     fi
     if (( ${#After[@]} )); then
         printf 'After="netctl@%s.service"\n' \
-               $(sd_escape "${After[@]}") >> "$unit"
+               $(systemd-escape "${After[@]}") >> "$unit"
     fi
     mkdir -p "/etc/systemd/system/multi-user.target.wants"
     echo "ln -s '$unit' '${unit/system\//system/multi-user.target.wants/}'"
@@ -132,7 +116,7 @@ unit_enable() {
 }
 
 unit_disable() {
-    local unit="/etc/systemd/system/netctl@$(sd_escape "$1").service"
+    local unit="/etc/systemd/system/netctl@$(systemd-escape "$1").service"
     if sd_call "is-enabled --quiet" "$1" &> /dev/null; then
         sd_call disable "$1"
     fi
@@ -141,6 +125,16 @@ unit_disable() {
         return 1
     fi
     do_debug rm "$unit"
+}
+
+wait_online() {
+    local profile="$1"
+    if sd_call "is-active --quiet" "$profile"; then
+        timeout_wait "${TIMEOUT_ONLINE:-120}" \
+                     '[[ $(sd_status_text "$profile") == "online" ]]'
+    else
+        return 1
+    fi
 }
 
 
@@ -163,7 +157,7 @@ case $# in
     esac;;
   2)
     case $1 in
-      start|stop|restart|status|is-enabled)
+      start|stop|restart|is-active|status|is-enabled)
         sd_call "$1" "$2";;
       switch-to)
         ensure_root "$(basename "$0")"
@@ -171,18 +165,20 @@ case $# in
       enable|disable)
         ensure_root "$(basename "$0")"
         "unit_$1" "$2"
-        if sd_booted; then
+        if systemd-notify --booted; then
             systemctl daemon-reload
         fi;;
       reenable)
         ensure_root "$(basename "$0")"
         unit_disable "$2"
         unit_enable "$2"
-        if sd_booted; then
+        if systemd-notify --booted; then
             systemctl daemon-reload
         fi;;
       edit)
         exec ${EDITOR:-nano} "$PROFILE_DIR/$2";;
+      wait-online)
+        wait_online "$2";;
       *)
         exit_error "$(usage)";;
     esac;;

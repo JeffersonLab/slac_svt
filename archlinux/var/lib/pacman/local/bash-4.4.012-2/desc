@@ -1,0 +1,47 @@
+%NAME%
+bash
+
+%VERSION%
+4.4.012-2
+
+%DESC%
+The GNU Bourne Again shell
+
+%URL%
+http://www.gnu.org/software/bash/bash.html
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1487704723
+
+%INSTALLDATE%
+1495690499
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu3@archlinuxarm.org>
+
+%SIZE%
+7672832
+
+%GROUPS%
+base
+
+%LICENSE%
+GPL
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+readline>=7.0
+glibc
+ncurses
+
+%OPTDEPENDS%
+bash-completion: for tab completion
+
+%PROVIDES%
+sh
+

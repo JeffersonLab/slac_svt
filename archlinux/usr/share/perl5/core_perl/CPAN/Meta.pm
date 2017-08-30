@@ -3,7 +3,7 @@ use strict;
 use warnings;
 package CPAN::Meta;
 
-our $VERSION = '2.150001';
+our $VERSION = '2.150010';
 
 #pod =head1 SYNOPSIS
 #pod
@@ -591,6 +591,10 @@ sub as_struct {
 #pod both cases, the same rules are followed as in the C<save()> method for choosing
 #pod a serialization backend.
 #pod
+#pod The serialized structure will include a C<x_serialization_backend> entry giving
+#pod the package and version used to serialize.  Any existing key in the given
+#pod C<$meta> object will be clobbered.
+#pod
 #pod =cut
 
 sub as_string {
@@ -610,10 +614,14 @@ sub as_string {
   my ($data, $backend);
   if ( $version ge '2' ) {
     $backend = Parse::CPAN::Meta->json_backend();
+    local $struct->{x_serialization_backend} = sprintf '%s version %s',
+      $backend, $backend->VERSION;
     $data = $backend->new->pretty->canonical->encode($struct);
   }
   else {
     $backend = Parse::CPAN::Meta->yaml_backend();
+    local $struct->{x_serialization_backend} = sprintf '%s version %s',
+      $backend, $backend->VERSION;
     $data = eval { no strict 'refs'; &{"$backend\::Dump"}($struct) };
     if ( $@ ) {
       croak $backend->can('errstr') ? $backend->errstr : $@
@@ -632,8 +640,6 @@ sub TO_JSON {
 
 # ABSTRACT: the distribution metadata for a CPAN dist
 
-__END__
-
 =pod
 
 =encoding UTF-8
@@ -644,7 +650,7 @@ CPAN::Meta - the distribution metadata for a CPAN dist
 
 =head1 VERSION
 
-version 2.150001
+version 2.150010
 
 =head1 SYNOPSIS
 
@@ -859,6 +865,10 @@ JSON.  For C<version> less than 2, the string will be serialized as YAML.  In
 both cases, the same rules are followed as in the C<save()> method for choosing
 a serialization backend.
 
+The serialized structure will include a C<x_serialization_backend> entry giving
+the package and version used to serialize.  Any existing key in the given
+C<$meta> object will be clobbered.
+
 =head1 STRING DATA
 
 The following methods return a single value, which is the value for the
@@ -1021,11 +1031,15 @@ David Golden <dagolden@cpan.org>
 
 Ricardo Signes <rjbs@cpan.org>
 
+=item *
+
+Adam Kennedy <adamk@cpan.org>
+
 =back
 
 =head1 CONTRIBUTORS
 
-=for stopwords Ansgar Burchardt Avar Arnfjord Bjarmason Christopher J. Madsen Chuck Adams Cory G Watson Damyan Ivanov Eric Wilhelm Graham Knop Gregor Hermann Karen Etheridge Kenichi Ishigaki Ken Williams Lars Dieckow Leon Timmermans majensen Mark Fowler Matt S Trout Michael G. Schwern mohawk2 moznion Olaf Alders Olivier Mengue Randy Sims
+=for stopwords Ansgar Burchardt Avar Arnfjord Bjarmason Benjamin Noggle Christopher J. Madsen Chuck Adams Cory G Watson Damyan Ivanov David Golden Eric Wilhelm Graham Knop Gregor Hermann Karen Etheridge Kenichi Ishigaki Kent Fredric Ken Williams Lars Dieckow Leon Timmermans majensen Mark Fowler Matt S Trout Michael G. Schwern Mohammad Anwar mohawk2 moznion Niko Tyni Olaf Alders Olivier Mengué Randy Sims Tomohiro Hosaka
 
 =over 4
 
@@ -1036,6 +1050,10 @@ Ansgar Burchardt <ansgar@cpan.org>
 =item *
 
 Avar Arnfjord Bjarmason <avar@cpan.org>
+
+=item *
+
+Benjamin Noggle <agwind@users.noreply.github.com>
 
 =item *
 
@@ -1052,6 +1070,10 @@ Cory G Watson <gphat@cpan.org>
 =item *
 
 Damyan Ivanov <dam@cpan.org>
+
+=item *
+
+David Golden <xdg@xdg.me>
 
 =item *
 
@@ -1072,6 +1094,10 @@ Karen Etheridge <ether@cpan.org>
 =item *
 
 Kenichi Ishigaki <ishigaki@cpan.org>
+
+=item *
+
+Kent Fredric <kentfredric@gmail.com>
 
 =item *
 
@@ -1103,6 +1129,10 @@ Michael G. Schwern <mschwern@cpan.org>
 
 =item *
 
+Mohammad S Anwar <mohammad.anwar@yahoo.com>
+
+=item *
+
 mohawk2 <mohawk2@users.noreply.github.com>
 
 =item *
@@ -1111,23 +1141,36 @@ moznion <moznion@gmail.com>
 
 =item *
 
+Niko Tyni <ntyni@debian.org>
+
+=item *
+
 Olaf Alders <olaf@wundersolutions.com>
 
 =item *
 
-Olivier Mengue <dolmen@cpan.org>
+Olivier Mengué <dolmen@cpan.org>
 
 =item *
 
 Randy Sims <randys@thepierianspring.org>
 
+=item *
+
+Tomohiro Hosaka <bokutin@bokut.in>
+
 =back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by David Golden and Ricardo Signes.
+This software is copyright (c) 2010 by David Golden, Ricardo Signes, Adam Kennedy and Contributors.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+
+__END__
+
+
+# vim: ts=2 sts=2 sw=2 et :

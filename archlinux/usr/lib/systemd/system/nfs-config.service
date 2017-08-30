@@ -1,7 +1,0 @@
-[Unit]
-Description=Preprocess NFS configuration
-
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-ExecStart=/usr/lib/systemd/scripts/nfs-utils_env.sh

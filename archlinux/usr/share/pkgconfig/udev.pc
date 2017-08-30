@@ -1,5 +1,5 @@
 Name: udev
 Description: udev
-Version: 224
+Version: 234
 
 udevdir=/usr/lib/udev

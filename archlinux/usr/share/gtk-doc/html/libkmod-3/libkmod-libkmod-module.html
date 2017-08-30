@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>libkmod-module: libkmod Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="libkmod Reference Manual">
 <link rel="up" href="ch01.html" title="libkmod">
 <link rel="prev" href="libkmod-libkmod-config.html" title="libkmod-config">
 <link rel="next" href="libkmod-libkmod-loaded.html" title="libkmod-loaded">
-<meta name="generator" content="GTK-Doc V1.24 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -33,7 +33,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="libkmod-libkmod-module.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -347,7 +347,7 @@
 </div>
 <div class="refsect1">
 <a name="libkmod-libkmod-module.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -387,8 +387,8 @@ not unref <em class="parameter"><code>ctx</code></em>
  before all the desired operations with the returned list are
 completed.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.2.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-new-from-lookup.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -416,7 +416,7 @@ completed.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.2.8"></a><h4>Returns</h4>
+<a name="kmod-module-new-from-lookup.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 otherwise. It fails if any of the lookup
 methods failed, which is basically due to memory allocation fail. If module
 is not found, it still returns 0, but <em class="parameter"><code>list</code></em>
@@ -444,8 +444,8 @@ not unref <em class="parameter"><code>ctx</code></em>
  before all the desired operations with the returned
 kmod_module are done.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.3.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-new-from-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -471,7 +471,7 @@ kmod_module are done.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.3.8"></a><h4>Returns</h4>
+<a name="kmod-module-new-from-name.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 otherwise. It fails if name is not a valid
 module name or if memory allocation failed.</p>
 </div>
@@ -497,8 +497,8 @@ kmod_module are done.</p>
  is relative, it's treated as relative to the current working
 directory. Otherwise, give an absolute path.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.4.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-new-from-path.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -524,7 +524,7 @@ directory. Otherwise, give an absolute path.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.4.8"></a><h4>Returns</h4>
+<a name="kmod-module-new-from-path.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 otherwise. It fails if file does not exist, if
 it's not a valid file for a kmod_module or if memory allocation failed.</p>
 </div>
@@ -536,8 +536,8 @@ it's not a valid file for a kmod_module or if memory allocation failed.</p>
 kmod_module_ref (<em class="parameter"><code><span class="type">struct kmod_module</span> *mod</code></em>);</pre>
 <p>Take a reference of the kmod module, incrementing its refcount.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.5.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-ref.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -551,7 +551,7 @@ kmod_module_ref (<em class="parameter"><code><span class="type">struct kmod_modu
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.5.6"></a><h4>Returns</h4>
+<a name="kmod-module-ref.returns"></a><h4>Returns</h4>
 <p> the passed <em class="parameter"><code>module</code></em>
 with its refcount incremented.</p>
 </div>
@@ -564,8 +564,8 @@ kmod_module_unref (<em class="parameter"><code><span class="type">struct kmod_mo
 <p>Drop a reference of the kmod module. If the refcount reaches zero, its
 resources are released.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.6.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-unref.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -579,7 +579,7 @@ resources are released.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.6.6"></a><h4>Returns</h4>
+<a name="kmod-module-unref.returns"></a><h4>Returns</h4>
 <p> NULL if <em class="parameter"><code>mod</code></em>
 is NULL or if the module was released. Otherwise it
 returns the passed <em class="parameter"><code>mod</code></em>
@@ -595,8 +595,8 @@ kmod_module_unref_list (<em class="parameter"><code><span class="type">struct km
  and releases the resources
 taken by the list itself.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.7.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-unref-list.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -610,7 +610,7 @@ taken by the list itself.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.7.6"></a><h4>Returns</h4>
+<a name="kmod-module-unref-list.returns"></a><h4>Returns</h4>
 <p> 0</p>
 </div>
 </div>
@@ -625,8 +625,8 @@ kmod_module_insert_module (<em class="parameter"><code><span class="type">struct
 ,
 mmap'ing it and passing to kernel.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.8.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-insert-module.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -655,7 +655,7 @@ KMOD_INSERT_FORCE_MODVERSION: ignore symbol version hashes.</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.8.6"></a><h4>Returns</h4>
+<a name="kmod-module-insert-module.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 on failure. If module is already loaded it
 returns -EEXIST.</p>
 </div>
@@ -679,8 +679,8 @@ system(3). Don't pass a NULL argument in <em class="parameter"><code>run_install
 setuid/setgid (see warning in system(3)). If you need control over the
 execution of an install command, give a callback function instead.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.9.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-probe-insert-module.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -746,7 +746,7 @@ output or in dry-run mode.</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.9.7"></a><h4>Returns</h4>
+<a name="kmod-module-probe-insert-module.returns"></a><h4>Returns</h4>
 <p> 0 on success, &gt; 0 if stopped by a reason given in <em class="parameter"><code>flags</code></em>
 or &lt; 0 on
 failure.</p>
@@ -760,8 +760,8 @@ kmod_module_remove_module (<em class="parameter"><code><span class="type">struct
                            <em class="parameter"><code>unsigned <span class="type">int</span> flags</code></em>);</pre>
 <p>Remove a module from Linux kernel.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.10.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-remove-module.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -786,7 +786,7 @@ delete_module(2).</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.10.6"></a><h4>Returns</h4>
+<a name="kmod-module-remove-module.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 on failure.</p>
 </div>
 </div>
@@ -801,8 +801,8 @@ After it's used, unref it. Since the refcount is incremented upon return,
 you still have to call <a class="link" href="libkmod-libkmod-module.html#kmod-module-unref-list" title="kmod_module_unref_list ()"><code class="function">kmod_module_unref_list()</code></a> to release the list of kmod
 modules.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.11.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-module.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -816,7 +816,7 @@ modules.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.11.6"></a><h4>Returns</h4>
+<a name="kmod-module-get-module.returns"></a><h4>Returns</h4>
 <p> NULL on failure or the kmod_module contained in this list entry
 with its refcount incremented.</p>
 </div>
@@ -832,8 +832,8 @@ The result is cached in <em class="parameter"><code>mod</code></em>
 , so subsequent calls to this function will
 return the already searched list of modules.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.12.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-dependencies.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -847,7 +847,7 @@ return the already searched list of modules.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.12.6"></a><h4>Returns</h4>
+<a name="kmod-module-get-dependencies.returns"></a><h4>Returns</h4>
 <p> NULL on failure. Otherwise it returns a list of kmod modules
 that can be released by calling <a class="link" href="libkmod-libkmod-module.html#kmod-module-unref-list" title="kmod_module_unref_list ()"><code class="function">kmod_module_unref_list()</code></a>.</p>
 </div>
@@ -870,8 +870,8 @@ list and return the result.</p>
  are newly created list of kmod_module and
 should be unreferenced with <a class="link" href="libkmod-libkmod-module.html#kmod-module-unref-list" title="kmod_module_unref_list ()"><code class="function">kmod_module_unref_list()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.13.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-softdeps.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -897,7 +897,7 @@ should be unreferenced with <a class="link" href="libkmod-libkmod-module.html#km
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.13.7"></a><h4>Returns</h4>
+<a name="kmod-module-get-softdeps.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 otherwise.</p>
 </div>
 </div>
@@ -914,8 +914,8 @@ kmod_module_apply_filter (<em class="parameter"><code>const <span class="type">s
 and save it in <em class="parameter"><code>output</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.14.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-apply-filter.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -948,7 +948,7 @@ KMOD_FILTER_BUILTIN: filter builtin modules out.</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.14.6"></a><h4>Returns</h4>
+<a name="kmod-module-apply-filter.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 otherwise. <em class="parameter"><code>output</code></em>
 is saved with the updated
 list.</p>
@@ -967,8 +967,8 @@ kmod_module_get_filtered_blacklist (<em class="parameter"><code>const <span clas
 and save it in <em class="parameter"><code>output</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.15.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-filtered-blacklist.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -994,7 +994,7 @@ and save it in <em class="parameter"><code>output</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.15.7"></a><h4>Returns</h4>
+<a name="kmod-module-get-filtered-blacklist.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 otherwise. <em class="parameter"><code>output</code></em>
 is saved with the updated
 list.</p>
@@ -1013,8 +1013,8 @@ the cached string. The install commands are returned as they were in the
 configuration, concatenated by ';'. No other processing is made in this
 string.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.16.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-install-commands.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1028,7 +1028,7 @@ string.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.16.6"></a><h4>Returns</h4>
+<a name="kmod-module-get-install-commands.returns"></a><h4>Returns</h4>
 <p> a string with all install commands separated by semicolons. This
 string is owned by <em class="parameter"><code>mod</code></em>
 , do not free it.</p>
@@ -1047,8 +1047,8 @@ the cached string. The remove commands are returned as they were in the
 configuration, concatenated by ';'. No other processing is made in this
 string.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.17.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-remove-commands.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1062,7 +1062,7 @@ string.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.17.6"></a><h4>Returns</h4>
+<a name="kmod-module-get-remove-commands.returns"></a><h4>Returns</h4>
 <p> a string with all remove commands separated by semicolons. This
 string is owned by <em class="parameter"><code>mod</code></em>
 , do not free it.</p>
@@ -1077,8 +1077,8 @@ kmod_module_get_name (<em class="parameter"><code>const <span class="type">struc
 if it was created by <a class="link" href="libkmod-libkmod-module.html#kmod-module-new-from-name" title="kmod_module_new_from_name ()"><code class="function">kmod_module_new_from_name()</code></a> or another function and
 it's always normalized (dashes are replaced with underscores).</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.18.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1092,7 +1092,7 @@ it's always normalized (dashes are replaced with underscores).</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.18.6"></a><h4>Returns</h4>
+<a name="kmod-module-get-name.returns"></a><h4>Returns</h4>
 <p> the name of this kmod module.</p>
 </div>
 </div>
@@ -1106,8 +1106,8 @@ and are cached in <em class="parameter"><code>mod</code></em>
 . The first call to this function will search for
 this module in configuration and subsequent calls return the cached string.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.19.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-options.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1121,7 +1121,7 @@ this module in configuration and subsequent calls return the cached string.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.19.6"></a><h4>Returns</h4>
+<a name="kmod-module-get-options.returns"></a><h4>Returns</h4>
 <p> a string with all the options separated by spaces. This string is
 owned by <em class="parameter"><code>mod</code></em>
 , do not free it.</p>
@@ -1136,8 +1136,8 @@ kmod_module_get_path (<em class="parameter"><code>const <span class="type">struc
 path, it can search the modules.dep index in order to find out the module
 under context's dirname.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.20.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-path.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1151,7 +1151,7 @@ under context's dirname.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.20.6"></a><h4>Returns</h4>
+<a name="kmod-module-get-path.returns"></a><h4>Returns</h4>
 <p> the path of this kmod module or NULL if such information is not
 available.</p>
 </div>
@@ -1167,8 +1167,8 @@ kmod_module_get_dependency_symbols (<em class="parameter"><code>const <span clas
  by calling
 <a class="link" href="libkmod-libkmod-module.html#kmod-module-dependency-symbols-free-list" title="kmod_module_dependency_symbols_free_list ()"><code class="function">kmod_module_dependency_symbols_free_list()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.21.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-dependency-symbols.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1192,7 +1192,7 @@ kmod_module_get_dependency_symbols (<em class="parameter"><code>const <span clas
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.21.7"></a><h4>Returns</h4>
+<a name="kmod-module-get-dependency-symbols.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 otherwise.</p>
 </div>
 </div>
@@ -1204,8 +1204,8 @@ kmod_module_dependency_symbol_get_bind
                                (<em class="parameter"><code>const <span class="type">struct kmod_list</span> *entry</code></em>);</pre>
 <p>Get the bind type of a kmod module dependency_symbol.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.22.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-dependency-symbol-get-bind.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1219,7 +1219,7 @@ kmod_module_dependency_symbol_get_bind
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.22.6"></a><h4>Returns</h4>
+<a name="kmod-module-dependency-symbol-get-bind.returns"></a><h4>Returns</h4>
 <p> the bind of this kmod module dependency_symbol on success
 or &lt; 0 on failure.</p>
 </div>
@@ -1231,8 +1231,8 @@ or &lt; 0 on failure.</p>
 kmod_module_dependency_symbol_get_crc (<em class="parameter"><code>const <span class="type">struct kmod_list</span> *entry</code></em>);</pre>
 <p>Get the crc of a kmod module dependency_symbol.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.23.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-dependency-symbol-get-crc.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1246,7 +1246,7 @@ kmod_module_dependency_symbol_get_crc (<em class="parameter"><code>const <span c
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.23.6"></a><h4>Returns</h4>
+<a name="kmod-module-dependency-symbol-get-crc.returns"></a><h4>Returns</h4>
 <p> the crc of this kmod module dependency_symbol on success or NULL on
 failure. The string is owned by the dependency_symbol, do not free it.</p>
 </div>
@@ -1259,8 +1259,8 @@ kmod_module_dependency_symbol_get_symbol
                                (<em class="parameter"><code>const <span class="type">struct kmod_list</span> *entry</code></em>);</pre>
 <p>Get the dependency symbol of a kmod module</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.24.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-dependency-symbol-get-symbol.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1274,7 +1274,7 @@ kmod_module_dependency_symbol_get_symbol
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.24.6"></a><h4>Returns</h4>
+<a name="kmod-module-dependency-symbol-get-symbol.returns"></a><h4>Returns</h4>
 <p> the symbol of this kmod module dependency_symbols on success or NULL
 on failure. The string is owned by the dependency_symbols, do not free it.</p>
 </div>
@@ -1288,8 +1288,8 @@ kmod_module_dependency_symbols_free_list
 <p>Release the resources taken by <em class="parameter"><code>list</code></em>
 </p>
 <div class="refsect3">
-<a name="id-1.2.5.6.25.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-dependency-symbols-free-list.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1316,8 +1316,8 @@ can be obtained by calling <a class="link" href="libkmod-libkmod-module.html#kmo
 <p>After use, free the <em class="parameter"><code>list</code></em>
  by calling <a class="link" href="libkmod-libkmod-module.html#kmod-module-section-free-list" title="kmod_module_section_free_list ()"><code class="function">kmod_module_section_free_list()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.26.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-sections.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1331,7 +1331,7 @@ can be obtained by calling <a class="link" href="libkmod-libkmod-module.html#kmo
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.26.7"></a><h4>Returns</h4>
+<a name="kmod-module-get-sections.returns"></a><h4>Returns</h4>
 <p> a new list of kmod module sections on success or NULL on failure.</p>
 </div>
 </div>
@@ -1343,8 +1343,8 @@ kmod_module_section_free_list (<em class="parameter"><code><span class="type">st
 <p>Release the resources taken by <em class="parameter"><code>list</code></em>
 </p>
 <div class="refsect3">
-<a name="id-1.2.5.6.27.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-section-free-list.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1367,8 +1367,8 @@ kmod_module_section_get_address (<em class="parameter"><code>const <span class="
 <p>After use, free the <em class="parameter"><code>list</code></em>
  by calling <a class="link" href="libkmod-libkmod-module.html#kmod-module-section-free-list" title="kmod_module_section_free_list ()"><code class="function">kmod_module_section_free_list()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.28.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-section-get-address.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1382,7 +1382,7 @@ kmod_module_section_get_address (<em class="parameter"><code>const <span class="
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.28.7"></a><h4>Returns</h4>
+<a name="kmod-module-section-get-address.returns"></a><h4>Returns</h4>
 <p> the address of this kmod module section on success or ULONG_MAX
 on failure.</p>
 </div>
@@ -1403,8 +1403,8 @@ kmod_module_get_symbols (<em class="parameter"><code>const <span class="type">st
 <p>After use, free the <em class="parameter"><code>list</code></em>
  by calling <a class="link" href="libkmod-libkmod-module.html#kmod-module-symbols-free-list" title="kmod_module_symbols_free_list ()"><code class="function">kmod_module_symbols_free_list()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.30.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-symbols.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1428,7 +1428,7 @@ kmod_module_get_symbols (<em class="parameter"><code>const <span class="type">st
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.30.7"></a><h4>Returns</h4>
+<a name="kmod-module-get-symbols.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 otherwise.</p>
 </div>
 </div>
@@ -1439,8 +1439,8 @@ kmod_module_get_symbols (<em class="parameter"><code>const <span class="type">st
 kmod_module_symbol_get_crc (<em class="parameter"><code>const <span class="type">struct kmod_list</span> *entry</code></em>);</pre>
 <p>Get the crc of a kmod module symbol.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.31.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-symbol-get-crc.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1454,7 +1454,7 @@ kmod_module_symbol_get_crc (<em class="parameter"><code>const <span class="type"
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.31.6"></a><h4>Returns</h4>
+<a name="kmod-module-symbol-get-crc.returns"></a><h4>Returns</h4>
 <p> the crc of this kmod module symbol on success or NULL on
 failure. The string is owned by the symbol, do not free it.</p>
 </div>
@@ -1466,8 +1466,8 @@ failure. The string is owned by the symbol, do not free it.</p>
 kmod_module_symbol_get_symbol (<em class="parameter"><code>const <span class="type">struct kmod_list</span> *entry</code></em>);</pre>
 <p>Get the symbol of a kmod module symbols.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.32.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-symbol-get-symbol.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1481,7 +1481,7 @@ kmod_module_symbol_get_symbol (<em class="parameter"><code>const <span class="ty
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.32.6"></a><h4>Returns</h4>
+<a name="kmod-module-symbol-get-symbol.returns"></a><h4>Returns</h4>
 <p> the symbol of this kmod module symbols on success or NULL
 on failure. The string is owned by the symbols, do not free it.</p>
 </div>
@@ -1494,8 +1494,8 @@ kmod_module_symbols_free_list (<em class="parameter"><code><span class="type">st
 <p>Release the resources taken by <em class="parameter"><code>list</code></em>
 </p>
 <div class="refsect3">
-<a name="id-1.2.5.6.33.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-symbols-free-list.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1519,8 +1519,8 @@ kmod_module_get_versions (<em class="parameter"><code>const <span class="type">s
 <p>After use, free the <em class="parameter"><code>list</code></em>
  by calling <a class="link" href="libkmod-libkmod-module.html#kmod-module-versions-free-list" title="kmod_module_versions_free_list ()"><code class="function">kmod_module_versions_free_list()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.34.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-versions.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1544,7 +1544,7 @@ kmod_module_get_versions (<em class="parameter"><code>const <span class="type">s
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.34.7"></a><h4>Returns</h4>
+<a name="kmod-module-get-versions.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 otherwise.</p>
 </div>
 </div>
@@ -1555,8 +1555,8 @@ kmod_module_get_versions (<em class="parameter"><code>const <span class="type">s
 kmod_module_version_get_crc (<em class="parameter"><code>const <span class="type">struct kmod_list</span> *entry</code></em>);</pre>
 <p>Get the crc of a kmod module version.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.35.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-version-get-crc.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1570,7 +1570,7 @@ kmod_module_version_get_crc (<em class="parameter"><code>const <span class="type
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.35.6"></a><h4>Returns</h4>
+<a name="kmod-module-version-get-crc.returns"></a><h4>Returns</h4>
 <p> the crc of this kmod module version on success or NULL on
 failure. The string is owned by the version, do not free it.</p>
 </div>
@@ -1582,8 +1582,8 @@ failure. The string is owned by the version, do not free it.</p>
 kmod_module_version_get_symbol (<em class="parameter"><code>const <span class="type">struct kmod_list</span> *entry</code></em>);</pre>
 <p>Get the symbol of a kmod module versions.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.36.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-version-get-symbol.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1597,7 +1597,7 @@ kmod_module_version_get_symbol (<em class="parameter"><code>const <span class="t
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.36.6"></a><h4>Returns</h4>
+<a name="kmod-module-version-get-symbol.returns"></a><h4>Returns</h4>
 <p> the symbol of this kmod module versions on success or NULL
 on failure. The string is owned by the versions, do not free it.</p>
 </div>
@@ -1610,8 +1610,8 @@ kmod_module_versions_free_list (<em class="parameter"><code><span class="type">s
 <p>Release the resources taken by <em class="parameter"><code>list</code></em>
 </p>
 <div class="refsect3">
-<a name="id-1.2.5.6.37.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-versions-free-list.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1639,8 +1639,8 @@ sig_key and sig_hashalgo.</p>
 <p>After use, free the <em class="parameter"><code>list</code></em>
  by calling <a class="link" href="libkmod-libkmod-module.html#kmod-module-info-free-list" title="kmod_module_info_free_list ()"><code class="function">kmod_module_info_free_list()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.38.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-get-info.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1664,7 +1664,7 @@ sig_key and sig_hashalgo.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.38.7"></a><h4>Returns</h4>
+<a name="kmod-module-get-info.returns"></a><h4>Returns</h4>
 <p> 0 on success or &lt; 0 otherwise.</p>
 </div>
 </div>
@@ -1676,8 +1676,8 @@ kmod_module_info_free_list (<em class="parameter"><code><span class="type">struc
 <p>Release the resources taken by <em class="parameter"><code>list</code></em>
 </p>
 <div class="refsect3">
-<a name="id-1.2.5.6.39.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-info-free-list.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1698,8 +1698,8 @@ kmod_module_info_free_list (<em class="parameter"><code><span class="type">struc
 kmod_module_info_get_key (<em class="parameter"><code>const <span class="type">struct kmod_list</span> *entry</code></em>);</pre>
 <p>Get the key of a kmod module info.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.40.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-info-get-key.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1713,7 +1713,7 @@ kmod_module_info_get_key (<em class="parameter"><code>const <span class="type">s
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.40.6"></a><h4>Returns</h4>
+<a name="kmod-module-info-get-key.returns"></a><h4>Returns</h4>
 <p> the key of this kmod module info on success or NULL on
 failure. The string is owned by the info, do not free it.</p>
 </div>
@@ -1725,8 +1725,8 @@ failure. The string is owned by the info, do not free it.</p>
 kmod_module_info_get_value (<em class="parameter"><code>const <span class="type">struct kmod_list</span> *entry</code></em>);</pre>
 <p>Get the value of a kmod module info.</p>
 <div class="refsect3">
-<a name="id-1.2.5.6.41.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="kmod-module-info-get-value.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1740,7 +1740,7 @@ kmod_module_info_get_value (<em class="parameter"><code>const <span class="type"
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.5.6.41.6"></a><h4>Returns</h4>
+<a name="kmod-module-info-get-value.returns"></a><h4>Returns</h4>
 <p> the value of this kmod module info on success or NULL on
 failure. The string is owned by the info, do not free it.</p>
 </div>
@@ -1756,6 +1756,6 @@ failure. The string is owned by the info, do not free it.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.24</div>
+<hr>Generated by GTK-Doc V1.25.1</div>
 </body>
 </html>

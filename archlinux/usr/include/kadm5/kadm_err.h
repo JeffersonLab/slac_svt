@@ -64,6 +64,9 @@
 #define KADM5_CANT_RESOLVE                       (43787576L)
 #define KADM5_PASS_Q_GENERIC                     (43787577L)
 #define KADM5_BAD_KEYSALTS                       (43787578L)
+#define KADM5_SETKEY_BAD_KVNO                    (43787579L)
+#define KADM5_AUTH_EXTRACT                       (43787580L)
+#define KADM5_PROTECT_KEYS                       (43787581L)
 extern const struct error_table et_ovk_error_table;
 extern void initialize_ovk_error_table(void);
 

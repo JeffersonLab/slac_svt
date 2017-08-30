@@ -1,0 +1,47 @@
+%NAME%
+m17n-lib
+
+%VERSION%
+1.7.0-1
+
+%DESC%
+Multilingual text processing library (runtimes)
+
+%URL%
+http://www.nongnu.org/m17n/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1426638438
+
+%INSTALLDATE%
+1495690941
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu3@archlinuxarm.org>
+
+%SIZE%
+805888
+
+%REASON%
+1
+
+%LICENSE%
+GPL
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+libxft
+m17n-db
+fribidi
+libxml2
+gd
+libotf
+
+%OPTDEPENDS%
+anthy: to use the anthy input method
+

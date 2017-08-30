@@ -1,0 +1,36 @@
+%NAME%
+inputproto
+
+%VERSION%
+2.3.2-1
+
+%DESC%
+X11 Input extension wire protocol
+
+%URL%
+http://xorg.freedesktop.org/
+
+%ARCH%
+any
+
+%BUILDDATE%
+1459793976
+
+%INSTALLDATE%
+1495690943
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu2@archlinuxarm.org>
+
+%SIZE%
+657408
+
+%REASON%
+1
+
+%LICENSE%
+custom
+
+%VALIDATION%
+sha256
+

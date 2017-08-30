@@ -1,0 +1,38 @@
+%NAME%
+gssproxy
+
+%VERSION%
+0.6.2-1
+
+%DESC%
+GSSAPI Proxy
+
+%URL%
+https://fedorahosted.org/gss-proxy/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1487526791
+
+%INSTALLDATE%
+1495690685
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu3@archlinuxarm.org>
+
+%SIZE%
+268288
+
+%LICENSE%
+custom: MIT
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+krb5
+popt
+ding-libs
+

@@ -7,7 +7,7 @@
 
 - Don't break code lines too eagerly. We do *not* force line breaks at
   80ch, all of today's screens should be much larger than that. But
-  then again, don't overdo it, ~140ch should be enough really.
+  then again, don't overdo it, ~119ch should be enough really.
 
 - Variables and functions *must* be static, unless they have a
   prototype, and are supposed to be exported.
@@ -145,11 +145,15 @@
 - Think about the types you use. If a value cannot sensibly be
   negative, do not use "int", but use "unsigned".
 
-- Do not use types like "short". They *never* make sense. Use ints,
-  longs, long longs, all in unsigned+signed fashion, and the fixed
-  size types uint32_t and so on, as well as size_t, but nothing
-  else. Do not use kernel types like u32 and so on, leave that to the
-  kernel.
+- Use "char" only for actual characters. Use "uint8_t" or "int8_t"
+  when you actually mean a byte-sized signed or unsigned
+  integers. When referring to a generic byte, we generally prefer the
+  unsigned variant "uint8_t". Do not use types based on "short". They
+  *never* make sense. Use ints, longs, long longs, all in
+  unsigned+signed fashion, and the fixed size types
+  uint8_t/uint16_t/uint32_t/uint64_t/int8_t/int16_t/int32_t and so on,
+  as well as size_t, but nothing else. Do not use kernel types like
+  u32 and so on, leave that to the kernel.
 
 - Public API calls (i.e. functions exported by our shared libraries)
   must be marked "_public_" and need to be prefixed with "sd_". No
@@ -159,7 +163,7 @@
   programming error with assert_return() and return a sensible return
   code. In all other calls, it is recommended to check for programming
   errors with a more brutal assert(). We are more forgiving to public
-  users then for ourselves! Note that assert() and assert_return()
+  users than for ourselves! Note that assert() and assert_return()
   really only should be used for detecting programming errors, not for
   runtime errors. assert() and assert_return() by usage of _likely_()
   inform the compiler that he should not expect these checks to fail,
@@ -209,6 +213,7 @@
   b) socket() and socketpair() must get SOCK_CLOEXEC passed
   c) recvmsg() must get MSG_CMSG_CLOEXEC set
   d) F_DUPFD_CLOEXEC should be used instead of F_DUPFD, and so on
+  f) invocations of fopen() should take "e"
 
 - We never use the POSIX version of basename() (which glibc defines it in
   libgen.h), only the GNU version (which glibc defines in string.h).
@@ -234,6 +239,11 @@
   instead of just this:
 
       unlink("/foo/bar/baz");
+
+  Don't cast function calls to (void) that return no error
+  conditions. Specifically, the various xyz_unref() calls that return a NULL
+  object shouldn't be cast to (void), since not using the return value does not
+  hide any errors.
 
 - Don't invoke exit(), ever. It is not replacement for proper error
   handling. Please escalate errors up your call chain, and use normal
@@ -295,22 +305,132 @@
   EXIT_FAILURE and EXIT_SUCCESS as defined by libc.
 
 - The order in which header files are included doesn't matter too
-  much. However, please try to include the headers of external
-  libraries first (these are all headers enclosed in <>), followed by
-  the headers of our own public headers (these are all headers
-  starting with "sd-"), internal utility libraries from src/shared/,
-  followed by the headers of the specific component. Or in other
-  words:
+  much. systemd-internal headers must not rely on an include order, so
+  it is safe to include them in any order possible.
+  However, to not clutter global includes, and to make sure internal
+  definitions will not affect global headers, please always include the
+  headers of external components first (these are all headers enclosed
+  in <>), followed by our own exported headers (usually everything
+  that's prefixed by "sd-"), and then followed by internal headers.
+  Furthermore, in all three groups, order all includes alphabetically
+  so duplicate includes can easily be detected.
 
-          #include <stdio.h>
-          #include "sd-daemon.h"
-          #include "util.h"
-          #include "frobnicator.h"
+- To implement an endless loop, use "for (;;)" rather than "while
+  (1)". The latter is a bit ugly anyway, since you probably really
+  meant "while (true)"... To avoid the discussion what the right
+  always-true expression for an infinite while() loop is our
+  recommendation is to simply write it without any such expression by
+  using "for (;;)".
 
-  Where stdio.h is a public glibc API, sd-daemon.h is a public API of
-  our own, util.h is a utility library header from src/shared, and
-  frobnicator.h is an placeholder name for any systemd component. The
-  benefit of following this ordering is that more local definitions
-  are always defined after more global ones. Thus, our local
-  definitions will never "leak" into the global header files, possibly
-  altering their effect due to #ifdeffery.
+- Never use the "off_t" type, and particularly avoid it in public
+  APIs. It's really weirdly defined, as it usually is 64bit and we
+  don't support it any other way, but it could in theory also be
+  32bit. Which one it is depends on a compiler switch chosen by the
+  compiled program, which hence corrupts APIs using it unless they can
+  also follow the program's choice. Moreover, in systemd we should
+  parse values the same way on all architectures and cannot expose
+  off_t values over D-Bus. To avoid any confusion regarding conversion
+  and ABIs, always use simply uint64_t directly.
+
+- Commit message subject lines should be prefixed with an appropriate
+  component name of some kind. For example "journal: ", "nspawn: " and
+  so on.
+
+- Do not use "Signed-Off-By:" in your commit messages. That's a kernel
+  thing we don't do in the systemd project.
+
+- Avoid leaving long-running child processes around, i.e. fork()s that
+  are not followed quickly by an execv() in the child. Resource
+  management is unclear in this case, and memory CoW will result in
+  unexpected penalties in the parent much much later on.
+
+- Don't block execution for arbitrary amounts of time using usleep()
+  or a similar call, unless you really know what you do. Just "giving
+  something some time", or so is a lazy excuse. Always wait for the
+  proper event, instead of doing time-based poll loops.
+
+- To determine the length of a constant string "foo", don't bother
+  with sizeof("foo")-1, please use strlen("foo") directly. gcc knows
+  strlen() anyway and turns it into a constant expression if possible.
+
+- If you want to concatenate two or more strings, consider using
+  strjoin() rather than asprintf(), as the latter is a lot
+  slower. This matters particularly in inner loops.
+
+- Please avoid using global variables as much as you can. And if you
+  do use them make sure they are static at least, instead of
+  exported. Especially in library-like code it is important to avoid
+  global variables. Why are global variables bad? They usually hinder
+  generic reusability of code (since they break in threaded programs,
+  and usually would require locking there), and as the code using them
+  has side-effects make programs intransparent. That said, there are
+  many cases where they explicitly make a lot of sense, and are OK to
+  use. For example, the log level and target in log.c is stored in a
+  global variable, and that's OK and probably expected by most. Also
+  in many cases we cache data in global variables. If you add more
+  caches like this, please be careful however, and think about
+  threading. Only use static variables if you are sure that
+  thread-safety doesn't matter in your case. Alternatively consider
+  using TLS, which is pretty easy to use with gcc's "thread_local"
+  concept. It's also OK to store data that is inherently global in
+  global variables, for example data parsed from command lines, see
+  below.
+
+- If you parse a command line, and want to store the parsed parameters
+  in global variables, please consider prefixing their names with
+  "arg_". We have been following this naming rule in most of our
+  tools, and we should continue to do so, as it makes it easy to
+  identify command line parameter variables, and makes it clear why it
+  is OK that they are global variables.
+
+- When exposing public C APIs, be careful what function parameters you make
+  "const". For example, a parameter taking a context object should probably not
+  be "const", even if you are writing an other-wise read-only accessor function
+  for it. The reason is that making it "const" fixates the contract that your
+  call won't alter the object ever, as part of the API. However, that's often
+  quite a promise, given that this even prohibits object-internal caching or
+  lazy initialization of object variables. Moreover it's usually not too useful
+  for client applications. Hence: please be careful and avoid "const" on object
+  parameters, unless you are very sure "const" is appropriate.
+
+- Make sure to enforce limits on every user controllable resource. If the user
+  can allocate resources in your code, your code must enforce some form of
+  limits after which it will refuse operation. It's fine if it is hardcoded (at
+  least initially), but it needs to be there. This is particularly important
+  for objects that unprivileged users may allocate, but also matters for
+  everything else any user may allocated.
+
+- htonl()/ntohl() and htons()/ntohs() are weird. Please use htobe32() and
+  htobe16() instead, it's much more descriptive, and actually says what really
+  is happening, after all htonl() and htons() don't operation on longs and
+  shorts as their name would suggest, but on uint32_t and uint16_t. Also,
+  "network byte order" is just a weird name for "big endian", hence we might
+  want to call it "big endian" right-away.
+
+- You might wonder what kind of common code belongs in src/shared/ and what
+  belongs in src/basic/. The split is like this: anything that uses public APIs
+  we expose (i.e. any of the sd-bus, sd-login, sd-id128, ... APIs) must be
+  located in src/shared/. All stuff that only uses external libraries from
+  other projects (such as glibc's APIs), or APIs from src/basic/ itself should
+  be placed in src/basic/. Conversely, src/libsystemd/ may only use symbols
+  from src/basic, but not from src/shared/. To summarize:
+
+  src/basic/      → may be used by all code in the tree
+                  → may not use any code outside of src/basic/
+
+  src/libsystemd/ → may be used by all code in the tree, except for code in src/basic/
+                  → may not use any code outside of src/basic/, src/libsystemd/
+
+  src/shared/     → may be used by all code in the tree, except for code in src/basic/, src/libsystemd/
+                  → may not use any code outside of src/basic/, src/libsystemd/, src/shared/
+
+- Our focus is on the GNU libc (glibc), not any other libcs. If other libcs are
+  incompatible with glibc it's on them. However, if there are equivalent POSIX
+  and Linux/GNU-specific APIs, we generally prefer the POSIX APIs. If there
+  aren't, we are happy to use GNU or Linux APIs, and expect non-GNU
+  implementations of libc to catch up with glibc.
+
+- Whenever installing a signal handler, make sure to set SA_RESTART for it, so
+  that interrupted system calls are automatically restarted, and we minimize
+  hassles with handling EINTR (in particular as EINTR handling is pretty broken
+  on Linux).

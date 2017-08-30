@@ -1,0 +1,37 @@
+%NAME%
+ding-libs
+
+%VERSION%
+0.6.0-1
+
+%DESC%
+'D is not GLib' utility libraries
+
+%URL%
+https://fedorahosted.org/sssd/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1466925140
+
+%INSTALLDATE%
+1495690617
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu7@archlinuxarm.org>
+
+%SIZE%
+628736
+
+%LICENSE%
+GPL3
+LGPL3
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+glibc
+

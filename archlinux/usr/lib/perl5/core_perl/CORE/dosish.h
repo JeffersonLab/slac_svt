@@ -52,11 +52,11 @@
 #endif	/* DJGPP */
 
 #ifndef PERL_SYS_TERM_BODY
-#  define PERL_SYS_TERM_BODY() \
-    HINTS_REFCNT_TERM; OP_CHECK_MUTEX_TERM; \
-    OP_REFCNT_TERM; PERLIO_TERM; MALLOC_TERM
+#  define PERL_SYS_TERM_BODY()                              \
+    HINTS_REFCNT_TERM; OP_CHECK_MUTEX_TERM;                 \
+    OP_REFCNT_TERM; PERLIO_TERM; MALLOC_TERM; LOCALE_TERM;
 #endif
-#define dXSUB_SYS
+#define dXSUB_SYS dNOOP
 
 /* USEMYBINMODE
  *	This symbol, if defined, indicates that the program should

@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="UP"
 TITLE="FcPattern"
 HREF="x102.html#AEN241"><LINK
@@ -43,7 +43,7 @@ VALIGN="bottom"
 ><A
 HREF="fcnameunparse.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -87,38 +87,16 @@ CLASS="FUNCSYNOPSIS"
 ><A
 NAME="AEN909"
 ></A
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="FUNCSYNOPSISINFO"
->#include &#60;fontconfig/fontconfig.h&#62;
+>#include &lt;fontconfig/fontconfig.h&gt;
 	</PRE
-></TD
-></TR
-></TABLE
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcChar8 * <TT
-CLASS="FUNCTION"
->FcPatternFormat</TT
-></CODE
->(FcPattern *<TT
-CLASS="PARAMETER"
-><I
->pat</I
-></TT
->, const FcChar8 *<TT
-CLASS="PARAMETER"
-><I
->format</I
-></TT
->);</CODE
+>FcChar8 * FcPatternFormat</CODE
+>(FcPattern *pat, const FcChar8 *format);</CODE
 ></P
 ><P
 ></P
@@ -132,24 +110,18 @@ NAME="AEN918"
 ><H2
 >Description</H2
 ><P
->Converts given pattern <TT
+>Converts given pattern <CODE
 CLASS="PARAMETER"
-><I
->pat</I
-></TT
+>pat</CODE
 > into text described by
-the format specifier <TT
+the format specifier <CODE
 CLASS="PARAMETER"
-><I
->format</I
-></TT
+>format</CODE
 >.
 The return value refers to newly allocated memory which should be freed by the
-caller using free(), or NULL if <TT
+caller using free(), or NULL if <CODE
 CLASS="PARAMETER"
-><I
->format</I
-></TT
+>format</CODE
 > is invalid.&#13;</P
 ><P
 >&#13;The format is loosely modeled after printf-style format string.
@@ -180,11 +152,9 @@ CLASS="FIRSTTERM"
 > tag
 is one where the content is an identifier.  When simple
 tags are expanded, the named identifier will be looked up in
-<TT
+<CODE
 CLASS="PARAMETER"
-><I
->pattern</I
-></TT
+>pattern</CODE
 > and the resulting list of values returned,
 joined together using comma.  For example, to print the family name and style of the
 pattern, use the format "%{family} %{style}\n".  To extend the family column
@@ -197,32 +167,26 @@ to get the first family name only, use "%{family[0]}".&#13;</P
 >&#13;If a simple tag ends with "=" and the element is found in the pattern, the
 name of the element followed by "=" will be output before the list of values.
 For example, "%{weight=}" may expand to the string "weight=80".  Or to the empty
-string if <TT
+string if <CODE
 CLASS="PARAMETER"
-><I
->pattern</I
-></TT
+>pattern</CODE
 > does not have weight set.&#13;</P
 ><P
 >&#13;If a simple tag starts with ":" and the element is found in the pattern, ":"
 will be printed first.  For example, combining this with the =, the format
 "%{:weight=}" may expand to ":weight=80" or to the empty string
-if <TT
+if <CODE
 CLASS="PARAMETER"
-><I
->pattern</I
-></TT
+>pattern</CODE
 > does not have weight set.&#13;</P
 ><P
 >&#13;If a simple tag contains the string ":-", the rest of the the tag contents
 will be used as a default string.  The default string is output if the element
 is not found in the pattern.  For example, the format
 "%{:weight=:-123}" may expand to ":weight=80" or to the string
-":weight=123" if <TT
+":weight=123" if <CODE
 CLASS="PARAMETER"
-><I
->pattern</I
-></TT
+>pattern</CODE
 > does not have weight set.&#13;</P
 ><P
 >&#13;A <I
@@ -232,11 +196,9 @@ CLASS="FIRSTTERM"
 is one that starts with the character "#" followed by an element
 name, and expands to the number of values for the element in the pattern.
 For example, "%{#family}" expands to the number of family names
-<TT
+<CODE
 CLASS="PARAMETER"
-><I
->pattern</I
-></TT
+>pattern</CODE
 > has set, which may be zero.&#13;</P
 ><P
 >&#13;A <I
@@ -260,11 +222,9 @@ comma-separated list of element names, followed by a sub-expression enclosed
 in curly braces.  The sub-expression will be expanded but with a pattern that
 has the listed elements removed from it.
 For example, the format "%{-size,pixelsize{sub-expr}}" will expand "sub-expr"
-with <TT
+with <CODE
 CLASS="PARAMETER"
-><I
->pattern</I
-></TT
+>pattern</CODE
 > sans the size and pixelsize elements.&#13;</P
 ><P
 >&#13;A <I
@@ -277,11 +237,9 @@ in curly braces.  The sub-expression will be expanded but with a pattern that
 only has the listed elements from the surrounding pattern.
 For example, the format "%{+family,familylang{sub-expr}}" will expand "sub-expr"
 with a sub-pattern consisting only the family and family lang elements of
-<TT
+<CODE
 CLASS="PARAMETER"
-><I
->pattern</I
-></TT
+>pattern</CODE
 >.&#13;</P
 ><P
 >&#13;A <I
@@ -297,11 +255,9 @@ is negated.  The conditional passes if all the element conditions pass.
 The tag expands the first sub-expression if the conditional passes, and
 expands the second sub-expression otherwise.
 For example, the format "%{?size,dpi,!pixelsize{pass}{fail}}" will expand
-to "pass" if <TT
+to "pass" if <CODE
 CLASS="PARAMETER"
-><I
->pattern</I
-></TT
+>pattern</CODE
 > has size and dpi elements but
 no pixelsize element, and to "fail" otherwise.&#13;</P
 ><P
@@ -379,11 +335,9 @@ packages accordingly.</P
 
 For example, the format "%{+family,style{%{=unparse}}}\n" will expand
 to an unparsed name containing only the family and style element values
-from <TT
+from <CODE
 CLASS="PARAMETER"
-><I
->pattern</I
-></TT
+>pattern</CODE
 >.&#13;</P
 ><P
 >&#13;The contents of any tag can be followed by a set of zero or more
@@ -439,83 +393,61 @@ CLASS="VARIABLELIST"
 (Escapes less-than, greater-than, and ampersand.)</P
 ></DD
 ><DT
->delete(<TT
+>delete(<CODE
 CLASS="PARAMETER"
-><I
->chars</I
-></TT
+>chars</CODE
 >)</DT
 ><DD
 ><P
->Deletes all occurrences of each of the characters in <TT
+>Deletes all occurrences of each of the characters in <CODE
 CLASS="PARAMETER"
-><I
->chars</I
-></TT
+>chars</CODE
 >
 from the text.
 FIXME: This converter is not UTF-8 aware yet.</P
 ></DD
 ><DT
->escape(<TT
+>escape(<CODE
 CLASS="PARAMETER"
-><I
->chars</I
-></TT
+>chars</CODE
 >)</DT
 ><DD
 ><P
->Escapes all occurrences of each of the characters in <TT
+>Escapes all occurrences of each of the characters in <CODE
 CLASS="PARAMETER"
-><I
->chars</I
-></TT
+>chars</CODE
 >
-by prepending it by the first character in <TT
+by prepending it by the first character in <CODE
 CLASS="PARAMETER"
-><I
->chars</I
-></TT
+>chars</CODE
 >.
 FIXME: This converter is not UTF-8 aware yet.</P
 ></DD
 ><DT
->translate(<TT
+>translate(<CODE
 CLASS="PARAMETER"
-><I
->from</I
-></TT
->,<TT
+>from</CODE
+>,<CODE
 CLASS="PARAMETER"
-><I
->to</I
-></TT
+>to</CODE
 >)</DT
 ><DD
 ><P
->Translates all occurrences of each of the characters in <TT
+>Translates all occurrences of each of the characters in <CODE
 CLASS="PARAMETER"
-><I
->from</I
-></TT
+>from</CODE
 >
-by replacing them with their corresponding character in <TT
+by replacing them with their corresponding character in <CODE
 CLASS="PARAMETER"
-><I
->to</I
-></TT
+>to</CODE
 >.
-If <TT
+If <CODE
 CLASS="PARAMETER"
-><I
->to</I
-></TT
+>to</CODE
 > has fewer characters than
-<TT
+<CODE
 CLASS="PARAMETER"
-><I
->from</I
-></TT
+>from</CODE
 >, it will be extended by repeating its last
 character.
 FIXME: This converter is not UTF-8 aware yet.</P
@@ -525,11 +457,9 @@ FIXME: This converter is not UTF-8 aware yet.</P
 >
 
 For example, the format "%{family|downcase|delete( )}\n" will expand
-to the values of the family element in <TT
+to the values of the family element in <CODE
 CLASS="PARAMETER"
-><I
->pattern</I
-></TT
+>pattern</CODE
 >,
 lower-cased and with spaces removed.
 	    </P
@@ -562,14 +492,14 @@ VALIGN="top"
 ><A
 HREF="fcnameunparse.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD

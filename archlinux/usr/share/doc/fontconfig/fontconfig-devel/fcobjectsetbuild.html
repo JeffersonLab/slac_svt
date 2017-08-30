@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
@@ -7,7 +7,7 @@
 NAME="GENERATOR"
 CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-HREF="t1.html"><LINK
+HREF="index.html"><LINK
 REL="UP"
 TITLE="FcObjectSet"
 HREF="x102.html#AEN1242"><LINK
@@ -43,7 +43,7 @@ VALIGN="bottom"
 ><A
 HREF="fcobjectsetdestroy.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="80%"
@@ -87,83 +87,30 @@ CLASS="FUNCSYNOPSIS"
 ><A
 NAME="AEN1315"
 ></A
-><TABLE
-BORDER="0"
-BGCOLOR="#E0E0E0"
-WIDTH="100%"
-><TR
-><TD
 ><PRE
 CLASS="FUNCSYNOPSISINFO"
->#include &#60;fontconfig/fontconfig.h&#62;
+>#include &lt;fontconfig/fontconfig.h&gt;
 	</PRE
-></TD
-></TR
-></TABLE
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcObjectSet * <TT
-CLASS="FUNCTION"
->FcObjectSetBuild</TT
-></CODE
->(const char *<TT
-CLASS="PARAMETER"
-><I
->first</I
-></TT
->, ...<TT
-CLASS="PARAMETER"
-><I
-></I
-></TT
->);</CODE
+>FcObjectSet * FcObjectSetBuild</CODE
+>(const char *first, ...);</CODE
 ></P
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->FcObjectSet * <TT
-CLASS="FUNCTION"
->FcObjectSetVaBuild</TT
-></CODE
->(const char *<TT
-CLASS="PARAMETER"
-><I
->first</I
-></TT
->, va_list <TT
-CLASS="PARAMETER"
-><I
->va</I
-></TT
->);</CODE
+>FcObjectSet * FcObjectSetVaBuild</CODE
+>(const char *first, va_list va);</CODE
 ></P
 ><P
 ><CODE
 ><CODE
 CLASS="FUNCDEF"
->void <TT
-CLASS="FUNCTION"
->FcObjectSetVapBuild</TT
-></CODE
->(FcObjectSet *<TT
-CLASS="PARAMETER"
-><I
->result</I
-></TT
->, const char *<TT
-CLASS="PARAMETER"
-><I
->first</I
-></TT
->, va_list <TT
-CLASS="PARAMETER"
-><I
->va</I
-></TT
->);</CODE
+>void FcObjectSetVapBuild</CODE
+>(FcObjectSet *result, const char *first, va_list va);</CODE
 ></P
 ><P
 ></P
@@ -179,11 +126,9 @@ NAME="AEN1340"
 ><P
 >These build an object set from a null-terminated list of property names.
 FcObjectSetVapBuild is a macro version of FcObjectSetVaBuild which returns
-the result in the <TT
+the result in the <CODE
 CLASS="PARAMETER"
-><I
->result</I
-></TT
+>result</CODE
 > variable directly.
 	    </P
 ></DIV
@@ -205,14 +150,14 @@ VALIGN="top"
 ><A
 HREF="fcobjectsetdestroy.html"
 ACCESSKEY="P"
->&#60;&#60;&#60; Previous</A
+>Prev</A
 ></TD
 ><TD
 WIDTH="34%"
 ALIGN="center"
 VALIGN="top"
 ><A
-HREF="t1.html"
+HREF="index.html"
 ACCESSKEY="H"
 >Home</A
 ></TD

@@ -3,7 +3,7 @@
 # mkinitcpio - modular tool for building an initramfs images
 #
 
-declare -r version=18
+declare -r version=23
 
 shopt -s extglob
 
@@ -50,6 +50,7 @@ usage: ${0##*/} [options]
    -M, --automods               Display modules found via autodetection
    -n, --nocolor                Disable colorized output messages
    -p, --preset <file>          Build specified preset from /etc/mkinitcpio.d
+   -P, --allpresets             Process all preset files in /etc/mkinitcpio.d
    -r, --moduleroot <dir>       Root directory for modules (default: /)
    -S, --skiphooks <hooks>      Skip specified hooks, comma-separated, during build
    -s, --save                   Save build directory. (default: no)
@@ -85,7 +86,7 @@ cleanup() {
 }
 
 resolve_kernver() {
-    local kernel=$1 offset kver
+    local kernel=$1 arch=
 
     if [[ -z $kernel ]]; then
         uname -r
@@ -95,6 +96,12 @@ resolve_kernver() {
     if [[ ${kernel:0:1} != / ]]; then
         echo "$kernel"
         return 0
+    fi
+
+    arch=$(uname -m)
+    if [[ $arch != @(i?86|x86_64) ]]; then
+        error "kernel version extraction from image not supported for \`%s' architecture" "$arch"
+        return 1
     fi
 
     if [[ ! -e $kernel ]]; then
@@ -222,7 +229,7 @@ build_image() {
     fi
 
     pushd "$BUILDROOT" >/dev/null
-    find . -print0 |
+    find -mindepth 1 -printf '%P\0' |
             LANG=C bsdcpio "${cpio_opts[@]}" |
             $compress $COMPRESSION_OPTIONS > "$out"
     pipesave=("${PIPESTATUS[@]}") # save immediately
@@ -261,7 +268,7 @@ process_preset() (
         printf -v preset '%s/%s.preset' "$_d_presets" "$preset"
     fi
 
-    . "$preset" 2>/dev/null || die "Preset not found: \`%s'" "$preset"
+    . "$preset" || die "Failed to load preset: \`%s'" "$preset"
 
     # Use -m and -v options specified earlier
     (( _optquiet )) || preset_mkopts+=(-v)
@@ -436,7 +443,7 @@ if [[ $KERNELVERSION != 'none' ]]; then
     [[ -d $_d_kmoduledir ]] || die "'$_d_kmoduledir' is not a valid kernel module directory"
 fi
 
-_d_workdir=$(initialize_buildroot "$KERNELVERSION" $_opttargetdir) || cleanup 1
+_d_workdir=$(initialize_buildroot "$KERNELVERSION" "$_opttargetdir") || cleanup 1
 BUILDROOT=${_opttargetdir:-$_d_workdir/root}
 
 . "$_f_config" || die "Failed to read configuration \`%s'" "$_f_config"

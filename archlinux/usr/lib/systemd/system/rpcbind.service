@@ -1,11 +1,18 @@
 [Unit]
-Description=RPC bind service
-Requires=rpcbind.socket
+Description=RPC Bind
+Documentation=man:rpcbind(8)
+DefaultDependencies=no
+
+# Make sure we use the IP addresses listed for
+# rpcbind.socket, no matter how this unit is started.
+Wants=rpcbind.socket
+After=rpcbind.socket
 
 [Service]
-Type=forking
+Type=notify
+# distro can provide a drop-in adding EnvironmentFile=-/??? if needed.
 EnvironmentFile=/etc/conf.d/rpcbind
-ExecStart=/usr/bin/rpcbind -w ${RPCBIND_ARGS}
+ExecStart=/usr/bin/rpcbind $RPCBIND_OPTIONS -w -f
 
 [Install]
-Also=rpcbind.socket
+WantedBy=multi-user.target

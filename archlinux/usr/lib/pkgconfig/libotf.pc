@@ -1,0 +1,11 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libotf
+Description: OpenType font library
+Version: 0.9.13
+Requires: freetype2
+Libs: -lfreetype -lz -lbz2 -lpng16 -lharfbuzz -L${libdir} -lotf
+Cflags: -I/usr/include/freetype2 -I${includedir}
