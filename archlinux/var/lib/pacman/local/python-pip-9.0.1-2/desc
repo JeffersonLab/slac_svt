@@ -1,0 +1,37 @@
+%NAME%
+python-pip
+
+%VERSION%
+9.0.1-2
+
+%DESC%
+The PyPA recommended tool for installing Python packages
+
+%URL%
+https://pip.pypa.io/
+
+%ARCH%
+any
+
+%BUILDDATE%
+1483757575
+
+%INSTALLDATE%
+1495688994
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu3@archlinuxarm.org>
+
+%SIZE%
+6820864
+
+%LICENSE%
+MIT
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+python
+python-setuptools
+

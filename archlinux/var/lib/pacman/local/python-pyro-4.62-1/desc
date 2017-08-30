@@ -1,0 +1,36 @@
+%NAME%
+python-pyro
+
+%VERSION%
+4.62-1
+
+%DESC%
+Distributed object middleware for Python (RPC)
+
+%URL%
+https://github.com/irmen/Pyro4
+
+%ARCH%
+any
+
+%BUILDDATE%
+1502840942
+
+%INSTALLDATE%
+1495689512
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu6@archlinuxarm.org>
+
+%SIZE%
+612352
+
+%LICENSE%
+MIT
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+python
+

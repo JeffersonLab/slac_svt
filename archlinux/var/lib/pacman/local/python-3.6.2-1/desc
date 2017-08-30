@@ -1,0 +1,55 @@
+%NAME%
+python
+
+%VERSION%
+3.6.2-1
+
+%DESC%
+Next generation of the python high-level scripting language
+
+%URL%
+http://www.python.org/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1500758534
+
+%INSTALLDATE%
+1495688836
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu7@archlinuxarm.org>
+
+%SIZE%
+107383808
+
+%LICENSE%
+custom
+
+%VALIDATION%
+sha256
+
+%REPLACES%
+python3
+
+%DEPENDS%
+expat
+bzip2
+gdbm
+openssl
+libffi
+zlib
+
+%OPTDEPENDS%
+python-setuptools
+python-pip
+sqlite
+mpdecimal: for decimal
+xz: for lzma
+tk: for tkinter
+
+%PROVIDES%
+python3
+

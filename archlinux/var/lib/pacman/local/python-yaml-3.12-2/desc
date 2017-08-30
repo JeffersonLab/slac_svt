@@ -1,0 +1,37 @@
+%NAME%
+python-yaml
+
+%VERSION%
+3.12-2
+
+%DESC%
+Python bindings for YAML, using fast libYAML library
+
+%URL%
+http://pyyaml.org
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1483756176
+
+%INSTALLDATE%
+1495689499
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu1@archlinuxarm.org>
+
+%SIZE%
+582656
+
+%LICENSE%
+MIT
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+python
+libyaml
+

@@ -1,0 +1,45 @@
+%NAME%
+ipython
+
+%VERSION%
+5.3.0-1
+
+%DESC%
+An enhanced Interactive Python shell.
+
+%URL%
+http://ipython.org
+
+%ARCH%
+any
+
+%BUILDDATE%
+1491369562
+
+%INSTALLDATE%
+1495689282
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu4@archlinuxarm.org>
+
+%SIZE%
+4289536
+
+%LICENSE%
+BSD
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+python
+python-traitlets
+python-pexpect
+sqlite
+python-setuptools
+python-pickleshare
+python-prompt_toolkit
+
+%OPTDEPENDS%
+python-nose: for IPython's test suite
+

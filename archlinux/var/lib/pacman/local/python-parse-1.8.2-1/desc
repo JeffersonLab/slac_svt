@@ -1,0 +1,36 @@
+%NAME%
+python-parse
+
+%VERSION%
+1.8.2-1
+
+%DESC%
+Parse strings using a specification based on the Python format() syntax.
+
+%URL%
+http://pypi.python.org/pypi/parse
+
+%ARCH%
+any
+
+%BUILDDATE%
+1496670542
+
+%INSTALLDATE%
+1495689523
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu8@archlinuxarm.org>
+
+%SIZE%
+174080
+
+%LICENSE%
+BSD
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+python
+

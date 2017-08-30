@@ -4,7 +4,8 @@
 #
 
 ## Geo-IP based mirror selection and load balancing
-Server = http://mirror.archlinuxarm.org/$arch/$repo
+#Server = http://mirror.archlinuxarm.org/$arch/$repo
+Server = file:///mnt/host/mirror/$arch/$repo
 
 ### Mirrors by country
 

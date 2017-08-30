@@ -1,0 +1,47 @@
+%NAME%
+boost-libs
+
+%VERSION%
+1.64.0-4
+
+%DESC%
+Free peer-reviewed portable C++ source libraries - runtime libraries
+
+%URL%
+http://www.boost.org/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1499952502
+
+%INSTALLDATE%
+1495689068
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu8@archlinuxarm.org>
+
+%SIZE%
+9095168
+
+%REASON%
+1
+
+%LICENSE%
+custom
+
+%VALIDATION%
+sha256
+
+%DEPENDS%
+bzip2
+zlib
+icu
+
+%OPTDEPENDS%
+openmpi: for mpi support
+
+%PROVIDES%
+libboost_context.so=1.64.0-32
+
