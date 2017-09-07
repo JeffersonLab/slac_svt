@@ -17,7 +17,7 @@ utmp:x:20:
 locate:x:21:
 rfkill:x:24:
 smmsp:x:25:
-proc:x:26:
+proc:x:26:polkitd
 http:x:33:
 games:x:50:
 lock:x:54:
@@ -46,3 +46,4 @@ alarm:x:1000:
 hpsrun:x:1001:
 rpc:x:32:
 polkitd:x:102:
+git:x:997:

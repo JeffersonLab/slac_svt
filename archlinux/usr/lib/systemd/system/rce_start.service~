@@ -1,0 +1,11 @@
+[Unit]
+Description=RCE Startup Script
+After=network-online.target
+
+[Service]
+Type=forking
+ExecStart=/mnt/host/daq/rceData/rce_start.sh
+
+[Install]
+WantedBy=multi-user.target
+

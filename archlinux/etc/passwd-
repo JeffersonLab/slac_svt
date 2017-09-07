@@ -17,3 +17,5 @@ systemd-journal-upload:x:999:999:systemd Journal Upload:/:/sbin/nologin
 alarm:x:1000:1000::/home/alarm:/bin/bash
 hpsrun:x:1001:1001::/home/hpsrun:/bin/tcsh
 rpc:x:32:32:Rpcbind Daemon:/dev/null:/bin/false
+polkitd:x:102:102:Policy Kit Daemon:/:/bin/nologin
+git:x:997:997:git daemon user:/:/usr/bin/git-shell

@@ -1,0 +1,63 @@
+%NAME%
+git
+
+%VERSION%
+2.14.1-1
+
+%DESC%
+the fast distributed version control system
+
+%URL%
+http://git-scm.com/
+
+%ARCH%
+armv7h
+
+%BUILDDATE%
+1502479821
+
+%INSTALLDATE%
+1495865783
+
+%PACKAGER%
+Arch Linux ARM Build System <builder+xu8@archlinuxarm.org>
+
+%SIZE%
+30233600
+
+%LICENSE%
+GPL2
+
+%VALIDATION%
+sha256
+
+%REPLACES%
+git-core
+
+%DEPENDS%
+curl
+expat>=2.0
+perl-error
+perl>=5.14.0
+openssl
+pcre2
+
+%OPTDEPENDS%
+tk: gitk and git gui
+perl-libwww: git svn
+perl-term-readkey: git svn
+perl-mime-tools: git send-email
+perl-net-smtp-ssl: git send-email TLS support
+perl-authen-sasl: git send-email TLS support
+perl-mediawiki-api: git mediawiki support
+perl-datetime-format-iso8601: git mediawiki support
+perl-lwp-protocol-https: git mediawiki https support
+perl-cgi: gitweb (web interface) support
+python2: various helper scripts
+subversion: git svn
+cvsps2: git cvsimport
+gnome-keyring: GNOME keyring credential helper
+
+%PROVIDES%
+git-core
+

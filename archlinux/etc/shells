@@ -8,3 +8,4 @@
 # End of file
 /bin/tcsh
 /bin/csh
+/usr/bin/git-shell

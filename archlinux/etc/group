@@ -46,3 +46,6 @@ alarm:x:1000:
 hpsrun:x:1001:
 rpc:x:32:
 polkitd:x:102:
+git:x:997:
+kvm:x:996:
+systemd-coredump:x:995:
