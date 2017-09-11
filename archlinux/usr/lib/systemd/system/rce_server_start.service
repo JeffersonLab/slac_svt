@@ -1,13 +1,11 @@
 [Unit]
 Description=RCE Server Startup Script
-#After=network-online.target mnt-host.mount
-After=mnt-host.mount
+Requires=rce_start.service
+After=rce_start.service
 
 [Service]
 Type=forking
 ExecStart=/mnt/host/heavy-photon-daq/software/rceScripts/start_server.csh
-#ExecStart=/mnt/host/heavy-photon-daq/software/rceScripts/test.sh
-#ExecStart=/usr/local/bin/test.sh
 ExecStop=/usr/bin/killall rceServer
 
 [Install]

@@ -1,14 +1,12 @@
 [Unit]
 Description=RCE Startup Script
-#After=network-online.target mnt-host.mount
+Requires=mnt-host.mount
 After=mnt-host.mount
 
 [Service]
-Type=forking
-#RemainAfterExit=yes
+Type=oneshoot
+RemainAfterExit=yes
 ExecStart=/mnt/host/heavy-photon-daq/software/rceScripts/rce_start.sh
-#ExecStart=/mnt/host/heavy-photon-daq/software/rceScripts/test.sh
-#ExecStart=/usr/local/bin/test.sh
 
 [Install]
 WantedBy=multi-user.target

@@ -1,5 +1,6 @@
 [Unit]
 Description=RCE DMA Driver
+Requires=mnt-host.mount
 After=mnt-host.mount
 
 [Service]
