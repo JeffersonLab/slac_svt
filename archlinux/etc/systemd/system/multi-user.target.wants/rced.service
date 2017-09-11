@@ -1,11 +1,1 @@
-[Unit]
-Description=RCE Daemon
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/rced
-ExecStop=/usr/bin/killall /usr/bin/rced
-Restart=on-abort
-
-[Install]
-WantedBy=multi-user.target
+/usr/lib/systemd/system/rced.service

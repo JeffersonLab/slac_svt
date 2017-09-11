@@ -1,0 +1,11 @@
+[Unit]
+Description=RCE DMA Driver
+After=mnt-host.mount
+
+[Service]
+Type=forking
+ExecStart=/mnt/host/heavy-photon-daq/software/rceScripts/rce_dma.sh
+
+[Install]
+WantedBy=multi-user.target
+
