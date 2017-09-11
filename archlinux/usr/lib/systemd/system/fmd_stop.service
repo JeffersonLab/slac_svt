@@ -1,12 +1,13 @@
 [Unit]
 Description=Stop Fulcrum switch management
 Requires=fmd.service
-After=fmd.service
+After=mnt-host.mount fmd.service
+
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/mnt/host/daq/rceData/fmd_stop.sh
+ExecStart=/mnt/host/heavy-photon-daq/software/rceScripts/fmd_stop.sh
 
 [Install]
 WantedBy=multi-user.target
